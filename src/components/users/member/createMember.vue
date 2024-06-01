@@ -1,8 +1,8 @@
 <template>
-  <q-card style="max-width: 800px; width: 800px">
+  <q-card style="max-width: 400px; width: 800px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
     <q-toolbar class="bg-primary text-white">
-      <q-toolbar-title> Create Member </q-toolbar-title>
+      <q-toolbar-title> Create Client </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
     <q-card-section>
@@ -12,60 +12,42 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="First Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.firstname"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
               </template>
             </q-input>
           </div>
-          <div class="col-2 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="Middle Name"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.middlename"
             >
-              <!-- <template v-slot:prepend>
-                <q-icon name="numbers" />
-              </template> -->
             </q-input>
           </div>
-          <div class="col-4">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="Last Name*"
-              name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.lastname"
-              :rules="[(val) => !!val || 'Field is required']"
             >
-              <!-- <template v-slot:prepend>
-                <q-icon name="numbers" />
-              </template> -->
             </q-input>
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-4 q-mr-sm">
-            <q-input
-              filled
-              v-model="formData.dob"
-              mask="date"
-              label="Birthday*"
-              :rules="[(val) => !!val || 'Field is required']"
-            >
+          <div class="full-width q-mb-md">
+            <q-input filled v-model="formData.dob" mask="date" label="Birthday">
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy
@@ -88,26 +70,23 @@
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-select
               filled
               :options="['Male', 'Female']"
               label="Gender*"
               v-model="formData.gender"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="wc" />
               </template>
             </q-select>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Phone #*"
+              label="CP #(starts 09)"
               name="phone"
-              class="q-mr-sm col-3 q-mb-md full-width"
               type="text"
               v-model="formData.phone"
             >
@@ -117,16 +96,14 @@
             </q-input>
           </div>
         </div>
-        <div class="row q-col-gutter-none relative-position q-mb-sm q-mt-sm">
-          <div class="col-12 q-pr-xl">
+        <div class="row q-col-gutter-none relative-position">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Address*"
+              label="Address"
               name="addresss"
-              class="q-mr-sm col-3 full-width"
               type="text"
               v-model="formData.address"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
@@ -135,70 +112,26 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-3 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Profession"
-              class="q-mr-sm col-3 q-mb-md full-width"
-              v-model="formData.profession"
-            >
-              <template v-slot:prepend>
-                <q-icon name="handyman" />
-              </template>
-            </q-input>
-          </div>
-
-          <div class="col-4 q-mr-sm">
-            <q-input
-              filled
-              label="Email Address*"
+              label="Email Address"
               name="email"
-              class="q-mr-sm col-3 q-mb-md full-width"
               type="email"
               v-model="formData.email"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="email" />
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
-            <q-select
-              filled
-              :options="codes"
-              label="Registration Codes"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
-              v-model="formData.code"
-              :rules="[(val) => !!val || 'Field is required']"
-            >
-              <template v-slot:prepend>
-                <q-icon name="vpn_key" />
-              </template>
-            </q-select>
-          </div>
         </div>
-        <div class="row q-col-gutter-none relative-position">
-          <div class="col-12 q-mr-sm q-pr-xl">
-            <q-input
-              filled
-              label="From what source did you know about BeeFit?"
-              name="code"
-              class="q-mr-sm col-3 q-mb-md full-width"
-              type="text"
-              v-model="formData.from"
-            >
-              <template v-slot:prepend>
-                <q-icon name="not_listed_location" />
-              </template>
-            </q-input>
-          </div>
-        </div>
+
         <div class="row align-center">
           <q-btn
             unelevated
             label="Create"
-            class="text-center"
+            class="text-center full-width"
             color="primary"
             size="md"
             type="submit"
@@ -215,8 +148,10 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
 import { useUserData } from "src/stores/users/store";
-const emit = defineEmits(["hideCreateDialog"]);
-
+// import { route } from "quasar/wrappers";
+import { useRoute, useRouter } from "vue-router";
+const emit = defineEmits(["hideCreateDialog", "updateClient"]);
+const route = useRoute();
 const codesStore = useCodeData();
 const userStore = useUserData();
 
@@ -234,59 +169,69 @@ const getCodesFunc = () => {
 
 const onSubmit = () => {
   var newToken = LocalStorage.getItem("jwt");
-  $q.loading.show();
-  api
-    .post(
-      "/api/members",
-      {
-        firstname: formData.firstname,
-        middlename: formData.middlename,
-        lastname: formData.lastname,
-        dob: formData.dob,
-        gender: formData.gender,
-        address: formData.address,
-        contact: formData.phone,
-        code: formData.code.label,
-        email: formData.email,
-        know: formData.from,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + newToken,
-        },
-      }
-    )
-    .then((response) => {
-      // console.log(response);
-      if (response.data.status == 200) {
-        setTimeout(() => {
-          $q.loading.hide();
-          $q.notify({
-            type: "positive",
-            icon: "save",
-            timeout: 1000,
-            position: "bottom",
-            message: response.data.message,
-          });
-          userStore.getAllMembers();
-          emit("hideCreateDialog");
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          $q.loading.hide();
-          $q.notify({
-            type: "negative",
-            icon: "error",
-            timeout: 1000,
-            position: "bottom",
-            message: response.data.message,
-          });
-        }, 2000);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
+  if (formData.phone.includes("+63") || formData.phone.includes("+")) {
+    $q.notify({
+      position: "top",
+      type: "negative",
+      timeout: 3000,
+      message: "Cp number should starts with 09",
     });
+  } else {
+    $q.loading.show();
+    api
+      .post(
+        "/api/members",
+        {
+          firstname: formData.firstname,
+          middlename: formData.middlename,
+          lastname: formData.lastname,
+          dob: formData.dob,
+          gender: formData.gender,
+          address: formData.address,
+          cp_number: formData.phone,
+          email: formData.email,
+          slug: route.params.slug,
+          branch: route.params.id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + newToken,
+          },
+        }
+      )
+      .then((response) => {
+        // console.log(response);
+        if (response.data.status == 200) {
+          setTimeout(() => {
+            $q.notify({
+              type: "positive",
+              icon: "save",
+              timeout: 3000,
+              position: "top",
+              message: response.data.message,
+            });
+            $q.loading.hide();
+            userStore.addNewMember(response.data.data);
+            emit("hideCreateDialog");
+            emit("updateClient");
+          }, 500);
+        } else {
+          setTimeout(() => {
+            $q.loading.hide();
+            $q.notify({
+              type: "negative",
+              icon: "error",
+              timeout: 3000,
+              position: "top",
+              message: response.data.message,
+            });
+          }, 3000);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 };
 onMounted(() => {
   getCodesFunc();

@@ -10,6 +10,7 @@ import discountIndex from "pages/branches/DiscountIndex.vue";
 import monitoringIndex from "pages/branches/MonitorIndex.vue";
 import settingsIndex from "pages/settingsIndex.vue";
 import ProductIndexVue from "pages/products/ProductIndex.vue";
+import ServicesIndex from "pages/services/ServicesIndex.vue";
 import ThemeColorPage from "pages/ThemeColorIndex.vue";
 import CompanyIndex from "pages/company/CompanyIndex.vue";
 import CompanyCreate from "pages/company/CreateCompany.vue";
@@ -19,6 +20,17 @@ import CashierCreate from "pages/cashier/createCashier.vue";
 import ServiceIndex from "pages/branches/ServiceIndex.vue";
 import branchStaffIndex from "pages/branches/StaffIndex.vue";
 import accountIndex from "pages/profile/ProfileIndex.vue";
+import ProfileUpdate from "pages/profile/ProfileUpdate.vue";
+import ProfileUpdateImage from "pages/profile/ChangeProfileImage.vue";
+import ChangeProfilePassword from "pages/profile/ChangeProfilePassword.vue";
+import BranchReportIndex from "pages/branches/BranchReportIndex.vue";
+import ProductRequest from "pages/branches/request/RequestIndex.vue";
+import BookingIndex from "pages/branches/booking/BookingIndex.vue";
+import ExpensesIndex from "pages/branches/ExpensesIndex.vue";
+import BenefitsIndex from "pages/branches/BenefitsIndex.vue";
+import LoanIndex from "pages/branches/LoanIndex.vue";
+import PayrollIndex from "pages/branches/PayrollIndex.vue";
+import PayrollCreate from "pages/branches/payroll/CreatePayroll.vue";
 const routes = [
   {
     path: "/",
@@ -26,19 +38,30 @@ const routes = [
     name: "dashboard",
     meta: {
       requiredAuth: true,
-      access: ["super-admin", "cashier", "manager", "member", "owner"],
+      access: ["super-admin"],
     },
     children: [
       {
         path: "/dashboard",
         component: () => import("pages/IndexPage.vue"),
-        name: "dashboard",
+        name: "dashboard-main",
       },
+    ],
+  },
+  {
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
+    name: "dashboard-index",
+    meta: {
+      requiredAuth: true,
+      access: ["super-admin", "cashier", "manager", "franchisee", "owner"],
+    },
+    children: [
       {
         path: "/:slug/dashboard",
         component: () => import("pages/IndexPage.vue"),
-        name: "dashboard-index",
-        access: ["super-admin", "owner", "cashier", "barber"],
+        name: "dashboard-index-slug",
+        access: ["super-admin", "cashier", "manager", "franchisee", "owner"],
       },
     ],
   },
@@ -53,9 +76,42 @@ const routes = [
     children: [
       {
         path: "/:slug/products",
-        // component: () => ProductIndexVue,
         component: () => import("pages/products/ProductIndex.vue"),
         name: "product-index",
+        access: ["super-admin", "owner"],
+      },
+    ],
+  },
+  {
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
+    name: "services-index",
+    meta: {
+      requiredAuth: true,
+      access: ["super-admin", "owner"],
+    },
+    children: [
+      {
+        path: "/:slug/services",
+        component: () => import("pages/services/ServicesIndex.vue"),
+        name: "services-index",
+        access: ["super-admin", "owner"],
+      },
+    ],
+  },
+  {
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
+    name: "staff-barber-index",
+    meta: {
+      requiredAuth: true,
+      access: ["super-admin", "owner"],
+    },
+    children: [
+      {
+        path: "/:slug/staff",
+        component: () => import("pages/staff/StaffIndex.vue"),
+        name: "staff-barber-index",
         access: ["super-admin", "owner"],
       },
     ],
@@ -70,7 +126,7 @@ const routes = [
     },
     children: [
       {
-        path: ":slug/supplies",
+        path: "/:slug/supplies",
         component: () => import("pages/supplies/SupplyIndex.vue"),
         name: "supply-index",
       },
@@ -199,7 +255,7 @@ const routes = [
     name: "users",
     meta: {
       requiredAuth: true,
-      access: ["super-admin", "manager"],
+      access: ["super-admin", "manager", "franchisee"],
     },
     children: [
       {
@@ -301,7 +357,7 @@ const routes = [
     name: "branch-cashier-create",
     meta: {
       requiredAuth: true,
-      access: ["super-admin", "owner", "manager", "cashier"],
+      access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
     },
     children: [
       {
@@ -353,6 +409,15 @@ const routes = [
         name: "branch-index",
       },
       {
+        path: ":slug/branches/:id/report",
+        component: BranchReportIndex,
+        name: "branch-report-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner"],
+        },
+      },
+      {
         path: ":slug/branches/:id/staff",
         component: branchStaffIndex,
         name: "branch-staff-index",
@@ -377,7 +442,7 @@ const routes = [
         name: "branch-cashier-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager", "cashier"],
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
         },
       },
       {
@@ -386,7 +451,7 @@ const routes = [
         name: "discount-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager"],
+          access: ["super-admin", "owner", "manager", "franchisee"],
         },
       },
 
@@ -396,7 +461,7 @@ const routes = [
         name: "service-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager"],
+          access: ["super-admin", "owner", "manager", "franchisee"],
         },
       },
 
@@ -406,9 +471,83 @@ const routes = [
         name: "branch-product-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager", "cashier"],
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
         },
       },
+      {
+        path: "/:slug/branches/:id/products/request",
+        component: ProductRequest,
+        name: "branch-product-request",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+
+      {
+        path: "/:slug/branches/:id/booking",
+        component: BookingIndex,
+        name: "branch-booking-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/client",
+        component: import("pages/users/member/MemberIndex.vue"),
+        name: "branch-client-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/expenses",
+        component: ExpensesIndex,
+        name: "branch-expenses-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/benefits",
+        component: BenefitsIndex,
+        name: "branch-benefits-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/loans",
+        component: LoanIndex,
+        name: "branch-loans-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/payroll",
+        component: PayrollIndex,
+        name: "branch-payroll-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/payroll/create",
+        component: PayrollCreate,
+        name: "branch-payroll-create",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee"],
+        },
+      },
+
       // {
       //   path: ":slug/branches/:id/monitoring",
       //   component: monitoringIndex,
@@ -431,6 +570,7 @@ const routes = [
         "super-admin",
         "owner",
         "manager",
+        "franchisee",
         "member",
         "barber",
         "cashier",
@@ -447,6 +587,58 @@ const routes = [
             "super-admin",
             "owner",
             "manager",
+            "franchisee",
+            "member",
+            "barber",
+            "cashier",
+          ],
+        },
+      },
+      {
+        path: "/:slug/accounts/profle/update",
+        component: ProfileUpdate,
+        name: "profile-update",
+        meta: {
+          requiredAuth: true,
+          access: [
+            "super-admin",
+            "owner",
+            "manager",
+            "franchisee",
+            "member",
+            "barber",
+            "cashier",
+          ],
+        },
+      },
+      {
+        path: "/:slug/accounts/profle/image/update",
+        component: ProfileUpdateImage,
+        name: "profile-update-image",
+        meta: {
+          requiredAuth: true,
+          access: [
+            "super-admin",
+            "owner",
+            "manager",
+            "franchisee",
+            "member",
+            "barber",
+            "cashier",
+          ],
+        },
+      },
+      {
+        path: "/:slug/accounts/profle/password/update",
+        component: ChangeProfilePassword,
+        name: "profile-update-password",
+        meta: {
+          requiredAuth: true,
+          access: [
+            "super-admin",
+            "owner",
+            "manager",
+            "franchisee",
             "member",
             "barber",
             "cashier",

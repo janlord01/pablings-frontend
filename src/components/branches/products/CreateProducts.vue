@@ -138,7 +138,7 @@ const route = useRoute();
 
 const emit = defineEmits(["hideCreateDialog"]);
 
-const productStore = useProductData();
+const productStore = useProductDatas();
 
 const codes = reactive([]);
 const $q = useQuasar();

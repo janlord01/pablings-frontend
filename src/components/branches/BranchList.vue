@@ -49,19 +49,263 @@
   <q-table
     v-else
     flat
+    grid
     :pagination="pagination"
-    class="q-pa-sm"
-    :class="$q.dark.isActive ? 'text-white bg-blue-grey-10' : 'text-dark'"
+    :class="$q.dark.isActive ? 'text-white bg-primary-10' : 'text-dark'"
     :rows="branchData.rowDatas"
     :columns="columns"
     row-key="id"
-    separator="cell"
+    separator="horizontal"
     :visible-columns="
       $q.screen.gt.xs
         ? ['name', 'code', 'number', 'address', 'action']
         : ['name', 'code', 'number', 'address', 'action']
     "
   >
+    <template v-slot:item="props">
+      <q-card
+        class="my-card row q-mb-md q-mr-sm"
+        :style="$q.screen.gt.sm ? 'width: 47%' : 'width: 100%'"
+      >
+        <q-card-section>
+          <div
+            :style="$q.screen.gt.sm ? 'font-size: 14px;' : 'font-size: 10px'"
+          >
+            <span class="text-bold">Branch Name: </span><br />{{
+              props.row.name
+            }}
+          </div>
+          <div
+            :style="$q.screen.gt.sm ? 'font-size: 14px;' : 'font-size: 10px'"
+          >
+            <span class="text-bold">Branch Code:</span> <br />
+            {{ props.row.code }}
+          </div>
+          <div
+            :style="$q.screen.gt.sm ? 'font-size: 14px;' : 'font-size: 10px'"
+          >
+            <span class="text-bold">Branch Address:</span> <br />
+            {{ props.row.address }}
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-pt-none full-width">
+          <q-btn
+            :disable="props.row.status != 1"
+            label="edit"
+            color="primary"
+            icon="edit"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            @click="EditBranchDialog(props.row.id)"
+          />
+
+          <q-btn
+            :disable="props.row.status != 1"
+            label="report"
+            color="primary"
+            icon="equalizer"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/report'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Staff"
+            icon="people"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            @click="assignBranchFunc(props.row.id)"
+          />
+
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="product"
+            icon="fastfood"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/products'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="voucher"
+            icon="discount"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/discount'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Services"
+            icon="handyman"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/services'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            icon="calendar_month"
+            label="booking"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/booking'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Expenses"
+            icon="attach_money"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/expenses'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Benefits"
+            icon="workspaces"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/benefits'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Loans"
+            icon="credit_card"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/loans'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            label="Payroll"
+            icon="account_balance"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/payroll'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
+            icon="shopping_cart"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            label="POS"
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/cashier'
+            "
+          />
+          <q-btn
+            v-if="
+              userStore.userDetails.roles.find(
+                (role) => role === 'super-admin'
+              ) && props.row.status == 1
+            "
+            color="negative"
+            label="Deactivate"
+            icon="do_not_disturb"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 3px 3px 0;'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            @click="changeStatus(props.row.id, props.row.status)"
+          />
+          <q-btn
+            v-if="
+              userStore.userDetails.roles.find(
+                (role) => role === 'super-admin'
+              ) && props.row.status == 0
+            "
+            color="green"
+            label="Activate"
+            icon="check_circle"
+            size="sm"
+            @click="changeStatus(props.row.id, props.row.status)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <!-- :grid="!$q.screen.gt.xs" -->
     <template v-slot:body="props">
       <q-tr :props="props">
@@ -102,14 +346,33 @@
           />
           <q-btn
             v-if="props.row.status == 1"
+            label="report"
+            color="green"
+            icon="bar_chart"
+            size="sm"
+            :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/report'
+            "
+          />
+          <q-btn
+            v-else
+            disable
+            label="report"
+            color="green"
+            icon="bar_chart"
+            size="sm"
+          />
+          <q-btn
+            v-if="props.row.status == 1"
             color="purple"
             label="staff"
             icon="group"
             size="sm"
-            :to="
-              '/' + route.params.slug + '/branches/' + props.row.id + '/staff'
-            "
+            @click="assignBranchFunc(props.row.id)"
           />
+          <!-- :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/staff'
+            " -->
           <q-btn
             v-else
             disable
@@ -117,10 +380,11 @@
             label="staff"
             icon="group"
             size="sm"
-            :to="
-              '/' + route.params.slug + '/branches/' + props.row.id + '/staff'
-            "
+            @click="assignBranchFunc(props.row.id)"
           />
+          <!-- :to="
+              '/' + route.params.slug + '/branches/' + props.row.id + '/staff'
+            " -->
           <!-- <q-btn
             v-if="props.row.status == 1"
             color="green"
@@ -142,8 +406,8 @@
           <q-btn
             v-if="props.row.status == 1"
             color="orange"
-            label="inventory"
-            icon="inventory"
+            label="product"
+            icon="fastfood"
             size="sm"
             :to="
               '/' +
@@ -157,8 +421,8 @@
             v-else
             disable
             color="orange"
-            label="inventory"
-            icon="inventory"
+            label="product"
+            icon="fastfood"
             size="sm"
             :to="'/branches/' + props.row.id + '/products'"
           />
@@ -187,7 +451,7 @@
           />
           <q-btn
             v-if="props.row.status == 1"
-            color="blue-grey"
+            color="primary"
             icon="content_cut"
             label="services"
             size="sm"
@@ -202,7 +466,7 @@
           <q-btn
             v-else
             disable
-            color="blue-grey"
+            color="primary"
             icon="content_cut"
             label="services"
             size="sm"
@@ -214,27 +478,10 @@
               '/services'
             "
           />
-          <!-- <q-btn
-            v-if="props.row.status == 1"
-            color="indigo"
-            icon="calendar_month"
-            label="booking"
-            size="sm"
-            :to="'/branches/' + props.row.id + '/discount'"
-          />
-          <q-btn
-            v-else
-            disable
-            color="indigo"
-            icon="calendar_month"
-            label="booking"
-            size="sm"
-            :to="'/branches/' + props.row.id + '/discount'"
-          /> -->
           <q-btn
             v-if="props.row.status == 1"
             color="secondary"
-            label="cashier"
+            label="POS"
             icon="shopping_cart"
             size="sm"
             :to="
@@ -245,7 +492,7 @@
             v-else
             disable
             color="secondary"
-            label="cashier"
+            label="POS"
             icon="shopping_cart"
             size="sm"
             :to="
@@ -324,8 +571,13 @@ const $q = useQuasar();
 
 const branchData = useBranchData();
 const showEditDialog = ref(false);
+const showStaffDialog = ref(false);
 const showAssignDialog = ref(false);
 const branch_id = ref(null);
+const showStaffDialogFunc = (id) => {
+  showStaffDialog.value = true;
+  branch_id.value = id;
+};
 const EditBranchDialog = (id) => {
   branch_id.value = "";
   showEditDialog.value = true;
@@ -447,16 +699,6 @@ const columns = reactive([
     align: "left",
   },
 ]);
-const copyText = (code) => {
-  navigator.clipboard.writeText(code);
-  $q.notify({
-    type: "positive",
-    color: "positive",
-    timeout: 1000,
-    position: "top",
-    message: "Copy Code: " + code,
-  });
-};
 onMounted(() => {
   //   branchData.getAllStaff();
 });

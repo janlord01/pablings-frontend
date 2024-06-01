@@ -116,13 +116,14 @@
 import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useProductDatas } from "src/stores/branch/productStores";
 
+import { useCashierData } from "src/stores/branch/cashierStore";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
 import { useUserData } from "src/stores/users/store";
 import { useRoute, useRouter } from "vue-router";
 import { useCompanyData } from "stores/company/store";
-
+const cashierStore = useCashierData();
 const companyStore = useCompanyData();
 const company = ref(null);
 const route = useRoute();
@@ -130,7 +131,7 @@ const router = useRouter();
 const props = defineProps(["companyId"]);
 const emit = defineEmits(["hideEditDialog"]);
 
-const productStore = useProductData();
+const productStore = useProductDatas();
 
 const codes = reactive([]);
 const $q = useQuasar();

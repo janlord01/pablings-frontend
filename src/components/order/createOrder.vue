@@ -18,15 +18,9 @@
         <div class="row q-col-gutter-none relative-position">
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-12 q-mr-sm q-mb-md' : 'full-width'
+              $q.screen.gt.md ? 'col-md-12 q-mr-sm q-mb-md' : 'full-width '
             "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
-          ></div>
-          <div
-            :class="
-              $q.screen.gt.xs ? 'col-md-12 q-mr-sm q-mb-md' : 'full-width '
-            "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:20px;'"
+            :style="$q.screen.gt.md ? '' : 'margin-bottom:20px;'"
           >
             <q-select
               filled
@@ -48,9 +42,9 @@
           </div>
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.md ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
             "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+            :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
           >
             <q-input
               filled
@@ -84,9 +78,9 @@
 
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.md ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
             "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:20px;'"
+            :style="$q.screen.gt.md ? '' : 'margin-bottom:20px;'"
           >
             <q-input
               filled
@@ -117,15 +111,16 @@
             </q-input>
           </div>
           <div
-            :class="$q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'full-width row'"
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+            :class="$q.screen.gt.md ? 'col-md-5 q-mr-sm' : 'full-width row'"
+            :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
           >
             <q-btn
               icon="fastfood"
-              label="select products"
+              :label="$q.screen.gt.md ? 'select products' : 'Products'"
               size="sm"
               color="blue"
-              class="q-mr-sm col-5"
+              class="q-mr-sm"
+              :style="$q.screen.gt.md ? '' : 'font-size:10px;'"
               @click="selectFunc"
             />
             <!-- <q-btn
@@ -139,18 +134,92 @@
           </div>
           <q-table
             flat
+            :grid="!$q.screen.gt.md"
             :pagination="pagination"
-            class="q-pa-sm"
             :rows="orderStore.rowTempProducts"
             :columns="columns"
             row-key="id"
             separator="cell"
             :visible-columns="
-              $q.screen.gt.xs
+              $q.screen.gt.md
                 ? ['product', 'qty', 'remaining', 'msrp', 'srp', 'action']
                 : ['product', 'qty', 'remaining', 'msrp', 'srp', 'action']
             "
           >
+            <template v-slot:item="props" v-if="!$q.screen.gt.md">
+              <q-card class="my-card row q-mb-md q-mr-sm" style="width: 45%">
+                <q-card-section>
+                  <div style="font-size: 12px">
+                    {{ props.row.product.label }}
+                  </div>
+
+                  <div style="font-size: 10px">
+                    <span class="text-bold">Qty: </span> <br />{{
+                      props.row.qty
+                    }}
+                    <q-btn flat size="sm" color="blue">Edit</q-btn>
+                    <q-popup-edit v-model="props.row.qty" v-slot="scope">
+                      <q-input
+                        v-model="scope.value"
+                        dense
+                        autofocus
+                        counter
+                        @keyup.enter="scope.set"
+                      />
+                    </q-popup-edit>
+                  </div>
+                  <div style="font-size: 10px">
+                    <span
+                      ><span class="text-bold">Remaining: </span> <br />
+                      {{ props.row.remaining_qty }}
+                    </span>
+                    <br />
+
+                    <span
+                      ><span class="text-bold">MSRP: </span> <br />
+                      {{ props.row.msrp }}
+
+                      <q-btn flat size="sm" color="blue">Edit</q-btn>
+                      <q-popup-edit v-model="props.row.msrp" v-slot="scope">
+                        <q-input
+                          v-model="scope.value"
+                          dense
+                          autofocus
+                          counter
+                          @keyup.enter="scope.set"
+                        />
+                      </q-popup-edit>
+                    </span>
+                    <br />
+                    <span
+                      ><span class="text-bold">SRP: </span> <br />
+                      {{ props.row.srp }}
+
+                      <q-btn flat size="sm" color="blue">Edit</q-btn>
+                      <q-popup-edit v-model="props.row.srp" v-slot="scope">
+                        <q-input
+                          v-model="scope.value"
+                          dense
+                          autofocus
+                          counter
+                          @keyup.enter="scope.set"
+                        />
+                      </q-popup-edit>
+                    </span>
+                    <br />
+                  </div>
+                </q-card-section>
+
+                <q-card-actions class="q-pt-none">
+                  <q-btn
+                    color="red"
+                    icon="delete"
+                    size="sm"
+                    @click="DeleteDialog(props.row.id)"
+                  />
+                </q-card-actions>
+              </q-card>
+            </template>
             <template #body="props">
               <q-tr :props="props">
                 <q-td key="product" :props="props">
@@ -175,9 +244,27 @@
 
                 <q-td key="msrp" :props="props">
                   {{ props.row.msrp }}
+                  <q-popup-edit v-model="props.row.msrp" v-slot="scope">
+                    <q-input
+                      v-model="scope.value"
+                      dense
+                      autofocus
+                      counter
+                      @keyup.enter="scope.set"
+                    />
+                  </q-popup-edit>
                 </q-td>
                 <q-td key="srp" :props="props">
                   {{ props.row.srp }}
+                  <q-popup-edit v-model="props.row.srp" v-slot="scope">
+                    <q-input
+                      v-model="scope.value"
+                      dense
+                      autofocus
+                      counter
+                      @keyup.enter="scope.set"
+                    />
+                  </q-popup-edit>
                 </q-td>
 
                 <q-td key="action" :props="props">
@@ -194,7 +281,7 @@
         </div>
 
         <div class="row q-col-gutter-none q-mt-md relative-position">
-          <div :class="$q.screen.gt.xs ? 'col-md-11 q-mr-sm' : 'full-width'">
+          <div :class="$q.screen.gt.md ? 'col-md-11 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Remarks"
@@ -210,11 +297,11 @@
           </div>
           <div
             :class="
-              $q.screen.gt.xs
+              $q.screen.gt.md
                 ? 'col-md-3 q-mb-md q-mr-sm'
                 : 'col-sm-1 full-width'
             "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+            :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
           >
             <q-select
               filled
@@ -234,7 +321,7 @@
             unelevated
             label="Create"
             class="text-center"
-            :class="$q.screen.gt.xs ? '' : 'q-mt-md'"
+            :class="$q.screen.gt.md ? '' : 'q-mt-md'"
             color="blue"
             size="md"
             type="submit"
@@ -365,7 +452,6 @@ const columns = reactive([
     field: "msrp",
     align: "left",
     sortable: true,
-    classes: "bg-grey-4",
   },
   {
     name: "srp",
@@ -373,7 +459,6 @@ const columns = reactive([
     field: "srp",
     align: "left",
     sortable: true,
-    classes: "bg-grey-4",
   },
   {
     name: "mfg",
@@ -545,6 +630,7 @@ const formData = reactive({
   orderArrived: null,
   remark: null,
   status: null,
+  description: "",
 });
 
 const getActiveCodes = () => {};

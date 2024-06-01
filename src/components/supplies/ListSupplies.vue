@@ -4,12 +4,13 @@
     class="q-pa-sm"
     :rows="supplyStore.rowDatas"
     :columns="columns"
+    flat
     row-key="id"
     separator="cell"
     :visible-columns="
       $q.screen.gt.xs
-        ? ['id', 'name', 'description', 'msrp', 'action']
-        : ['id', 'name', 'description', 'msrp', 'action']
+        ? ['name', 'description', 'action']
+        : ['name', 'description', 'action']
     "
   >
     <template #body="props">

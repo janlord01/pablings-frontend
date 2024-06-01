@@ -1,8 +1,8 @@
 <template>
-  <q-card style="max-width: 800px; width: 800px; min-height: 400px">
+  <q-card style="max-width: 500px; width: 500px; min-height: 230px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
     <q-toolbar class="bg-blue text-white">
-      <q-toolbar-title> Create Service </q-toolbar-title>
+      <q-toolbar-title> Add Service </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
     <q-card-section>
@@ -12,22 +12,28 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div :class="$q.screen.gt.xs ? 'col-5 q-mr-sm' : 'full-width'">
-            <q-input
+          <div :class="$q.screen.gt.xs ? 'full-width' : 'full-width'">
+            <q-select
               filled
-              label="Service Name*"
-              name="code"
-              class="q-mr-sm col-3 full-width"
-              type="text"
-              v-model="formData.name"
-              :rules="[(val) => !!val || 'Field is required']"
+              v-model="service"
+              use-input
+              input-debounce="0"
+              label="Select Service"
+              :options="options"
+              @filter="filterFn"
+              behavior="menu"
             >
-              <template v-slot:prepend>
-                <q-icon name="fastfood" />
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
               </template>
-            </q-input>
+            </q-select>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
+        </div>
+        <!-- <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Price*"
@@ -43,17 +49,7 @@
             </q-input>
           </div>
           <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
-            <!-- <q-input
-              filled
-              label="Time Duration*"
-              class="q-mr-sm col-3 full-width"
-              v-model="formData.timeDuration"
-              :rules="[(val) => !!val || 'Price is required']"
-            >
-              <template v-slot:prepend>
-                <q-icon name="access_time" />
-              </template>
-            </q-input> -->
+
 
             <q-select
               filled
@@ -98,13 +94,9 @@
               </template>
             </q-input>
           </div>
-        </div>
-        <!-- <q-separator color="orange" inset />
-        <div class="row q-col-gutter-none relative-position">
-          <q-toggle v-model="formData.sale" label="On Sale?" />
         </div> -->
 
-        <div
+        <!-- <div
           class="row q-col-gutter-none relative-position q-mb-lg"
           v-if="formData.sale"
         >
@@ -119,13 +111,13 @@
               <q-icon name="attach_money" />
             </template>
           </q-input>
-        </div>
+        </div> -->
 
         <div class="row align-center">
           <q-btn
             unelevated
-            label="Create"
-            class="text-center"
+            label="Select"
+            class="text-center q-mt-sm"
             color="blue"
             size="md"
             type="submit"
@@ -149,135 +141,49 @@ const route = useRoute();
 
 const servicesStore = useServicesData();
 const emit = defineEmits(["hideCreateDialog"]);
-
+const service = ref("");
 const productStore = useProductDatas();
 
-const codes = reactive([]);
 const $q = useQuasar();
-const isPwd = ref(true);
-const isPwdCon = ref(true);
+const stringOptions = reactive([]);
+const options = ref(stringOptions);
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(() => {
+      options.value = stringOptions;
+    });
+    return;
+  }
 
-const timeDuration = reactive([
-  "30mins",
-  "1hr",
-  "1hr & 30mins",
-  "2hrs",
-  "2hrs $ 30mins",
-  "3hrs",
-  "3hrs & 30mins",
-  "4hrs",
-  "4hrs & 30mins",
-  "5hrs",
-  "5hrs & 30mins",
-  "6hrs",
-  "6hrs & 30mins",
-  "7hrs",
-  "7hrs & 30mins",
-  "8hrs",
-  // {
-  //   label: "30mins",
-  //   value: 0,
-  // },
-  // {
-  //   label: "1hr",
-  //   value: 1,
-  // },
-  // {
-  //   label: "1hr & 30mins",
-  //   value: 2,
-  // },
-  // {
-  //   label: "2hrs",
-  //   value: 3,
-  // },
-
-  // {
-  //   label: "2hrs $ 30mins",
-  //   value: 4,
-  // },
-  // {
-  //   label: "3hrs",
-  //   value: 5,
-  // },
-
-  // {
-  //   label: "3hrs & 30mins",
-  //   value: 6,
-  // },
-  // {
-  //   label: "4hrs",
-  //   value: 7,
-  // },
-  // {
-  //   label: "4hrs & 30mins",
-  //   value: 8,
-  // },
-  // {
-  //   label: "5hrs",
-  //   value: 9,
-  // },
-  // {
-  //   label: "5hrs & 30mins",
-  //   value: 10,
-  // },
-  // {
-  //   label: "6hrs",
-  //   value: 11,
-  // },
-  // {
-  //   label: "6hrs & 30mins",
-  //   value: 12,
-  // },
-  // {
-  //   label: "7hrs",
-  //   value: 13,
-  // },
-  // {
-  //   label: "7hrs & 30mins",
-  //   value: 14,
-  // },
-  // {
-  //   label: "8hrs",
-  //   value: 15,
-  // },
-]);
-
-// const getCodesFunc = () => {
-//   Object.entries(codesStore.rowDatas).map(([key, val]) => {
-//     codes.push({
-//       label: val.code,
-//       value: val.id,
-//     });
-//   });
-// };
-
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = stringOptions.filter(
+      (v) => v.label.toLowerCase().indexOf(needle) > -1
+    );
+  });
+};
 const onSubmit = () => {
   var newToken = LocalStorage.getItem("jwt");
   $q.loading.show();
 
-  var fileData = new FormData();
-  fileData.append("image", formData.image != null ? formData.image[0] : null);
-  fileData.append("service_name", formData.name);
-  fileData.append("service_descr", formData.description);
-  fileData.append("service_price", formData.price);
-  fileData.append("time_duration", formData.timeDuration);
-  fileData.append("branch_id", route.params.id);
-  fileData.append("_method", "POST");
+  // var fileData = new FormData();
+  // fileData.append("image", formData.image != null ? formData.image[0] : null);
+  // fileData.append("service_name", formData.name);
+  // fileData.append("service_descr", formData.description);
+  // fileData.append("service_price", formData.price);
+  // fileData.append("time_duration", formData.timeDuration);
+  // fileData.append("branch_id", route.params.id);
+  // fileData.append("_method", "POST");
 
   api
     .post(
-      "/api/services",
-      fileData,
-      // {
-      //   name: formData.name,
-      //   description: formData.description,
-      //   price: formData.price,
-      //   qty: formData.qty,
-      //   sale: formData.sale,
-      //   sale_price: formData.sale_price,
-      //   img: formData.img,
-      //   branch_id: route.params.id,
-      // },
+      "/api/services/assign/branch",
+      // fileData,
+      {
+        service: service.value != "" ? service.value.value : "",
+        slug: route.params.slug,
+        branch: route.params.id,
+      },
       {
         headers: {
           Authorization: "Bearer " + newToken,
@@ -296,7 +202,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          servicesStore.getAllServices(route.params.id);
+          servicesStore.getAllServicesBranch(route.params.id);
           emit("hideCreateDialog");
         }, 2000);
       } else {
@@ -319,6 +225,12 @@ const onSubmit = () => {
 onMounted(() => {
   //   getCodesFunc();
   // console.log(codes);
+  Object.entries(servicesStore.rowServiceDatas).map(([key, val]) => {
+    stringOptions.push({
+      value: val.id,
+      label: val.service_name,
+    });
+  });
 });
 
 const formData = reactive({
@@ -336,4 +248,3 @@ const getActiveCodes = () => {};
   margin-bottom: -10px;
 }
 </style>
-src/stores/branch/productStores

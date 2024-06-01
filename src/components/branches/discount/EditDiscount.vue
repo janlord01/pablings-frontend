@@ -1,7 +1,7 @@
 <template>
   <q-card style="max-width: 500px; width: 500px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="bg-blue text-white">
       <q-toolbar-title> Update Discount </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
@@ -17,11 +17,7 @@
             :options="['Percentage', 'Amount']"
             v-model="formData.type"
             label="Discount Type"
-            :class="
-              $q.screen.gt.sm
-                ? 'q-mr-sm full-width q-mt-md '
-                : 'full-width q-mb-md'
-            "
+            class="q-mb-sm full-width"
           >
             <template v-slot:prepend>
               <q-icon name="emoji_symbols" />
@@ -32,7 +28,7 @@
             v-model="formData.description"
             label="Name"
             name="code"
-            class="q-mr-sm col-3 q-mt-md full-width"
+            class="q-mb-sm full-width"
             type="text"
           >
             <template v-slot:prepend>
@@ -44,7 +40,7 @@
             v-model="formData.number"
             :label="formData.type == 'Amount' ? 'Amount' : 'Number'"
             name="code"
-            class="q-mr-sm col-3 q-mt-md full-width"
+            class="q-mb-sm full-width"
             type="number"
           >
             <template v-slot:prepend>
@@ -59,7 +55,7 @@
             unelevated
             label="Update"
             class="text-center"
-            color="primary"
+            color="blue"
             size="md"
             type="submit"
           />

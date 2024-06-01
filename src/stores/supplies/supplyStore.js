@@ -55,17 +55,18 @@ export const useSupplyData = defineStore("supplyStore", {
           console.log(error);
         });
     },
-    async getAllProducts() {
+    async getAllProducts(payload) {
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get("api/products", {
+        .get(`api/${payload}/supply`, {
           headers: {
             Authorization: "Bearer " + newToken,
           },
         })
         .then((response) => {
-          //   console.log(response);
-          this.rowDatas = response.data.data;
+          console.log(response);
+          this.tempRowDatas = response.data.data;
+          this.rowDatas = this.tempRowDatas;
         })
         .catch((error) => {
           console.log(error);
@@ -199,16 +200,14 @@ export const useSupplyData = defineStore("supplyStore", {
     },
 
     onSearch(payload) {
-      if (payload == "" || payload == null) {
-        this.getAllProducts();
+      if (payload[0] == "" || payload[0] == null) {
+        // this.getAllProducts(payload[1]);
+        this.rowDatas = this.tempRowDatas;
       } else {
-        const query = payload != null ? payload.toLowerCase() : "";
-
-        this.tempRowDatas = this.rowDatas;
-        this.rowDatas = [];
-        this.rowDatas = this.tempRowDatas.filter((product) => {
-          return Object.values(product).some((word) =>
-            String(word).toLowerCase().includes(query)
+        const needle = payload[0].toLowerCase();
+        this.rowDatas = this.tempRowDatas.filter((v) => {
+          return Object.values(v).some(
+            (word) => String(word).toLowerCase().indexOf(needle) > -1
           );
         });
       }

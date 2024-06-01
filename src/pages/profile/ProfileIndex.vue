@@ -26,7 +26,11 @@
       >
         <q-item-label header>Account</q-item-label>
 
-        <q-item clickable v-ripple>
+        <q-item
+          clickable
+          v-ripple
+          :to="'/' + route.params.slug + '/accounts/profle/update'"
+        >
           <q-item-section avatar top>
             <q-avatar icon="account_circle" color="grey-5" text-color="white" />
           </q-item-section>
@@ -41,7 +45,11 @@
         </q-item>
         <q-separator spaced />
 
-        <q-item clickable v-ripple>
+        <q-item
+          clickable
+          v-ripple
+          :to="'/' + route.params.slug + '/accounts/profle/image/update'"
+        >
           <q-item-section avatar top>
             <q-avatar icon="camera_alt" color="grey-5" text-color="white" />
           </q-item-section>
@@ -56,7 +64,11 @@
         </q-item>
         <q-separator spaced />
 
-        <q-item clickable v-ripple>
+        <q-item
+          clickable
+          v-ripple
+          :to="'/' + route.params.slug + '/accounts/profle/password/update'"
+        >
           <q-item-section avatar top>
             <q-avatar icon="password" color="grey-5" text-color="white" />
           </q-item-section>
@@ -73,7 +85,7 @@
 
         <q-item-label header>Help</q-item-label>
 
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple @click="notYetAvailable">
           <q-item-section avatar top>
             <q-avatar icon="assignment" color="grey-5" text-color="white" />
           </q-item-section>
@@ -88,7 +100,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple @click="notYetAvailable">
           <q-item-section avatar top>
             <q-avatar icon="help" color="grey-5" text-color="white" />
           </q-item-section>
@@ -103,7 +115,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple @click="notYetAvailable">
           <q-item-section avatar top>
             <q-avatar icon="star" color="grey-5" text-color="white" />
           </q-item-section>
@@ -144,6 +156,7 @@ const mainStore = useMainStoreData();
 const codesStore = useCodeData();
 const userStore = useUserData();
 
+const $q = useQuasar();
 const searchUser = ref(null);
 const updateImageDialog = ref(false);
 const name = ref(null);
@@ -152,7 +165,14 @@ const newToken = ref(LocalStorage.getItem("jwt"));
 const onSubmit = () => {
   // userStore.onSearchStaff(searchUser.value);
 };
-
+const notYetAvailable = () => {
+  $q.notify({
+    type: "warning",
+    timeout: 3000,
+    position: "center",
+    message: "Not yet available!",
+  });
+};
 const viewUpdateLogo = () => {
   updateImageDialog.value = true;
 };

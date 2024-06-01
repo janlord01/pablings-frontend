@@ -9,13 +9,18 @@ export const useOrderData = defineStore("orderStore", {
     rowDatasOwner: [],
     rowTempProducts: [],
     skeleton: true,
+    rowRequest: [],
+    rowTempRequest: [],
   }),
   getters: {},
   actions: {
     async getAllOrder(payload) {
+      Loading.show();
       this.skeleton = true;
       this.tempRowDatas = [];
       this.rowDatas = [];
+      this.rowRequest = [];
+      this.rowTempRequest = [];
       var newToken = LocalStorage.getItem("jwt");
       await api
         .get(`/api/${payload}/order`, {
@@ -24,14 +29,19 @@ export const useOrderData = defineStore("orderStore", {
           },
         })
         .then((response) => {
-          // console.log(response);
+          console.log(response);
 
           // if (response.data.data)
           if (response.status === 200) {
-            this.tempRowDatas = response.data.data;
+            setTimeout(() => {
+              this.tempRowDatas = response.data.data;
+              this.rowDatas = this.tempRowDatas;
 
-            this.rowDatas = this.tempRowDatas;
-            this.skeleton = false;
+              this.rowTempRequest = response.data.requestProduct;
+              this.rowRequest = this.rowTempRequest;
+              this.skeleton = false;
+              Loading.hide();
+            }, 1000);
           }
           // }
         })

@@ -1,58 +1,11 @@
 <template>
-  <q-markup-table v-if="orderStore.skeleton">
-    <thead>
-      <tr>
-        <th class="text-left" style="width: 150px">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-        <th class="text-right">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-        <th class="text-right">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-        <th class="text-right">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-        <th class="text-right">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-        <th class="text-right">
-          <q-skeleton animation="blink" type="text" />
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr v-for="n in 5" :key="n">
-        <td class="text-left">
-          <q-skeleton animation="blink" type="text" width="85px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton animation="blink" type="text" width="50px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton animation="blink" type="text" width="35px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton animation="blink" type="text" width="65px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton animation="blink" type="text" width="25px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton animation="blink" type="text" width="85px" />
-        </td>
-      </tr>
-    </tbody>
-  </q-markup-table>
   <q-table
-    v-else
     flat
+    grid
     :pagination="pagination"
-    class="q-pa-sm"
-    :rows="orderStore.rowDatas"
+    :rows="orderStore.rowRequest"
     :columns="columns"
+    title="Request Order"
     row-key="id"
     separator="cell"
     :visible-columns="
@@ -77,6 +30,166 @@
           ]
     "
   >
+    <template v-slot:item="props">
+      <q-card
+        v-if="props.row.status == 'Request'"
+        class="my-card row q-mb-md q-mr-sm"
+        style="width: 47%"
+      >
+        <q-card-section>
+          <div style="font-size: 12px">
+            <span class="text-bold">Branch: </span><br />{{ props.row.name }}
+          </div>
+          <div style="font-size: 12px">
+            <span class="text-bold">Description: </span><br /><span
+              v-html="props.row.description"
+            ></span>
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Status: </span>
+            <q-chip
+              size="sm"
+              class="text-white"
+              style="font-size: 8px"
+              :color="
+                props.row.status == 'Request'
+                  ? 'blue'
+                  : props.row.status == 'Order Arrived'
+                  ? 'green'
+                  : props.row.status == 'Order Placed'
+                  ? 'blue'
+                  : props.row.status == 'In Transit'
+                  ? 'orange'
+                  : 'red'
+              "
+              >{{ props.row.status }}</q-chip
+            >
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-pt-none full-width">
+          <q-btn
+            color="blue"
+            label="Proccess"
+            size="sm"
+            @click="EditDialog(props.row.id)"
+          />
+          <q-btn
+            color="red"
+            label="delete"
+            size="sm"
+            @click="DeleteDialog(props.row.id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
+  </q-table>
+  <q-table
+    flat
+    grid
+    :pagination="pagination"
+    :rows="orderStore.rowDatas"
+    :columns="columns"
+    title="Process Order"
+    row-key="id"
+    separator="cell"
+    :visible-columns="
+      $q.screen.gt.xs
+        ? [
+            'id',
+            'branch',
+            'order_date',
+            'order_arrived',
+            'status',
+            'remarks',
+            'action',
+          ]
+        : [
+            'id',
+            'branch',
+            'order_date',
+            'order_arrived',
+            'status',
+            'remarks',
+            'action',
+          ]
+    "
+  >
+    <template v-slot:item="props">
+      <q-card class="my-card row q-mb-md q-mr-sm" style="width: 47%">
+        <q-card-section>
+          <div style="font-size: 12px">
+            <span class="text-bold">Branch: </span><br />{{ props.row.name }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Order Date:</span> <br />
+            {{ date.formatDate(props.row.order_date, "MMMM DD, YYYY") }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Order Arrived: </span><br />{{
+              date.formatDate(props.row.order_arrived, "MMMM DD, YYYY")
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Remarks: </span><br />{{
+              props.row.remarks
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Status: </span>
+            <q-chip
+              v-if="props.row.status === 'Order Placed'"
+              color="blue"
+              text-color="white"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else-if="props.row.status === 'In Transit'"
+              color="orange"
+              text-color="white"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else-if="props.row.status === 'Order Arrived'"
+              color="green"
+              size="sm"
+              class="q-ma-none"
+              style="font-size: 8px"
+              text-color="white"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else
+              color="red"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              text-color="white"
+              >{{ props.row.status }}</q-chip
+            >
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-pt-none full-width">
+          <q-btn
+            color="blue"
+            label="edit"
+            size="sm"
+            @click="EditDialog(props.row.id)"
+          />
+          <q-btn
+            color="red"
+            label="delete"
+            size="sm"
+            @click="DeleteDialog(props.row.id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
@@ -265,8 +378,9 @@ const capturedImg = (id) => {
 };
 
 const pagination = reactive({
-  sortBy: "id",
+  sortBy: "created_at",
   rowsPerPage: 10,
+  sortOrder: "da",
 });
 const columns = reactive([
   {

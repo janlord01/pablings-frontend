@@ -96,6 +96,8 @@ const getBranchDiscounts = async () => {
 
 const AddDiscount = () => {
   if (discount.value != null) {
+    console.log("added");
+
     cashierStore.applyDiscount(discount.value);
     emit("hideDiscountDialog");
   } else {

@@ -12,12 +12,12 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-5 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="First Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.firstname"
             >
@@ -26,12 +26,12 @@
               </template>
             </q-input>
           </div>
-          <div class="col-2 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-2 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Middle Name"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.middlename"
             >
@@ -40,12 +40,12 @@
               </template> -->
             </q-input>
           </div>
-          <div class="col-4">
+          <div :class="$q.screen.gt.xs ? 'col-4' : 'full-width'">
             <q-input
               filled
               label="Last Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.lastname"
             >
@@ -56,12 +56,13 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-4 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-4 q-mr-sm' : 'full-width'">
             <q-input
               filled
               v-model="formData.dob"
               mask="date"
               label="Birthday*"
+              class="q-mb-sm"
             >
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
@@ -85,25 +86,25 @@
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-4 q-mr-sm' : 'full-width'">
             <q-select
               filled
               :options="['Male', 'Female']"
               label="Gender*"
+              class="q-mb-sm"
               v-model="formData.gender"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
             >
               <template v-slot:prepend>
                 <q-icon name="wc" />
               </template>
             </q-select>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Phone #*"
               name="phone"
-              class="q-mr-sm col-3 q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.phone"
             >
@@ -113,13 +114,13 @@
             </q-input>
           </div>
         </div>
-        <div class="row q-col-gutter-none relative-position q-mb-md">
-          <div class="col-12 q-pr-xl">
+        <div class="row q-col-gutter-none relative-position">
+          <div :class="$q.screen.gt.xs ? 'full-width q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Address*"
               name="addresss"
-              class="q-mr-sm col-3 full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.address"
             >
@@ -130,13 +131,13 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position q-mb-md">
-          <div class="col-5">
+          <div :class="$q.screen.gt.xs ? 'col-5 q-mr-sm' : 'full-width'">
             <q-select
               filled
               :options="['manager', 'cashier', 'barber']"
               label="Role*"
+              class="q-mb-sm"
               v-model="formData.role"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
             >
               <template v-slot:prepend>
                 <q-icon name="handyman" />
@@ -152,7 +153,7 @@
               filled
               label="Email Address*"
               name="email"
-              class="q-mb-md full-width"
+              class="q-mb-sm"
               type="email"
               v-model="formData.email"
             >
@@ -166,7 +167,7 @@
               filled
               label="Password*"
               name="email"
-              class="q-mb-md full-width"
+              class="q-mb-sm"
               :type="isPwd ? 'password' : 'text'"
               v-model="formData.password"
             >
@@ -187,7 +188,7 @@
               filled
               label="Password Confirmation"
               name="email"
-              class="q-mb-md full-width"
+              class="q-mb-md"
               :type="isPwdCon ? 'password' : 'text'"
               v-model="formData.password_confirmation"
             >
@@ -204,22 +205,6 @@
             </q-input>
           </div>
         </div>
-        <!-- <div class="row q-col-gutter-none relative-position">
-          <div class="col-12 q-mr-sm q-pr-xl">
-            <q-input
-              filled
-              label="From what source did you know about BeeFit?"
-              name="code"
-              class="q-mr-sm col-3 q-mb-md full-width"
-              type="text"
-              v-model="formData.from"
-            >
-              <template v-slot:prepend>
-                <q-icon name="not_listed_location" />
-              </template>
-            </q-input>
-          </div>
-        </div> -->
         <div class="row align-center">
           <q-btn
             unelevated

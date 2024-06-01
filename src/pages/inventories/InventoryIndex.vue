@@ -12,7 +12,7 @@
         <q-toolbar-title
           class="text-h6"
           :class="$q.screen.gt.sm ? '' : 'invisible'"
-          >Inventory</q-toolbar-title
+          >Product Inventory</q-toolbar-title
         >
         <q-input
           bottom-slots

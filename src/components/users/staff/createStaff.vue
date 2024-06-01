@@ -105,7 +105,7 @@
           <div class="col-3 q-mr-sm">
             <q-input
               filled
-              label="Phone #*"
+              label="CP # (start 09)"
               name="phone"
               class="q-mr-sm col-3 q-mb-md full-width"
               type="text"

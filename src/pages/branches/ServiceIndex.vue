@@ -31,7 +31,7 @@
           color="blue"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          :label="$q.screen.gt.xs ? 'Create Service' : 'Create'"
+          :label="$q.screen.gt.xs ? 'Select Service' : 'Select Service'"
           @click="createDialog"
         />
       </q-toolbar>
@@ -79,7 +79,8 @@ const ImportDialog = () => {
 onMounted(() => {
   mainStore.loc = "Services";
 
-  servicesStore.getAllServices(route.params.id);
+  servicesStore.getAllServicesBranch(route.params.id);
+  servicesStore.getAllServices(route.params.slug);
   // getCodesFunc();
   // console.log(codes);
 });

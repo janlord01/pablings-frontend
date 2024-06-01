@@ -203,7 +203,8 @@ export const useProductData = defineStore("productStore", {
 
     onSearch(payload) {
       if (payload[0] == "" || payload[0] == null) {
-        this.getAllProducts(payload[1]);
+        // this.getAllProducts(payload[1]);
+        this.rowDatas = this.tempRowDatas;
       } else {
         const needle = payload[0].toLowerCase();
         this.rowDatas = this.tempRowDatas.filter((v) => {

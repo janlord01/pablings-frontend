@@ -18,7 +18,7 @@
         <div class="row q-col-gutter-none relative-position">
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.xs ? 'col-md-8 q-mr-sm' : 'col-sm-1 full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
@@ -36,7 +36,7 @@
               </template>
             </q-input>
           </div>
-          <div
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-2 q-mr-sm' : 'col-sm-1 full-width'
             "
@@ -55,8 +55,8 @@
                 <q-icon name="attach_money" />
               </template>
             </q-input>
-          </div>
-          <div
+          </div> -->
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-2 q-mr-sm' : 'col-sm-1 full-width'
             "
@@ -75,10 +75,10 @@
                 <q-icon name="attach_money" />
               </template>
             </q-input>
-          </div>
+          </div> -->
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-2 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.xs ? 'col-md-3 q-mr-sm' : 'col-sm-1 full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
@@ -282,14 +282,14 @@ onMounted(() => {
 const oldImage = ref(null);
 
 const formData = reactive({
-  name: null,
-  description: null,
-  price: null,
-  msrp: null,
-  sku: null,
+  name: "",
+  description: "",
+  price: "",
+  msrp: "",
+  sku: "",
   //   sale: false,
   //   sale_price: 0,
-  img: null,
+  img: "",
 });
 
 const getActiveCodes = () => {};

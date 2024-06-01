@@ -7,15 +7,19 @@
     :rows="userStore.rowDatas"
     :columns="columns"
     row-key="id"
+    :loading="userStore.loading"
     separator="cell"
     :visible-columns="
       $q.screen.gt.xs
-        ? ['id', 'name', 'email', 'number', 'action']
+        ? ['name', 'email', 'number', 'action']
         : ['id', 'name', 'action']
     "
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template #body="props">
-      <q-tr :props="props" :class="props.row.code == null ? 'bg-red-3' : ''">
+      <q-tr :props="props">
         <q-td key="id" :props="props">
           {{ props.row.id }}
         </q-td>
@@ -52,7 +56,7 @@
             icon="camera_alt"
             label="profile image"
             size="sm"
-            :to="'/user/members/' + props.row.id + '/update-photo'"
+            @click="changeImageDialog(props.row.id)"
           />
           <q-btn
             color="grey"
@@ -81,6 +85,13 @@
     />
   </q-dialog>
 
+  <q-dialog v-model="showCaptureImg" persistent>
+    <changeImage
+      :user-id="member_id"
+      @hide-image-dialog="showCaptureImg = !showCaptureImg"
+    />
+  </q-dialog>
+
   <!-- Edit Member -->
 </template>
 
@@ -92,6 +103,8 @@ import { ref, reactive, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import EditMember from "./editMember.vue";
 import changePassword from "components/users/ChangePassword.vue";
+
+import changeImage from "components/users/changeImage.vue";
 // import snapPicture from "./snapPicture.vue";
 
 const $q = useQuasar();
@@ -106,6 +119,12 @@ const member_id = ref(null);
 const EditMemberDialog = (id) => {
   member_id.value = "";
   showEditDialog.value = true;
+  member_id.value = id;
+};
+
+const changeImageDialog = (id) => {
+  member_id.value = "";
+  showCaptureImg.value = true;
   member_id.value = id;
 };
 
@@ -173,7 +192,7 @@ const copyText = (code) => {
   });
 };
 onMounted(() => {
-  userStore.getAllMembers();
+  // userStore.getAllMembers();
 });
 </script>
 

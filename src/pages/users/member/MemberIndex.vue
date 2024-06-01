@@ -18,38 +18,11 @@
           label="Search Client"
           outlined
           class="search_input"
-          :style="!$q.screen.gt.sm ? 'display:none' : ''"
         >
           <template v-slot:append>
-            <!-- <q-icon
-              v-if="searchUser !== ''"
-              name="close"
-              @click="onLoadAllData"
-              class="cursor-pointer"
-            /> -->
             <q-icon name="search" size="sm" />
           </template>
         </q-input>
-        <!-- <q-btn
-          icon="download"
-          color="green"
-          size="sm"
-          :label="$q.screen.gt.xs ? 'member_template.xlsx' : ''"
-          class="q-mr-sm"
-          style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          href="/files/template-file-member.xlsx"
-        >
-          &nbsp;
-        </q-btn>
-        <q-btn
-          icon="cloud_upload"
-          color="secondary"
-          size="sm"
-          class="q-mr-sm"
-          style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          :label="$q.screen.gt.xs ? 'Import Member' : ''"
-          @click="ImportDialog"
-        /> -->
         <q-btn
           icon="add_circle"
           color="blue"
@@ -64,12 +37,6 @@
       <q-dialog v-model="showCreateDialog">
         <createMember
           @hide-create-dialog="showCreateDialog = !showCreateDialog"
-        />
-      </q-dialog>
-
-      <q-dialog v-model="showImportDialog">
-        <importMember
-          @hide-import-dialog="showImportDialog = !showImportDialog"
         />
       </q-dialog>
     </div>
@@ -87,6 +54,9 @@ import createMember from "src/components/users/member/createMember.vue";
 import importMember from "src/components/users/member/importMember.vue";
 import { useMainStoreData } from "stores/store";
 
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
 const mainStore = useMainStoreData();
 const codesStore = useCodeData();
 const userStore = useUserData();
@@ -107,10 +77,11 @@ const ImportDialog = () => {
   showImportDialog.value = true;
 };
 onMounted(() => {
-  codesStore.getAllCodes();
+  // codesStore.getAllCodes();
   mainStore.loc = "Clients";
   // getCodesFunc();
   // console.log(codes);
+  userStore.getAllMembers(route.params.slug);
 });
 </script>
 <style>

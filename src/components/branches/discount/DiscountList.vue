@@ -2,7 +2,7 @@
   <q-table
     :pagination="pagination"
     flat
-    class="q-pa-sm"
+    :grid="!$q.screen.gt.xs"
     :rows="discountStore.rowDatas"
     :columns="columns"
     row-key="id"
@@ -13,6 +13,37 @@
         : ['id', 'description', 'type', 'number', 'action']
     "
   >
+    <template v-slot:item="props" v-if="!$q.screen.gt.xs">
+      <q-card class="my-card row q-mb-md q-mr-sm" style="width: 47%">
+        <q-card-section>
+          <div style="font-size: 12px; font-weight: bold">
+            {{ props.row.description }}
+          </div>
+          <div style="font-size: 10px">Type:{{ props.row.type }}</div>
+          <div style="font-size: 10px">
+            Number: {{ props.row.type == "Amount" ? "P" : "" }}
+            {{ props.row.number }}
+            {{ props.row.type == "Amount" ? "" : "%" }}
+          </div>
+        </q-card-section>
+
+        <q-card-actions class="q-pt-none">
+          <q-btn
+            color="blue"
+            icon="edit"
+            size="sm"
+            @click="EditDialog(props.row.id)"
+          />
+          <q-btn
+            color="grey"
+            disable
+            @click="cantEditFunc()"
+            icon="delete"
+            size="sm"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
@@ -189,7 +220,6 @@ const copyText = (code) => {
 };
 onMounted(() => {
   //   branchData.getAllStaff();
-  discountStore.getAllDiscounts(route.params.id);
 });
 </script>
 

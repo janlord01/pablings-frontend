@@ -152,7 +152,7 @@ const seletedMember = ref(null);
 const searchVisible = ref(false);
 const status = ref(null);
 
-const productStore = useProductData();
+const productStore = useProductDatas();
 
 const $q = useQuasar();
 

@@ -1,7 +1,11 @@
 <template>
   <q-card style="max-width: 800px; width: 800px; min-height: 400px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar
+      :class="
+        $q.dark.isActive ? 'text-white bg-blue-grey-10' : 'bg-blue text-white'
+      "
+    >
       <q-toolbar-title> Create Supply </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
@@ -14,7 +18,7 @@
         <div class="row q-col-gutter-none relative-position">
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-4 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.xs ? 'full-width q-mr-sm' : 'col-sm-1 full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
@@ -32,7 +36,7 @@
               </template>
             </q-input>
           </div>
-          <div
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-3 q-mr-sm' : 'col-sm-1 full-width'
             "
@@ -51,28 +55,29 @@
                 <q-icon name="attach_money" />
               </template>
             </q-input>
-          </div>
-          <div
+          </div> -->
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-4 q-mr-sm' : 'col-sm-1 full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
-            <q-input
+            <q-select
               filled
-              label="Units*(ml,g,piece,head)"
+              :options="['g', 'ml', 'kl', 'piece']"
+              label="Units"
               name="code"
               class="col-3 full-width"
               type="text"
               v-model="formData.price"
-              :rules="[(val) => !!val || 'Price is required']"
+              :rules="[(val) => !!val || 'unit is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="straighten" />
               </template>
-            </q-input>
-          </div>
-          <div
+            </q-select>
+          </div> -->
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-3 q-mr-sm' : 'col-sm-1 full-width'
             "
@@ -89,7 +94,7 @@
                 <q-icon name="numbers" />
               </template>
             </q-input>
-          </div>
+          </div> -->
         </div>
 
         <!-- <div class="row q-col-gutter-none relative-position">
@@ -174,7 +179,7 @@
             unelevated
             label="Create"
             class="text-center"
-            color="primary"
+            color="blue"
             size="md"
             type="submit"
           />
@@ -228,7 +233,7 @@ const onSubmit = () => {
 
   api
     .post(
-      "/api/products",
+      `/api/${route.params.slug}/products`,
       fileData,
       // {
       //   name: formData.name,
@@ -247,7 +252,7 @@ const onSubmit = () => {
       }
     )
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       if (response.data.status == 200) {
         setTimeout(() => {
           $q.loading.hide();
@@ -258,9 +263,9 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          supplyStore.getAllProducts();
+          supplyStore.getAllProducts(route.params.slug);
           emit("hideCreateDialog");
-        }, 2000);
+        }, 1000);
       } else {
         setTimeout(() => {
           $q.loading.hide();
@@ -271,7 +276,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-        }, 2000);
+        }, 3000);
       }
     })
     .catch((error) => {
@@ -284,14 +289,14 @@ onMounted(() => {
 });
 
 const formData = reactive({
-  name: null,
-  description: null,
-  price: null,
-  msrp: null,
-  sku: null,
+  name: "",
+  description: "",
+  price: "",
+  msrp: "",
+  sku: "",
   //   sale: false,
   //   sale_price: 0,
-  img: null,
+  img: "",
 });
 
 const getActiveCodes = () => {};

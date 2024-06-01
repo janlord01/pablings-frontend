@@ -2,7 +2,7 @@
   <q-card style="max-width: 800px; width: 800px; min-height: 500px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
     <q-toolbar class="bg-blue text-white">
-      <q-toolbar-title> Update Staff </q-toolbar-title>
+      <q-toolbar-title> Create Staff </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
     <q-card-section>
@@ -12,12 +12,12 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-5 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="First Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.firstname"
             >
@@ -26,12 +26,12 @@
               </template>
             </q-input>
           </div>
-          <div class="col-2 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-2 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Middle Name"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.middlename"
             >
@@ -40,12 +40,12 @@
               </template> -->
             </q-input>
           </div>
-          <div class="col-4">
+          <div :class="$q.screen.gt.xs ? 'col-4' : 'full-width'">
             <q-input
               filled
               label="Last Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.lastname"
             >
@@ -56,12 +56,13 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-4 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-4 q-mr-sm' : 'full-width'">
             <q-input
               filled
               v-model="formData.dob"
               mask="date"
               label="Birthday*"
+              class="q-mb-sm"
             >
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
@@ -85,25 +86,25 @@
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-4 q-mr-sm' : 'full-width'">
             <q-select
               filled
               :options="['Male', 'Female']"
               label="Gender*"
+              class="q-mb-sm"
               v-model="formData.gender"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
             >
               <template v-slot:prepend>
                 <q-icon name="wc" />
               </template>
             </q-select>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Phone #*"
               name="phone"
-              class="q-mr-sm col-3 q-mb-md full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.phone"
             >
@@ -113,13 +114,13 @@
             </q-input>
           </div>
         </div>
-        <div class="row q-col-gutter-none relative-position q-mb-md">
-          <div class="col-12 q-pr-xl">
+        <div class="row q-col-gutter-none relative-position">
+          <div :class="$q.screen.gt.xs ? 'full-width q-mr-sm' : 'full-width'">
             <q-input
               filled
               label="Address*"
               name="addresss"
-              class="q-mr-sm col-3 full-width"
+              class="q-mb-sm"
               type="text"
               v-model="formData.address"
             >
@@ -129,14 +130,14 @@
             </q-input>
           </div>
         </div>
-        <div class="row q-col-gutter-none relative-position q-mb-md">
-          <div class="col-5">
+        <div class="row q-col-gutter-none relative-position">
+          <div :class="$q.screen.gt.xs ? 'col-5 q-mr-sm' : 'full-width'">
             <q-select
               filled
               :options="['manager', 'cashier', 'barber']"
               label="Role*"
+              class="q-mb-sm"
               v-model="formData.role"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
             >
               <template v-slot:prepend>
                 <q-icon name="handyman" />
@@ -145,13 +146,12 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <!-- <p class="text-h6">Account Login</p> -->
           <div class="full-width q-mr-xl">
             <q-input
               filled
               label="Email Address*"
               name="email"
-              class="q-mb-md full-width"
+              class="q-mb-sm"
               type="email"
               v-model="formData.email"
             >
@@ -164,7 +164,7 @@
         <div class="row align-center">
           <q-btn
             unelevated
-            label="Update"
+            label="Create"
             class="text-center"
             color="blue"
             size="md"

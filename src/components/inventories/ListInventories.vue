@@ -46,9 +46,11 @@
       </tr>
     </tbody>
   </q-markup-table>
+
   <q-table
     v-else
     flat
+    :grid="!$q.screen.gt.xs"
     :pagination="pagination"
     class="q-pa-sm"
     :rows="inventoryStore.rowDatas"
@@ -77,6 +79,85 @@
           ]
     "
   >
+    <template v-slot:item="props" v-if="!$q.screen.gt.xs">
+      <q-card class="my-card row q-mb-md q-mr-sm" style="width: 47%">
+        <q-card-section>
+          <div style="font-size: 12px">
+            <span class="text-bold">Supplier: </span><br />{{
+              props.row.supplier_name
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Order Date:</span> <br />
+            {{ date.formatDate(props.row.order_date, "MMMM DD, YYYY") }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Order Arrived: </span><br />{{
+              date.formatDate(props.row.order_arrived, "MMMM DD, YYYY")
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Remarks: </span><br />{{
+              props.row.remarks
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Status: </span>
+            <q-chip
+              v-if="props.row.status === 'Order Placed'"
+              color="blue"
+              text-color="white"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else-if="props.row.status === 'In Transit'"
+              color="orange"
+              text-color="white"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else-if="props.row.status === 'Order Arrived'"
+              color="green"
+              size="sm"
+              class="q-ma-none"
+              style="font-size: 8px"
+              text-color="white"
+              >{{ props.row.status }}</q-chip
+            >
+            <q-chip
+              v-else
+              color="red"
+              class="q-ma-none"
+              style="font-size: 8px"
+              size="sm"
+              text-color="white"
+              >{{ props.row.status }}</q-chip
+            >
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-pt-none">
+          <q-btn
+            color="blue"
+            label="edit"
+            style="font-size: 8px; margin: 0 3px 3px 0"
+            @click="EditDialog(props.row.id)"
+          />
+          <q-btn
+            color="red"
+            label="delete"
+            size="sm"
+            style="font-size: 8px; margin: 0 3px 3px 0"
+            @click="DeleteDialog(props.row.id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">

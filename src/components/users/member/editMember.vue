@@ -12,60 +12,42 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="First Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.firstname"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
               </template>
             </q-input>
           </div>
-          <div class="col-2 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="Middle Name"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.middlename"
             >
-              <!-- <template v-slot:prepend>
-                <q-icon name="numbers" />
-              </template> -->
             </q-input>
           </div>
-          <div class="col-4">
+          <div class="full-width q-mb-md">
             <q-input
               filled
               label="Last Name*"
-              name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
               type="text"
               v-model="formData.lastname"
-              :rules="[(val) => !!val || 'Field is required']"
             >
-              <!-- <template v-slot:prepend>
-                <q-icon name="numbers" />
-              </template> -->
             </q-input>
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-4 q-mr-sm">
-            <q-input
-              filled
-              v-model="formData.dob"
-              mask="date"
-              label="Birthday*"
-              :rules="[(val) => !!val || 'Field is required']"
-            >
+          <div class="full-width q-mb-md">
+            <q-input filled v-model="formData.dob" mask="date" label="Birthday">
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy
@@ -88,26 +70,23 @@
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-select
               filled
               :options="['Male', 'Female']"
               label="Gender*"
               v-model="formData.gender"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="wc" />
               </template>
             </q-select>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Phone #*"
+              label="Phone #"
               name="phone"
-              class="q-mr-sm col-3 q-mb-md full-width"
               type="text"
               v-model="formData.phone"
             >
@@ -117,16 +96,14 @@
             </q-input>
           </div>
         </div>
-        <div class="row q-col-gutter-none relative-position q-mb-sm q-mt-sm">
-          <div class="col-12 q-pr-xl">
+        <div class="row q-col-gutter-none relative-position">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Address*"
+              label="Address"
               name="addresss"
-              class="q-mr-sm col-3 full-width"
               type="text"
               v-model="formData.address"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
@@ -135,70 +112,26 @@
           </div>
         </div>
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-3 q-mr-sm">
+          <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Profession"
-              class="q-mr-sm col-3 q-mb-md full-width"
-              v-model="formData.profession"
-            >
-              <template v-slot:prepend>
-                <q-icon name="handyman" />
-              </template>
-            </q-input>
-          </div>
-
-          <div class="col-4 q-mr-sm">
-            <q-input
-              filled
-              label="Email Address*"
+              label="Email Address "
               name="email"
-              class="q-mr-sm col-3 q-mb-md full-width"
               type="email"
               v-model="formData.email"
-              :rules="[(val) => !!val || 'Field is required']"
             >
               <template v-slot:prepend>
                 <q-icon name="email" />
               </template>
             </q-input>
           </div>
-          <div class="col-4 q-mr-sm">
-            <q-select
-              filled
-              :options="codes"
-              label="Registration Codes"
-              :class="$q.screen.gt.sm ? 'q-mr-sm full-width' : 'full-width '"
-              v-model="formData.code"
-              :rules="[(val) => !!val || 'Field is required']"
-            >
-              <template v-slot:prepend>
-                <q-icon name="vpn_key" />
-              </template>
-            </q-select>
-          </div>
         </div>
-        <div class="row q-col-gutter-none relative-position">
-          <div class="col-12 q-mr-sm q-pr-xl">
-            <q-input
-              filled
-              label="From what source did you know about BeeFit?"
-              name="code"
-              class="q-mr-sm col-3 q-mb-md full-width"
-              type="text"
-              v-model="formData.from"
-            >
-              <template v-slot:prepend>
-                <q-icon name="not_listed_location" />
-              </template>
-            </q-input>
-          </div>
-        </div>
+
         <div class="row align-center">
           <q-btn
             unelevated
             label="Update"
-            class="text-center"
+            class="text-center full-width"
             color="primary"
             size="md"
             type="submit"
@@ -215,9 +148,12 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
 import { useUserData } from "src/stores/users/store";
+import { useRoute, useRouter } from "vue-router";
+
 const emit = defineEmits(["hideEditDialog"]);
 const props = defineProps(["memberId"]);
 
+const route = useRoute();
 const codesStore = useCodeData();
 const userStore = useUserData();
 const newToken = ref(LocalStorage.getItem("jwt"));
@@ -240,10 +176,10 @@ const getMemberData = () => {
       formData.gender = response.data.data.gender;
       formData.phone = response.data.data.cp_number;
       formData.address = response.data.data.address;
-      formData.profession = response.data.data.profession;
+      // formData.profession = response.data.data.profession;
       formData.email = response.data.data.email;
-      formData.code = response.data.data.code;
-      formData.from = response.data.data.know_beefit;
+      // formData.code = response.data.data.code;
+      // formData.from = response.data.data.know_beefit;
     })
     .catch((error) => {
       console.log(error);
@@ -272,10 +208,7 @@ const onSubmit = () => {
         gender: formData.gender,
         address: formData.address,
         contact: formData.phone,
-        code: formData.code.label != null ? formData.code.label : formData.code,
         email: formData.email,
-        know: formData.from,
-        profession: formData.profession,
       },
       {
         headers: {
@@ -295,7 +228,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          userStore.getAllMembers();
+          userStore.getAllMembers(route.params.slug);
           emit("hideEditDialog");
         }, 2000);
       } else {

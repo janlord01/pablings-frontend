@@ -9,7 +9,7 @@ import {
 } from "vue-router";
 import { api } from "src/boot/axios";
 import routes from "./routes";
-import { Notify, Loading, LocalStorage } from "quasar";
+import { Notify, Loading, LocalStorage, Dialog, colors } from "quasar";
 
 import { useUserData } from "stores/users/store";
 
@@ -50,6 +50,63 @@ export default route(function (/* { store, ssrContext } */) {
     var newToken = LocalStorage.getItem("jwt");
     if (LocalStorage.getItem("jwt")) {
       if (requiredAuth) {
+        let new_update = "v0000000002";
+        if (LocalStorage.getItem("new_update")) {
+          if (LocalStorage.getItem("new_update") === new_update) {
+          } else {
+            Dialog.create({
+              title: "New Update",
+              message: "Refresh for new updates!",
+              position: "top",
+
+              persistent: true,
+              cancel: {
+                color: "grey",
+              },
+              ok: {
+                label: "Refresh",
+                color: "primary",
+              },
+            })
+              .onOk(() => {
+                // console.log('OK')
+                LocalStorage.set("new_update", new_update);
+                window.location.reload();
+              })
+              .onCancel(() => {
+                // console.log('Cancel')
+              })
+              .onDismiss(() => {
+                // console.log('I am triggered on both OK and Cancel')
+              });
+          }
+        } else {
+          Dialog.create({
+            title: "New Update",
+            message: "Refresh for new updates!",
+            position: "top",
+
+            persistent: true,
+            cancel: {
+              color: "grey",
+            },
+            ok: {
+              label: "Refresh",
+              color: "primary",
+            },
+          })
+            .onOk(() => {
+              // console.log('OK')
+              LocalStorage.set("new_update", new_update);
+              window.location.reload();
+            })
+            .onCancel(() => {
+              // console.log('Cancel')
+            })
+            .onDismiss(() => {
+              // console.log('I am triggered on both OK and Cancel')
+            });
+        }
         // next();
         api
           .get("api/check-token", {
@@ -61,42 +118,88 @@ export default route(function (/* { store, ssrContext } */) {
             // console.log(response);
 
             if (response.data.status === 200) {
-              var a = 0;
-              access.forEach((e) => {
-                response.data.roles.forEach((f) => {
-                  if (e == f) {
-                    // userStore.getUserDetails();
-                    a++;
-                    next();
-                  }
-                });
-              });
+              LocalStorage.set("slug", response.data.slug);
+              // var a = 0;
+              // access.forEach((e) => {
 
-              if (a == 0) {
+              //   response.data.roles.forEach((f) => {
+              //     console.log("e: " + e);
+              //     console.log("f: " + f);
+              //     if (e == f) {
+              //       // userStore.getUserDetails();
+              //       console.log("true");
+              //       a++;
+              //       next();
+              //     }
+              //   });
+              // });
+              const checkRole = access.some(
+                (permis) => response.data.roles.indexOf(permis) !== -1
+              );
+              if (checkRole == true && to.path == "/") {
+                return next({
+                  name: "dashboard-main",
+                  replace: true,
+                });
+              }
+              if (checkRole == false && to.path == "/") {
+                Notify.create({
+                  type: "warning",
+                  color: "warning",
+                  timeout: 3000,
+                  position: "top",
+                  message: "Please wait. Redirecting...",
+                });
+                setTimeout(() => {
+                  window.location =
+                    window.location.origin +
+                    "/" +
+                    LocalStorage.getItem("slug") +
+                    "/dashboard";
+                }, 2000);
+              } else if (checkRole == false) {
                 Notify.create({
                   type: "negative",
                   color: "negative",
                   timeout: 3000,
                   position: "top",
-                  message:
-                    "Access Denied! You don't have permission to access this section! Please Login Again",
+                  message: "Access Denied! Please wait...Redirect to dashboard",
                 });
-                localStorage.removeItem("jwt");
+                // LocalStorage.removeItem("branchName");
+                // LocalStorage.removeItem("bb");
+                // LocalStorage.removeItem("jwt");
+                // return next("dashboard-index-slug");
+                // console.log(window.location.origin);
 
-                return next({ name: "login" });
-                // return next(""+rroute.para+"/dashboard");
-                // return routerrrrr.go(-1);
+                setTimeout(() => {
+                  window.location =
+                    window.location.origin +
+                    "/" +
+                    LocalStorage.getItem("slug") +
+                    "/dashboard";
+                }, 2000);
+              } else {
+                next();
               }
             } else {
-              return next({
-                name: "login",
-                // params: { redirect: to.fullPath },
-                replace: true,
-              });
+              return next("login");
             }
           })
           .catch((error) => {
+            console.log(error);
+            // Loading.show();
+            Notify.create({
+              type: "warning",
+              position: "top",
+              timeout: 3000,
+              message: "Session Expired! Please re-login again... ",
+            });
             localStorage.removeItem("jwt");
+            setTimeout(() => {
+              window.location.reload();
+              // Loading.hide();
+            }, 3000);
+            // return next("/login");
             console.log(error);
           });
       } else if (to.path == "/login" || to.path == "/register") {
@@ -110,16 +213,12 @@ export default route(function (/* { store, ssrContext } */) {
           replace: true,
         });
       }
-    } else if (
-      to.path == "/login" ||
-      to.path == "/register" ||
-      to.path == "/:catchAll(.*)*"
-    ) {
+    } else if (to.path == "/login" || to.path == "/register") {
       next();
     } else if (to.path == "/") {
       next("login");
     } else {
-      next();
+      next("login");
     }
   });
 

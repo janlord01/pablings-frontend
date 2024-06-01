@@ -151,24 +151,24 @@ const onSubmit = () => {
           $q.notify({
             type: "positive",
             icon: "save",
-            timeout: 1000,
-            position: "bottom",
+            timeout: 3000,
+            position: "top",
             message: response.data.message,
           });
           userStore.getAllMembers();
           emit("hidePasswordDialog");
-        }, 2000);
+        }, 1000);
       } else {
         setTimeout(() => {
           $q.loading.hide();
           $q.notify({
             type: "negative",
             icon: "error",
-            timeout: 1000,
-            position: "bottom",
+            timeout: 3000,
+            position: "top",
             message: response.data.message,
           });
-        }, 2000);
+        }, 3000);
       }
     })
     .catch((error) => {

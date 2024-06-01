@@ -9,7 +9,10 @@
       style="border-radius: 20px"
     >
       <q-toolbar class="q-mt-sm">
-        <q-toolbar-title class="text-h6">Products </q-toolbar-title>
+        <q-toolbar-title
+          :class="$q.screen.gt.xs ? ' full-width  text-h6' : 'hidden'"
+          >{{ mainStore.loc }}
+        </q-toolbar-title>
         <q-input
           bottom-slots
           v-model="searchUser"
@@ -17,7 +20,6 @@
           label="Search Product"
           outlined
           class="search_input"
-          :style="!$q.screen.gt.sm ? 'display:none' : ''"
         >
           <template v-slot:append>
             <q-icon
@@ -29,14 +31,14 @@
             <q-icon name="search" size="sm" />
           </template>
         </q-input>
-        <!-- <q-btn
-          icon="add_circle"
+        <q-btn
+          icon="description"
           color="blue"
           size="sm"
-          style="padding-top: 15px; padding-bottom: 15px; margin-top: 0px"
-          :label="$q.screen.gt.xs ? 'Create Product' : 'Create'"
-          @click="createDialog"
-        /> -->
+          style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
+          :label="$q.screen.gt.xs ? 'Request Product' : 'Request'"
+          :to="`/${route.params.slug}/branches/${route.params.id}/products/request`"
+        />
       </q-toolbar>
       <productList />
 
@@ -52,13 +54,15 @@
 <script setup>
 import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useProductDatas } from "src/stores/branch/productStores";
-import { useQuasar } from "quasar";
+import { LocalStorage, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import productList from "src/components/branches/products/BranchProductList.vue";
 import createBranch from "src/components/branches/CreateBranch.vue";
 import importMember from "src/components/users/member/importMember.vue";
 import CreateProducts from "src/components/branches/products/CreateProducts.vue";
 import { useRoute } from "vue-router";
+import { useMainStoreData } from "stores/store";
+const mainStore = useMainStoreData();
 
 const route = useRoute();
 
@@ -69,7 +73,21 @@ const onSearchSubmit = () => {};
 const onLoadAllData = () => {
   searchUser.value = "";
 };
-
+const getBranch = async () => {
+  api
+    .get(`api/branch/${route.params.id}`, {
+      headers: {
+        Authorization: "Bearer " + LocalStorage.getItem("jwt"),
+      },
+    })
+    .then((response) => {
+      mainStore.loc = response.data.branch.name + " Product";
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 const showCreateDialog = ref(false);
 const showImportDialog = ref(false);
 
@@ -80,6 +98,8 @@ const ImportDialog = () => {
   showImportDialog.value = true;
 };
 onMounted(() => {
+  mainStore.loc = "Product";
+  getBranch();
   productStore.getAllBranchProducts(route.params.id);
   // getCodesFunc();
   // console.log(codes);

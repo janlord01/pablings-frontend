@@ -2,7 +2,7 @@
   <q-table
     flat
     :pagination="pagination"
-    class="q-pa-sm"
+    grid
     :rows="productStore.rowBranchProductDatas"
     :columns="columns"
     row-key="id"
@@ -13,6 +13,64 @@
         : ['id', 'name', 'description', 'qty', 'msrp', 'srp', 'qrcode']
     "
   >
+    <template v-slot:item="props">
+      <q-card
+        class="my-card row q-mb-md q-mr-sm"
+        :style="
+          $q.screen.gt.lg
+            ? 'width: 32%'
+            : $q.screen.gt.sm
+            ? 'width: 32%'
+            : 'width: 47%;'
+        "
+      >
+        <q-img
+          :src="props.row.product_img"
+          v-if="props.row.product_img"
+          :height="$q.screen.gt.xs ? '250px' : '100px'"
+          class="full-width"
+        />
+        <q-avatar
+          v-else
+          color="grey"
+          text-color="white"
+          icon="image_not_supported"
+          class="full-width"
+        >
+        </q-avatar>
+
+        <q-card-section>
+          <div style="font-size: 12px">{{ props.row.title }}</div>
+          <div style="font-size: 10px">SKU:{{ props.row.sku }}</div>
+          <div style="font-size: 10px">Qty:{{ props.row.qty_remaining }}</div>
+          <div style="font-size: 10px">MSRP:{{ props.row.msrp }}</div>
+          <div style="font-size: 10px">SRP:{{ props.row.srp }}</div>
+        </q-card-section>
+
+        <q-card-actions class="q-pt-none">
+          <vue-qrcode
+            :value="props.row.code"
+            :options="{
+              errorCorrectionLevel: 'Q',
+              width: 100,
+            }"
+            @ready="onReady"
+            :id="'qrcode_canvas' + props.row.sku"
+            crossorigin="anonymous"
+          ></vue-qrcode
+          ><br />
+          <q-btn
+            dense
+            flat
+            label="download"
+            color="green"
+            icon="download"
+            size="sm"
+            @click="downloadFunc('qrcode_canvas' + props.row.sku)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
@@ -32,7 +90,6 @@
               text-color="white"
               icon="image_not_supported"
             >
-              <!-- <img src="https://cdn.quasar.dev/img/avatar.png" /> -->
             </q-avatar>
           </q-avatar>
           {{ props.row.title }}
@@ -218,7 +275,7 @@ const EditDialog = (id) => {
 
 const pagination = reactive({
   sortBy: "id",
-  rowsPerPage: 10,
+  rowsPerPage: 0,
 });
 const columns = reactive([
   {
@@ -293,7 +350,7 @@ onMounted(() => {
   $q.loading.show();
 
   setTimeout(() => {
-    console.log(productStore.rowBranchProductDatas);
+    // console.log(productStore.rowBranchProductDatas);
 
     $q.loading.hide();
   }, 1000);

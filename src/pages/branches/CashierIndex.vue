@@ -9,7 +9,10 @@
       style="border-radius: 20px"
     >
       <q-toolbar class="q-mt-sm">
-        <q-toolbar-title class="text-h6">Cashier</q-toolbar-title>
+        <q-toolbar-title
+          :class="$q.screen.gt.xs ? ' full-width  text-h6' : 'hidden'"
+          >{{ mainStore.loc }}
+        </q-toolbar-title>
 
         <q-btn
           icon="add_circle"
@@ -41,7 +44,7 @@
 <script setup>
 import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useProductDatas } from "src/stores/branch/productStores";
-import { useQuasar } from "quasar";
+import { useQuasar, LocalStorage } from "quasar";
 import { api } from "src/boot/axios";
 import cashierList from "src/components/branches/cashier/CashierList.vue";
 import { useDiscountData } from "stores/branch/discountStore";
@@ -53,6 +56,9 @@ import CreatePayment from "src/components/branches/cashier/CreatePayment.vue";
 import { useUserData } from "stores/users/store";
 
 import { useCashierData } from "src/stores/branch/cashierStore";
+
+import { useMainStoreData } from "stores/store";
+const mainStore = useMainStoreData();
 
 const cashierStore = useCashierData();
 
@@ -76,7 +82,25 @@ const createDialog = () => {
 const ImportDialog = () => {
   showImportDialog.value = true;
 };
+
+const getBranch = async () => {
+  api
+    .get(`api/branch/${route.params.id}`, {
+      headers: {
+        Authorization: "Bearer " + LocalStorage.getItem("jwt"),
+      },
+    })
+    .then((response) => {
+      mainStore.loc = response.data.branch.name + " Cashier";
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 onMounted(() => {
+  mainStore.loc = "Cashier";
+  getBranch();
   //   productStore.getAllProducts(route.params.id);
   // getCodesFunc();
   // console.log(codes);

@@ -51,7 +51,6 @@
                 filled
                 label="MSRP"
                 name="code"
-                readonly
                 class="col-3 full-width"
                 type="text"
                 v-model="formData.msrp"
@@ -71,7 +70,6 @@
                 filled
                 label="SRP"
                 class="col-3 full-width"
-                readonly
                 v-model="formData.srp"
               >
                 <template v-slot:prepend>

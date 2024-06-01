@@ -16,6 +16,9 @@ export const useProductDatas = defineStore("productStore", {
     tempCashierProductDatas: [],
     tempCashierPlanDatas: [],
 
+    rowRequest: [],
+    rowTempRequest: [],
+
     selectedPlan: [],
     addToCartPlan: {
       subTotal: 0,
@@ -120,6 +123,11 @@ export const useProductDatas = defineStore("productStore", {
     },
     async getAllProducts(payload) {
       this.skeleton = true;
+      this.tempRowDatas = [];
+      this.rowDatas = [];
+      Loading.show();
+      // this.rowTempRequest = [];
+      // this.rowRequest = [];
       var newToken = LocalStorage.getItem("jwt");
       await api
         .get(`api/${payload}/products`, {
@@ -128,13 +136,16 @@ export const useProductDatas = defineStore("productStore", {
           },
         })
         .then((response) => {
-          //   console.log(response);
+          console.log(response);
           if (response.status === 200) {
-            // setTimeout(() => {
-            this.skeleton = false;
-            this.tempRowDatas = response.data.data;
-            this.rowDatas = this.tempRowDatas;
-            // }, 3000);
+            setTimeout(() => {
+              this.skeleton = false;
+              this.tempRowDatas = response.data.data;
+              this.rowDatas = this.tempRowDatas;
+              // this.rowTempRequest = response.data.requestProduct;
+              // this.rowRequest = this.rowTempRequest;
+              Loading.hide();
+            }, 1000);
           }
         })
         .catch((error) => {
@@ -144,6 +155,7 @@ export const useProductDatas = defineStore("productStore", {
     },
 
     async getAllBranchProducts(payload) {
+      Loading.show();
       this.rowBranchProductDatas = [];
       this.rowTempBranchProductDatas = [];
       var newToken = LocalStorage.getItem("jwt");
@@ -154,19 +166,45 @@ export const useProductDatas = defineStore("productStore", {
           },
         })
         .then((response) => {
-          // console.log(response);
-          // Object.entries(response.data.data).map(([val, key]) => {
-          //   this.rowTempBranchProductDatas.push(val);
-          // });
-          this.rowTempBranchProductDatas = response.data.data;
-          this.rowBranchProductDatas = this.rowTempBranchProductDatas;
+          if (response.data.status === 200) {
+            setTimeout(() => {
+              this.rowTempBranchProductDatas = response.data.data;
+              this.rowBranchProductDatas = this.rowTempBranchProductDatas;
 
-          // console.log(this.rowBranchProductDatas);
+              Loading.hide();
+            }, 1000);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
       //   console.log(this.rowDatas);
+    },
+    async getAllRequestBranch(payload) {
+      Loading.show();
+      this.rowRequest = [];
+      this.rowTempRequest = [];
+
+      var newToken = LocalStorage.getItem("jwt");
+      await api
+        .get("api/products/branch/request/" + payload, {
+          headers: {
+            Authorization: "Bearer " + newToken,
+          },
+        })
+        .then((response) => {
+          // console.log(response);
+          if (response.data.status === 200) {
+            setTimeout(() => {
+              this.rowTempRequest = response.data.data;
+              this.rowRequest = this.rowTempRequest;
+              Loading.hide();
+            }, 1000);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     removeProduct(payload) {
       // console.log(state.tempDataBilling);
@@ -312,7 +350,8 @@ export const useProductDatas = defineStore("productStore", {
     },
     onSearch(payload) {
       if (payload[0] == "" || payload[0] == null) {
-        this.getAllProducts(payload[1]);
+        // this.getAllProducts(payload[1]);
+        this.rowDatas = this.tempRowDatas;
         // this.getAllBranchProducts(payload[1]);
       } else {
         const query = payload[0] != null ? payload[0].toLowerCase() : "";
@@ -320,6 +359,22 @@ export const useProductDatas = defineStore("productStore", {
         // this.tempRowDatas = this.rowDatas;
         // this.rowDatas = [];
         this.rowDatas = this.tempRowDatas.filter((product) => {
+          return Object.values(product).some(
+            (word) => String(word).toLowerCase().indexOf(query) > -1
+          );
+        });
+      }
+    },
+    onSearchRequest(payload) {
+      // console.log(payload);
+      if (payload == "" || payload == null) {
+        // this.getAllProducts(payload[1]);
+        this.rowRequest = this.rowTempRequest;
+        // this.getAllBranchProducts(payload[1]);
+      } else {
+        const query = payload != null ? payload.toLowerCase() : "";
+
+        this.rowRequest = this.rowTempRequest.filter((product) => {
           return Object.values(product).some(
             (word) => String(word).toLowerCase().indexOf(query) > -1
           );

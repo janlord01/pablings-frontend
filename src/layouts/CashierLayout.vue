@@ -21,9 +21,11 @@ import { useCashierData } from "stores/branch/cashierStore";
 import { useRoute, useRouter } from "vue-router";
 import addDiscount from "components/branches/cashier/AddDiscount.vue";
 import payBill from "components/branches/cashier/payBills.vue";
-
+import addClient from "components/users/member/createMember.vue";
+import { useCompanyData } from "src/stores/company/store";
 const tab = ref("home");
 
+const companyStore = useCompanyData();
 const router = useRouter();
 const showOwnerDialog = ref(false);
 
@@ -33,11 +35,21 @@ const cashierStore = useCashierData();
 const showDiscountDialog = ref(false);
 const showPayBillDialog = ref(false);
 
-const discountDialogFunc = () => {
+const showAddClientDialog = ref(false);
+
+// const itemUid = ref("");
+const addNewClientFunc = () => {
+  showAddClientDialog.value = true;
+};
+const discountDialogFunc = (id) => {
+  // itemUid.value = id;
+  cashierStore.selectedUid = id;
   showDiscountDialog.value = true;
 };
 
 const payBillFunc = () => {
+  // console.log(formData.mop);
+  cashierStore.balanceDue = cashierStore.total;
   showPayBillDialog.value = true;
 };
 
@@ -54,6 +66,27 @@ const { themeColors } = storeToRefs(useSettingData());
 const settingStore = useSettingData();
 const removeFunc = (uid) => {
   cashierStore.removeProduct(uid);
+};
+
+let stringOptions = reactive([]);
+const options = ref(stringOptions);
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(() => {
+      options.value = stringOptions;
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = stringOptions.filter(
+      (v) => v.label.toLowerCase().indexOf(needle) > -1
+    );
+  });
+};
+const selectedClientFunc = () => {
+  // console.log(cashierStore.selectedClient);
 };
 const changeTheme = () => {
   // $q.dark.set(LocalStore.setItem('dark', true))
@@ -93,6 +126,23 @@ const memberBranch = computed(() => {
   return userStore.userDetails.branch;
 });
 
+const companyLogo = watch(
+  () => companyStore.rowDatasCompany,
+  (newValue, oldValue) => {
+    // console.log(newValue);
+    logo.value = typeof newValue !== "undefined" ? newValue.logo : null;
+  }
+);
+
+const guestClientFunc = () => {
+  if (cashierStore.client == "Client") {
+    stringOptions = userStore.rowDatas;
+    options.value = stringOptions;
+  } else {
+    cashierStore.selectedClient = null;
+  }
+};
+
 const formData = reactive({
   branchs: null,
   users: null,
@@ -105,17 +155,10 @@ const formData = reactive({
 });
 
 const memberDatas = watch(
-  () => userStore.userDetails,
+  () => userStore.branch,
   (newValue, oldValue) => {
-    // console.log("new value" + newValue.branch);
-    // if (newValue.branch != 0) {
-    //   memberBranch.value = newValue.branch;
-    //   console.log(memberBranch.value);
-    // }
-    link.value = newValue.branch;
-
+    // link.value = newValue;
     // console.log(link.value);
-    // return newValue.branch;
   }
 );
 
@@ -142,8 +185,8 @@ const cashEnteredFunc = () => {
 };
 
 const checkoutDialog = () => {
-  console.log(productStores.addToCartPlan.cash);
-  console.log(productStores.addToCartPlan.total);
+  // console.log(productStores.addToCartPlan.cash);
+  // console.log(productStores.addToCartPlan.total);
   if (
     parseFloat(productStores.addToCartPlan.cash) <
     parseFloat(productStores.addToCartPlan.total)
@@ -241,69 +284,78 @@ const essentialLinks = reactive([
     role: ["super-admin"],
     // permission: ["view-profile"],
   },
-  // {
-  //   icon: "widgets",
-  //   label: "Inventory",
-  //   to: "/colleges",
-  //   separator: false,
-  //   role: ["super-admin"],
-  //   subMenu: [
-  //     {
-  //       icon: "subscriptions",
-  //       label: "Product",
-  //       to: "/membership/plans",
 
-  //       role: ["super-admin"],
-  //     },
-  //     {
-  //       icon: "confirmation_number",
-  //       label: "Supply",
-  //       to: "/membership/codes",
-
-  //       role: ["super-admin"],
-  //     },
-  //   ],
-  // },
   {
-    icon: "o_fastfood",
-    label: "Product",
-    // to: "/barracks-barbers-shaves/products",
+    icon: "o_groups",
+    label: "Staff",
     separator: false,
     role: ["owner"],
   },
-  // {
-  //   icon: "o_dry_cleaning",
-  //   label: "Supplies",
-  //   separator: false,
-  //   role: ["owner"],
-  // },
+  {
+    icon: "o_fastfood",
+    label: "Product",
+    separator: false,
+    role: ["owner"],
+  },
+
+  {
+    icon: "o_construction",
+    label: "Services",
+    separator: false,
+    role: ["owner"],
+  },
 
   {
     icon: "o_inventory",
     label: "Inventory",
-    to: "/inventory/",
-    // to: userStore,
+    to: "/inventory",
     separator: false,
     role: ["owner"],
-    // permission: ["view-profile"],
   },
 
   {
     icon: "o_co_present",
     label: "Supplier",
     to: "/supplier/",
-    // to: userStore,
     separator: false,
     role: ["owner"],
-    // permission: ["view-profile"],
   },
 
+  {
+    icon: "o_store",
+    label: "Branches",
+    to: slug.value + "/branches",
+    separator: false,
+    role: ["owner"],
+  },
+
+  {
+    icon: "o_receipt",
+    label: "Orders",
+    to: slug.value + "/order",
+    separator: false,
+    role: ["owner"],
+  },
+  {
+    icon: "eva-settings-outline",
+    label: "Settings",
+    to: slug.value + "/settings",
+    separator: false,
+    role: ["owner"],
+  },
+  // Manager / Cashier
+  {
+    icon: "o_groups",
+    label: "Client",
+    separator: false,
+    role: ["cashier", "manager", "franchisee"],
+  },
   {
     icon: "o_fastfood",
     label: "Products",
     to: "/branches/" + link.value + "/products",
     separator: false,
-    role: ["manager", "cashier"],
+    role: ["manager", "cashier", "franchisee"],
     // permission: ["view-profile"],
   },
 
@@ -320,33 +372,34 @@ const essentialLinks = reactive([
     to: "/branches/" + userStore.userDetails.branch + "/cashier",
     // to: userStore,
     separator: false,
-    role: ["manager", "cashier"],
-    // permission: ["view-profile"],
-  },
-
-  {
-    icon: "o_store",
-    label: "Branches",
-    to: slug.value + "/branches",
-    separator: false,
-    role: ["owner"],
-    // permission: ["view-profile"],
-  },
-
-  {
-    icon: "o_receipt",
-    label: "Orders",
-    to: slug.value + "/order",
-    separator: false,
-    role: ["owner"],
+    role: ["manager", "cashier", "franchisee"],
     // permission: ["view-profile"],
   },
   {
-    icon: "eva-settings-outline",
-    label: "Settings",
-    to: slug.value + "/settings",
+    icon: "o_shopping_cart",
+    label: "Expenses",
+    to: "/branches/" + userStore.userDetails.branch + "/expenses",
+    // to: userStore,
     separator: false,
-    role: ["owner"],
+    role: ["manager", "cashier", "franchisee"],
+    // permission: ["view-profile"],
+  },
+  {
+    icon: "o_shopping_cart",
+    label: "Benefits",
+    to: "/branches/" + userStore.userDetails.branch + "/benefits",
+    // to: userStore,
+    separator: false,
+    role: ["manager", "cashier", "franchisee"],
+    // permission: ["view-profile"],
+  },
+  {
+    icon: "o_credit_card",
+    label: "Loans",
+    to: "/branches/" + userStore.userDetails.branch + "/loans",
+    // to: userStore,
+    separator: false,
+    role: ["manager", "cashier", "franchisee"],
     // permission: ["view-profile"],
   },
 
@@ -400,7 +453,7 @@ const loginSubmit = () => {
   userStore.logoutUser();
 };
 onBeforeMount(() => {
-  userStore.getUserDetails();
+  // userStore.getUserDetails();
 });
 
 const textColor = ref(null);
@@ -497,8 +550,12 @@ const columns = reactive([
 //   (newValue, oldValue) => {
 //   }
 // );
+const logo = ref(null);
+const getBranchName = ref("");
 onMounted(() => {
+  companyStore.getCompany(route.params.slug ? route.params.slug : "admin");
   userStore.getUserDetails();
+  userStore.getAllMembers(route.params.slug);
   // onLoad();
   if (LocalStorage.getItem("dark")) {
     $q.dark.set(LocalStorage.getItem("dark"));
@@ -506,10 +563,15 @@ onMounted(() => {
     LocalStorage.set("dark", false);
     $q.dark.set(LocalStorage.getItem("dark"));
   }
-  settingStore.getColor();
+  // settingStore.getColor();
+  link.value = LocalStorage.getItem("bb");
 
   setTimeout(() => {
     setColor();
+
+    getBranchName.value = LocalStorage.getItem("branchName");
+    stringOptions = userStore.rowDatas;
+    options.value = stringOptions;
   }, 300);
   // getColor();
 });
@@ -540,9 +602,7 @@ const setColor = () => {
       " -->
     <q-header
       :class="
-        $q.dark.isActive
-          ? 'text-white bg-blue-grey-10 '
-          : 'text-dark bg-primary'
+        $q.dark.isActive ? 'text-white bg-blue-grey-10 ' : 'text-dark bg-grey-2'
       "
     >
       <q-toolbar>
@@ -563,7 +623,9 @@ const setColor = () => {
           @click="router.go(-1)"
         />
 
-        <q-toolbar-title :class="$q.screen.gt.xs ? 'invisible' : 'text-center'">
+        <q-toolbar-title
+          :class="$q.screen.gt.xs ? 'invisible' : 'text-center text-body2'"
+        >
           {{ mainStore.loc }}
         </q-toolbar-title>
 
@@ -596,6 +658,16 @@ const setColor = () => {
               >
               </q-badge>
             </q-btn>
+            <span
+              :style="$q.screen.gt.xs ? 'font-size: 15px;' : 'font-size:10px;'"
+            >
+              Welcome,
+              {{
+                userStore.userDetails.user
+                  ? userStore.userDetails.user.firstname
+                  : ""
+              }}
+            </span>
             <q-btn class="no-hover" unelevated dense ripple>
               <q-avatar v-if="userStore.userDetails.user" size="32px">
                 <img :src="userStore.userDetails.user.image_path" />
@@ -726,6 +798,7 @@ const setColor = () => {
               </q-menu>
             </q-btn>
             <q-btn
+              v-if="$q.screen.gt.xs"
               flat
               dense
               round
@@ -761,16 +834,13 @@ const setColor = () => {
     <q-footer
       class="text-dark"
       :class="
-        $q.dark.isActive
-          ? 'text-white bg-blue-grey-10 '
-          : 'text-dark bg-primary'
+        $q.dark.isActive ? 'text-white bg-blue-grey-10 ' : 'text-dark bg-grey-2'
       "
     >
       <q-toolbar v-if="$q.screen.width > 1008">
         <q-toolbar-title style="font-size: 14px"
-          >Barbershop System &copy; Copyright 2023. All Right Reserved. Created
-          By: Nehemiah Solutions</q-toolbar-title
-        >
+          >Gnb POS System &copy; Copyright 2024. All Right Reserved.
+        </q-toolbar-title>
       </q-toolbar>
       <q-tabs
         dense
@@ -830,7 +900,7 @@ const setColor = () => {
         no-caps
         active-color="white"
         indicator-color="white"
-        class="bg-blue text-white q-pt-sm text-caption text-weight-thin"
+        class="bg-blue text-white text-sm q-pt-sm text-caption text-weight-thin menu_size"
         active-class="active_link_mobile"
         v-model="tab"
       >
@@ -841,13 +911,13 @@ const setColor = () => {
           icon="eva-home-outline"
           label="Home"
         />
-        <q-route-tab
+        <!-- <q-route-tab
           name="products"
           :to="`/${computedSlug}/products`"
           ripple
           icon="o_fastfood"
           label="Products"
-        />
+        /> -->
 
         <q-route-tab
           name="inventory"
@@ -864,12 +934,20 @@ const setColor = () => {
           label="Branches"
         />
         <q-route-tab
+          name="Menu"
+          ripple
+          icon="menu"
+          label="Menu"
+          @click="toggleLeftDrawer"
+        />
+
+        <!-- <q-route-tab
           name="order"
           ripple
           :to="`/${computedSlug}/order`"
           icon="o_store"
           label="Orders"
-        />
+        /> -->
       </q-tabs>
 
       <!-- Owner Mobile Tab -->
@@ -910,13 +988,21 @@ const setColor = () => {
           icon="o_shopping_cart"
           label="cashier"
         />
+
         <q-route-tab
+          name="Menu"
+          ripple
+          icon="menu"
+          label="Menu"
+          @click="toggleLeftDrawer"
+        />
+        <!-- <q-route-tab
           name="account"
           ripple
           :to="`/${computedSlug}/accounts`"
           icon="o_account_circle"
           label="Account"
-        />
+        /> -->
       </q-tabs>
 
       <!-- Owner Mobile Tab -->
@@ -950,19 +1036,27 @@ const setColor = () => {
           label="Products"
         />
 
-        <q-route-tab
+        <!-- <q-route-tab
           name="voucher"
           ripple
           :to="`/${computedSlug}/branches/${link}/discount`"
           icon="o_local_offer"
           label="Voucher"
-        />
+        /> -->
         <q-route-tab
           name="cashier"
           ripple
           :to="`/${computedSlug}/branches/${link}/cashier`"
           icon="o_shopping_cart"
           label="cashier"
+        />
+
+        <q-route-tab
+          name="Menu"
+          ripple
+          icon="menu"
+          label="Menu"
+          @click="toggleLeftDrawer"
         />
       </q-tabs>
     </q-footer>
@@ -978,30 +1072,28 @@ const setColor = () => {
       :breakpoint="1500"
       show-if-above
       :class="
-        $q.dark.isActive
-          ? 'text-white bg-blue-grey-10 '
-          : 'text-dark bg-primary'
+        $q.dark.isActive ? 'text-white bg-blue-grey-10 ' : 'text-dark bg-grey-2'
       "
     >
       <!-- <q-item-label class="text-dark" header> Menus </q-item-label> -->
       <div class="q-mt-md q-mb-lg border full-width">
         <q-img
-          src="/images/barracks_pngwhite.png"
-          loading="lazy"
-          width="100px"
-          class="block q-mx-auto"
-          v-if="$q.screen.gt.sm"
-        />
-        <q-img
-          src="/images/barracks_pngwhite.png"
+          :src="logo"
           loading="lazy"
           :width="!miniState ? '100px' : '20px'"
           class="block q-mx-auto"
+          v-if="logo"
+        />
+        <q-img
           v-else
+          src="/images/gnb-logo.jpeg"
+          loading="lazy"
+          :width="!miniState ? '180px' : '20px'"
+          class="block q-mx-auto"
         />
       </div>
       <q-list
-        class="text-dark q-pl-lg q-pr-lg"
+        :class="!miniState ? 'text-dark q-pl-lg q-pr-lg' : ''"
         v-for="(menuItem, index) in essentialLinks"
         :key="index"
       >
@@ -1011,7 +1103,7 @@ const setColor = () => {
           :class="
             $q.dark.isActive
               ? 'text-white bg-blue-grey-10 '
-              : 'text-dark bg-primary'
+              : 'text-dark bg-grey-2'
           "
           expand-separator
           :icon="menuItem.icon"
@@ -1022,14 +1114,14 @@ const setColor = () => {
             :class="
               $q.dark.isActive
                 ? 'text-white bg-blue-grey-10 '
-                : 'text-dark bg-primary'
+                : 'text-dark bg-grey-2'
             "
           >
             <q-list
               :class="
                 $q.dark.isActive
                   ? 'text-white bg-blue-grey-10 '
-                  : 'text-dark bg-primary'
+                  : 'text-dark bg-grey-2'
               "
               v-for="(sub, index) in menuItem.subMenu"
               :key="index"
@@ -1037,14 +1129,35 @@ const setColor = () => {
               <q-item
                 clickable
                 v-ripple
-                :to="sub.to"
                 class="q-ml-sm q-mb-sm q-mt-sm"
                 :class="
                   $q.dark.isActive
                     ? 'text-white bg-blue-grey-10 '
-                    : 'text-dark bg-primary'
+                    : 'text-dark bg-grey-2'
                 "
-                v-if="userStore.checkRole(sub.role)"
+                v-if="
+                  userStore.checkRole(sub.role) &&
+                  (sub.label === 'Products' || sub.label === 'Inventory')
+                "
+                :to="`/${computedSlug}` + sub.to"
+                exact
+              >
+                <q-item-section avatar>
+                  <q-icon :name="sub.icon" />
+                </q-item-section>
+                <q-item-section>{{ sub.label }}</q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                v-ripple
+                class="q-ml-sm q-mb-sm q-mt-sm"
+                :class="
+                  $q.dark.isActive
+                    ? 'text-white bg-blue-grey-10 '
+                    : 'text-dark bg-grey-2'
+                "
+                v-else-if="userStore.checkRole(sub.role)"
+                :to="sub.to"
                 exact
               >
                 <q-item-section avatar>
@@ -1059,7 +1172,7 @@ const setColor = () => {
         <!-- <q-item
           v-else-if="menuItem.label == 'Logout'"
           :class="!miniState ? 'q-ml-lg' : ''"
-          class="q-mb-sm q-pr-sm logout fixed-bottom"
+          class="q-mb-sm q-pr-sm logout absolute-bottom"
           clickable
           @click="userStore.logoutUser"
           v-ripple
@@ -1083,10 +1196,18 @@ const setColor = () => {
           :to="
             menuItem.label == 'Cashier'
               ? `/${computedSlug}/branches/${link}/cashier`
+              : menuItem.label == 'Expenses'
+              ? `/${computedSlug}/branches/${link}/expenses`
+              : menuItem.label == 'Loans'
+              ? `/${computedSlug}/branches/${link}/loans`
+              : menuItem.label == 'Benefits'
+              ? `/${computedSlug}/branches/${link}/benefits`
               : menuItem.label == 'Products'
               ? `/${computedSlug}/branches/${link}/products`
               : menuItem.label == 'Voucher'
               ? `/${computedSlug}/branches/${link}/discount`
+              : menuItem.label == 'Client'
+              ? `/${computedSlug}/branches/${link}/client`
               : menuItem.label == 'Branches' &&
                 menuItem.role.find((element) => element == 'owner')
               ? `/${computedSlug}/branches`
@@ -1099,6 +1220,12 @@ const setColor = () => {
               : menuItem.label == 'Product' &&
                 menuItem.role.find((element) => element == 'owner')
               ? `/${computedSlug}/products`
+              : menuItem.label == 'Services' &&
+                menuItem.role.find((element) => element == 'owner')
+              ? `/${computedSlug}/services`
+              : menuItem.label == 'Staff' &&
+                menuItem.role.find((element) => element == 'owner')
+              ? `/${computedSlug}/staff`
               : menuItem.label == 'Supplies' &&
                 menuItem.role.find((element) => element == 'owner')
               ? `/${computedSlug}/supplies`
@@ -1118,15 +1245,38 @@ const setColor = () => {
           <q-item-section avatar>
             <q-icon :name="menuItem.icon" />
           </q-item-section>
-          <q-item-section> {{ menuItem.label }} </q-item-section>
+          <q-item-section>
+            {{ menuItem.label
+            }}<q-badge
+              color="red"
+              v-if="menuItem.label == 'Orders' && userStore.orderCount > 0"
+              floating
+            >
+              {{ userStore.orderCount }}</q-badge
+            >
+          </q-item-section>
         </q-item>
       </q-list>
+      <span
+        class="text-center block full-width"
+        style="position: absolute; bottom: 10px; font-size: 12px"
+      >
+        <span class="block text-center" v-if="getBranchName !== ''">
+          {{ LocalStorage.getItem("branchName") }}
+        </span>
+        <q-chip
+          v-else
+          :label="userStore.userDetails.roles.toString()"
+          size="sm"
+          icon="badge"
+        />
+      </span>
     </q-drawer>
 
     <!-- right drawer for Billing ofr Payment Sidebar -->
     <q-drawer
       class="sidebar"
-      :width="$q.platform.is.mobile ? 300 : 350"
+      :width="$q.platform.is.mobile ? 300 : 320"
       v-model="rightDrawerOpen"
       side="right"
       :breakpoint="767"
@@ -1254,10 +1404,7 @@ const setColor = () => {
               </div>
             </div>
             <q-btn
-              v-show="
-                productStores.addToCartPlan.cash != '' ||
-                productStores.addToCartPlan.cash != 0
-              "
+              v-show="Object.keys(cashierStore.rowDatas).length !== 0"
               label="Checkout"
               color="blue"
               class="q-mt-md full-width"
@@ -1271,8 +1418,60 @@ const setColor = () => {
         class="q-pa-md row items-start q-gutter-md full-width"
       >
         <q-card class="my-card full-width" flat bordered>
-          <q-separator />
-
+          <!-- <q-separator /> -->
+          <q-card-section horizontal>
+            <q-select
+              class="my-card"
+              filled
+              :class="cashierStore.client != 'Client' ? 'full-width' : ''"
+              v-model="cashierStore.client"
+              :options="['Guest', 'Client']"
+              label="Select Guest or Client"
+              @update:model-value="guestClientFunc"
+              style="width: 100px"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-italic text-grey">
+                    no results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-select
+              filled
+              v-if="cashierStore.client == 'Client'"
+              v-model="cashierStore.selectedClient"
+              use-input
+              input-debounce="0"
+              label="Search Client"
+              :options="options"
+              @filter="filterFn"
+              style="width: 190px"
+              behavior="menu"
+              @update:model-value="selectedClientFunc"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </q-card-section>
+          <q-card-section
+            class="q-pa-none"
+            v-if="cashierStore.client == 'Client'"
+          >
+            <q-btn
+              label="add new client"
+              class="q-mt-sm q-ml-sm"
+              color="primary"
+              size="sm"
+              @click="addNewClientFunc"
+            />
+          </q-card-section>
           <q-card-actions>
             <q-card
               class="my-card full-width"
@@ -1321,7 +1520,16 @@ const setColor = () => {
                             color="blue"
                           ></q-btn>
                         </span>
-                        <span style="font-weight: bold; float: right"
+                        <span
+                          style="font-weight: bold; float: right"
+                          :style="
+                            item.discount ? 'text-decoration:line-through' : ''
+                          "
+                          >P{{ parseFloat(item.srp) * parseFloat(item.qty) }}
+                        </span>
+                        <span
+                          style="font-weight: bold; float: right"
+                          v-if="item.discount"
                           >P{{ item.total }}
                         </span>
                       </span>
@@ -1334,6 +1542,14 @@ const setColor = () => {
                 style="margin-top: -20px; margin-bottom: -5px"
               >
                 <q-btn
+                  @click="discountDialogFunc(item.uid)"
+                  icon="local_offer"
+                  flat
+                  label="Voucher"
+                  color="orange"
+                  size="sm"
+                />
+                <q-btn
                   label="remove"
                   icon="delete"
                   dense
@@ -1343,6 +1559,18 @@ const setColor = () => {
                   size="sm"
                 />
               </q-card-section>
+              <!-- <q-separator />
+
+              <q-card-section align="right">
+                <q-btn
+                  @click="discountDialogFunc(item.uid)"
+                  icon="percent"
+                  flat
+                  label="Commission"
+                  color="primary"
+                  size="sm"
+                />
+              </q-card-section> -->
               <q-separator />
             </q-card>
             <!-- <q-table
@@ -1423,12 +1651,12 @@ const setColor = () => {
               class="full-width"
               style="position: relative; left: 3%; margin-top: 3%"
             >
-              <div class="q-mt-sm row">
+              <!-- <div class="q-mt-sm row">
                 <div class="col-9">Sub-total</div>
                 <div class="col-3">P{{ cashierStore.subTotal }}</div>
-              </div>
+              </div> -->
               <div class="q-mt-sm row">
-                <div class="col-9">Discount</div>
+                <div class="col-9">Total Discount</div>
                 <div class="col-3">
                   P{{ cashierStore.totalDiscount }}
                   <!-- <q-btn
@@ -1439,7 +1667,7 @@ const setColor = () => {
                     size="sm"
                   /> -->
                 </div>
-                <div class="full-width">
+                <!-- <div class="full-width">
                   <q-btn
                     @click="discountDialogFunc"
                     icon="local_offer"
@@ -1448,23 +1676,37 @@ const setColor = () => {
                     color="orange"
                     size="sm"
                   />
-                </div>
+                </div> -->
               </div>
-              <q-separator class="q-mt-sm q-mt-mb" />
+              <!-- <q-separator class="q-mt-sm q-mt-mb" /> -->
               <div class="q-mt-sm row">
                 <div class="col-9">Total</div>
                 <div class="col-3">P{{ cashierStore.total }}</div>
               </div>
 
-              <!-- <h6 style="margin-top: 20px; margin-bottom: -10px">
+              <!-- <h6
+                style="margin-top: 20px; margin-bottom: -10px; font-size: 16px"
+              >
                 Payment Method
               </h6>
               <div class="q-mt-md q-mb-md">
                 <q-btn-toggle
                   v-model="formData.mop"
+                  name="mop"
                   toggle-color="blue"
+                  @click="cashierStore.chooseMop(formData.mop)"
+                  size="sm"
                   color="grey"
-                  :options="[{ label: 'Cash', value: 'cash', slot: 'cash' }]"
+                  :options="[
+                    {
+                      label: 'Cash',
+                      value: 'cash',
+                    },
+                    {
+                      label: 'GCash',
+                      value: 'gcash',
+                    },
+                  ]"
                 >
                   <template v-slot:cash>
                     <q-icon name="local_atm" />
@@ -1476,10 +1718,10 @@ const setColor = () => {
               </div> -->
               <div class="q-mt-lg q-mb-md text-center">
                 <q-btn
-                  style="width: 260px"
+                  style="width: 240px"
                   color="orange"
                   @click="payBillFunc"
-                  label="Pay Bills"
+                  label="Checkout"
                 />
               </div>
             </div>
@@ -1493,7 +1735,7 @@ const setColor = () => {
         :class="
           $q.dark.isActive
             ? 'text-white bg-blue-grey-10 q-pa-lg'
-            : 'text-dark bg-primary q-pa-lg'
+            : 'text-dark  bg-grey-2 q-pa-lg'
         "
       >
         <router-view />
@@ -1512,6 +1754,12 @@ const setColor = () => {
 
     <q-dialog v-model="showPayBillDialog" persistent>
       <payBill @hide-pay-dialog="showPayBillDialog = !showPayBillDialog" />
+    </q-dialog>
+    <q-dialog persistent v-model="showAddClientDialog">
+      <addClient
+        @hide-create-dialog="showAddClientDialog = !showAddClientDialog"
+        @update-client="guestClientFunc"
+      />
     </q-dialog>
   </q-layout>
 </template>

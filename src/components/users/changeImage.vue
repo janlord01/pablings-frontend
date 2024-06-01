@@ -148,12 +148,12 @@ export default {
                 type: "positive",
                 icon: "save",
                 timeout: 3000,
-                position: "bottom",
+                position: "top",
                 message: response.data.message,
               });
               emit("hideImageDialog");
 
-              // userStore.getAllMembers();
+              userStore.getAllMembers(route.params.slug);
               companyStore.getAllOwners(route.params.slug);
               userStore.getAllStaff([route.params.slug, route.params.id]);
               // emit("hideImageDialog");
@@ -166,13 +166,13 @@ export default {
               $q.notify({
                 type: "negative",
                 icon: "error",
-                timeout: 1000,
-                position: "bottom",
+                timeout: 3000,
+                position: "top",
                 message: response.data.message,
               });
               // userStore.getAllMembers();
               // emit("hideCreateDialog");
-            }, 2000);
+            }, 3000);
           }
         })
         .catch((error) => {

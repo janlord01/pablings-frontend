@@ -1,8 +1,8 @@
 {
-  "name": "frontend-gym",
+  "name": "service-pos",
   "version": "0.0.1",
-  "description": "A Barbershop System",
-  "productName": "Barbershop System",
+  "description": "A all in One Product and Service Solution",
+  "productName": "Gnb POS System",
   "author": "Janlord Luga <janlord.luga@gmail.com>",
   "private": true,
   "scripts": {
@@ -33,6 +33,7 @@
     "vue-qrcode-reader": "^3.1.6",
     "vue-router": "^4.0.0",
     "vue-web-cam": "^1.9.0",
+    "vue3-print-nb": "^0.1.4",
     "vue3-qr-reader": "^1.0.0"
   },
   "devDependencies": {

@@ -31,7 +31,7 @@
           color="blue"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          :label="$q.screen.gt.xs ? 'Create Product' : 'Create'"
+          :label="$q.screen.gt.xs ? 'Add Product' : 'add'"
           @click="createDialog"
         />
       </q-toolbar>
@@ -71,7 +71,7 @@ const onSearchSubmit = ($event) => {
 };
 const onSearchDelete = () => {
   // console.log("delete");
-  productStore.onSearchDelete();
+  productStores.onSearchDelete();
 };
 const onLoadAllData = () => {};
 

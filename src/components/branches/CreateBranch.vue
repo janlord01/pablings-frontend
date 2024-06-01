@@ -79,6 +79,21 @@
             </q-input>
           </div>
         </div>
+        <div class="row q-col-gutter-none q-mb-md relative-position">
+          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width'">
+            <q-input
+              filled
+              label="Commission"
+              class="full-width"
+              type="number"
+              v-model="formData.commission"
+            >
+              <template v-slot:prepend>
+                <q-icon name="percent" />
+              </template>
+            </q-input>
+          </div>
+        </div>
 
         <div class="row align-center">
           <q-btn
@@ -135,6 +150,7 @@ const onSubmit = () => {
         code: formData.code,
         cp: formData.cp,
         address: formData.address,
+        commission: formData.commission,
       },
       {
         headers: {
@@ -185,6 +201,7 @@ const formData = reactive({
   code: null,
   cp: null,
   address: null,
+  commission: "",
 });
 
 const getActiveCodes = () => {};

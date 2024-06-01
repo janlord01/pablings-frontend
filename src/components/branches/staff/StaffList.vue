@@ -1,19 +1,73 @@
 <template>
-  <div class="q-pa-md">
+  <div class="">
     <q-table
       flat
       :pagination="pagination"
-      class="q-pa-sm"
       :rows="staffStore.rowStaffDatas"
       :columns="columns"
       row-key="id"
+      :grid="!$q.screen.gt.xs"
       separator="cell"
       :visible-columns="
         $q.screen.gt.xs
           ? ['id', 'name', 'email', 'number', 'role', 'action']
-          : ['id', 'name', 'action']
+          : ['name', 'number', 'role']
       "
     >
+      <template v-slot:item="props" v-if="!$q.screen.gt.xs">
+        <q-card class="my-card row q-mb-sm q-mr-sm" style="width: 47%">
+          <q-card-section>
+            <div style="font-size: 12px">
+              <q-btn round>
+                <q-avatar size="100px">
+                  <img
+                    :src="props.row.image_path"
+                    v-if="props.row.image_path != null"
+                  />
+                  <q-btn
+                    v-else-if="props.row.gender == 'Male'"
+                    icon="face"
+                  ></q-btn>
+                  <q-btn v-else icon="face_3"></q-btn>
+                </q-avatar> </q-btn
+              ><br />
+              <span class="text-bold">Name: </span><br />
+              {{ props.row.name }}
+            </div>
+            <div style="font-size: 10px">
+              <span class="text-bold">Phone:</span> <br />
+              {{ props.row.cp_number }} <br />
+              <span class="text-bold">Email:</span> <br />
+              {{ props.row.email }}
+              <span class="text-bold">Role(s):</span> <br />
+              {{ props.row.role }}
+            </div>
+          </q-card-section>
+          <q-card-actions class="q-pt-none">
+            <q-btn
+              color="blue"
+              icon="edit"
+              size="sm"
+              style="margin: 0; font-size: 10px"
+              @click="EditMemberDialog(props.row.user_id)"
+            />
+            <q-btn
+              color="orange"
+              icon="camera_alt"
+              size="sm"
+              style="margin: 0; font-size: 10px"
+              @click="changeImageDialog(props.row.user_id)"
+            />
+            <q-btn
+              color="grey"
+              icon="password"
+              size="sm"
+              style="margin: 0; font-size: 10px"
+              @click="passwordDialog(props.row.user_id)"
+            />
+          </q-card-actions>
+        </q-card>
+      </template>
       <template #body="props">
         <q-tr :props="props">
           <q-td key="id" :props="props">
@@ -35,6 +89,14 @@
               </q-avatar>
             </q-btn>
             {{ props.row.name }}
+            <q-btn
+              v-if="!$q.screen.gt.xs"
+              flat
+              color="blue"
+              icon="arrow_forward_ios"
+              size="sm"
+              @click="EditMemberDialog(props.row.user_id)"
+            />
           </q-td>
           <q-td key="email" :props="props">
             {{ props.row.email }}

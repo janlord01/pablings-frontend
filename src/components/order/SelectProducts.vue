@@ -18,7 +18,7 @@
         <div class="row q-col-gutter-none relative-position">
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-12 q-mb-md ' : 'full-width q-mb-md'
+              $q.screen.gt.md ? 'col-md-12 q-mb-md ' : 'full-width q-mb-md'
             "
           >
             <q-select
@@ -43,16 +43,16 @@
 
             <div
               :class="
-                $q.screen.gt.xs ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
+                $q.screen.gt.md
+                  ? 'col-md-4 q-mb-md'
+                  : 'col-sm-1 full-width q-mb-md'
               "
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
             >
               <q-input
                 filled
                 label="MSRP"
                 name="code"
-                readonly
-                class="col-3 full-width"
+                class="full-width"
                 type="text"
                 v-model="formData.msrp"
               >
@@ -63,15 +63,15 @@
             </div>
             <div
               :class="
-                $q.screen.gt.xs ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
+                $q.screen.gt.md
+                  ? 'col-md-4 q-mb-md'
+                  : 'col-sm-1 full-width q-mb-md'
               "
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
             >
               <q-input
                 filled
                 label="SRP"
                 class="col-3 full-width"
-                readonly
                 v-model="formData.srp"
               >
                 <template v-slot:prepend>
@@ -80,8 +80,8 @@
               </q-input>
             </div>
             <!-- <div
-              :class="$q.screen.gt.xs ? 'full-width ' : ' full-width'"
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+              :class="$q.screen.gt.md ? 'full-width ' : ' full-width'"
+              :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
             >
               <q-input
                 filled
@@ -96,14 +96,11 @@
                 </template>
               </q-input>
             </div> -->
-            <div
-              :class="$q.screen.gt.xs ? 'col-md-3' : 'col-sm-1 full-width'"
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
-            >
+            <div :class="$q.screen.gt.md ? 'col-md-3' : 'full-width q-mb-md'">
               <q-input
                 filled
                 label="Qty"
-                class="col-3 full-width"
+                class="full-width"
                 v-model="formData.qty"
                 @keyup="checkQty"
                 :rules="[(val) => !!val || 'Qty is required']"
@@ -115,9 +112,9 @@
             </div>
             <!-- <div
               :class="
-                $q.screen.gt.xs ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
+                $q.screen.gt.md ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
               "
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+              :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
             >
               <q-input
                 filled
@@ -148,8 +145,8 @@
               </q-input>
             </div> -->
             <!-- <div
-              :class="$q.screen.gt.xs ? 'col-md-4' : 'col-sm-1 full-width'"
-              :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
+              :class="$q.screen.gt.md ? 'col-md-4' : 'col-sm-1 full-width'"
+              :style="$q.screen.gt.md ? '' : 'margin-bottom:0px;'"
             >
               <q-input
                 filled
@@ -185,9 +182,8 @@
         <div class="row align-center">
           <q-btn
             unelevated
-            label="Create"
+            label="Submit"
             class="text-center"
-            :class="$q.screen.gt.xs ? '' : 'q-mt-md'"
             color="blue"
             size="md"
             type="submit"
@@ -249,8 +245,8 @@ const getProduct = async () => {
     })
     .then((response) => {
       // console.log(response);
-      formData.srp = response.data.data.price;
-      formData.msrp = response.data.data.msrp;
+      // formData.srp = response.data.data.price;
+      // formData.msrp = response.data.data.msrp;
       // Object.entries(response.data.data).map(([key, val]) => {
       //   stringOptions.push({
       //     label: val.title,

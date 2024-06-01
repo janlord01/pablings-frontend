@@ -5,14 +5,61 @@
     :rows="servicesStore.rowDatas"
     :columns="columns"
     flat
+    grid
     row-key="id"
     separator="cell"
     :visible-columns="
       $q.screen.gt.xs
         ? ['name', 'description', 'price', 'time', 'action']
-        : ['name', 'description', 'price', 'time', 'action']
+        : ['name', 'action']
     "
   >
+    <template v-slot:item="props">
+      <q-card
+        class="my-card row q-mb-md q-mr-sm"
+        :style="$q.screen.gt.md ? 'width:24%' : 'width: 47%'"
+      >
+        <q-img :src="props.row.image" v-if="props.row.image" />
+        <q-avatar
+          v-else
+          color="grey"
+          text-color="white"
+          icon="image_not_supported"
+        />
+        <q-card-section>
+          <div style="font-size: 12px">
+            <span class="text-bold">Service Name: </span><br />{{
+              props.row.service_name
+            }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Description:</span> <br />
+            {{ props.row.service_descr }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Price:</span> <br />
+            {{ props.row.service_price }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Duration:</span> <br />
+            {{ props.row.time_duration }}
+          </div>
+          <div style="font-size: 10px">
+            <span class="text-bold">Status:</span> <br />
+            <!-- {{ props.row.time_duration }} -->
+            <q-toggle
+              v-model="props.row.status"
+              checked-icon="check"
+              color="green"
+              unchecked-icon="clear"
+              keep-color
+              @click="changeStatus(props.row.id, props.row.status)"
+            />
+          </div>
+        </q-card-section>
+      </q-card>
+    </template>
+
     <template #body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
@@ -33,8 +80,30 @@
           </q-avatar>
           {{ props.row.service_name }}
         </q-td>
-        <q-td key="description" :props="props">
-          {{ props.row.service_descr }}
+        <q-td key="description" :props="props" style="width: 500px">
+          <span class="read" v-if="!readActivated" @click="activateReadMore"
+            ><span v-if="props.row.service_descr.length >= 80"
+              >{{ props.row.service_descr.slice(0, 80) }}
+              <q-btn
+                flat
+                style="text-transform: lowercase; font-weight: normal"
+                @click="readActivated = true"
+                >..read more</q-btn
+              ></span
+            ><span v-else>
+              {{ props.row.service_descr }}
+            </span>
+          </span>
+          <span v-else>
+            {{ props.row.service_descr }}
+            <q-btn
+              v-if="props.row.service_descr.length >= 80"
+              flat
+              style="text-transform: lowercase; font-weight: normal"
+              @click="readActivated = false"
+              >..show less</q-btn
+            >
+          </span>
         </q-td>
         <q-td key="price" :props="props">
           P{{ props.row.service_price }}
@@ -123,7 +192,7 @@ const route = useRoute();
 const servicesStore = useServicesData();
 
 const $q = useQuasar();
-
+const readActivated = ref(false);
 const showEditDialog = ref(false);
 const showCaptureImg = ref(false);
 const showPasswordDialog = ref(false);
@@ -153,14 +222,14 @@ const changeStatus = (id, status) => {
   $q.dialog({
     title: "Confirm",
     message: `Are you sure you want to ${
-      status == 1 ? "deactivate" : "activate"
+      status == 1 ? "activate" : "deactivate"
     } this service?`,
     cancel: {
       color: "grey",
     },
     ok: {
-      color: status == 1 ? "red" : "green",
-      label: status == 1 ? "Yes, Deactivate" : "Yes, Activate",
+      color: status == 1 ? "green " : "red",
+      label: status == 1 ? "Yes, Activate " : "Yes, Deactivate",
     },
     persistent: true,
   })
@@ -185,7 +254,7 @@ const changeStatus = (id, status) => {
               });
               $q.loading.hide();
 
-              servicesStore.getAllServices(route.params.id);
+              servicesStore.getAllServices(route.params.slug);
             }, 1000);
           } else {
             setTimeout(() => {
@@ -205,13 +274,20 @@ const changeStatus = (id, status) => {
         });
     })
     .onCancel(() => {
-      // console.log('>>>> Cancel')
+      let changeValue = "";
+      if (status == true) {
+        changeValue = false;
+      } else {
+        changeValue = true;
+      }
+      let x = servicesStore.rowDatas.find((item) => item.id === id);
+      x.status = changeValue;
     });
 };
 
 const pagination = reactive({
   sortBy: "id",
-  rowsPerPage: 10,
+  rowsPerPage: 0,
 });
 const columns = reactive([
   {

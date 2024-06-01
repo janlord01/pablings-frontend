@@ -1,13 +1,19 @@
 <template>
   <q-page class="">
-    <div class="bg-white text-black shadow-2">
+    <div
+      :class="
+        $q.dark.isActive
+          ? 'shadow-1 q-pa-md rounded-borders text-white bg-dark q-pa-lg'
+          : 'shadow-1 q-pa-md rounded-borders text-dark bg-white q-pa-lg'
+      "
+      style="border-radius: 20px"
+    >
       <q-toolbar class="q-mt-sm">
         <q-toolbar-title class="text-h6">Supplies</q-toolbar-title>
         <q-input
           bottom-slots
-          v-model="searchSupply"
-          @keyup="onSearchSubmit($event)"
-          @keyup.delete="onSearchDelete"
+          v-model="searchProduct"
+          @keyup="onSearchSubmit"
           label="Search Supply"
           outlined
           class="search_input"
@@ -19,10 +25,10 @@
         </q-input>
         <q-btn
           icon="add_circle"
-          color="primary"
+          color="blue"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          :label="$q.screen.gt.xs ? 'Create Supply' : ''"
+          :label="$q.screen.gt.xs ? 'Add Supply' : ''"
           @click="createDialog"
         />
       </q-toolbar>
@@ -52,9 +58,11 @@ const route = useRoute();
 
 const supplyStore = useSupplyData();
 const searchSupply = ref(null);
+const searchProduct = ref("");
 
-const onSearchSubmit = ($event) => {
-  supplyStore.onSearch(searchSupply.value);
+const onSearchSubmit = () => {
+  supplyStore.onSearch([searchProduct.value, route.params.slug]);
+  // supplyStore.onSearch(searchSupply.value);
 };
 const onSearchDelete = () => {
   // console.log("delete");
@@ -72,7 +80,7 @@ const ImportDialog = () => {
   showImportDialog.value = true;
 };
 onMounted(() => {
-  supplyStore.getAllProducts();
+  supplyStore.getAllProducts(route.params.slug);
   // getCodesFunc();
   // console.log(codes);
 });

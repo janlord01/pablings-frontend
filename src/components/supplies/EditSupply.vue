@@ -1,7 +1,7 @@
 <template>
   <q-card style="max-width: 800px; width: 800px; min-height: 400px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="bg-blue text-white">
       <q-toolbar-title> Update Product </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
@@ -14,7 +14,7 @@
         <div class="row q-col-gutter-none relative-position">
           <div
             :class="
-              $q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
+              $q.screen.gt.xs ? 'full-width q-mr-sm' : 'col-sm-1 full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
@@ -32,7 +32,7 @@
               </template>
             </q-input>
           </div>
-          <div
+          <!-- <div
             :class="
               $q.screen.gt.xs ? 'col-md-3 q-mr-sm' : 'col-sm-1 full-width'
             "
@@ -70,7 +70,7 @@
                 <q-icon name="numbers" />
               </template>
             </q-input>
-          </div>
+          </div> -->
         </div>
 
         <div class="row q-col-gutter-none relative-position">
@@ -91,20 +91,40 @@
         </div>
         <div class="row q-col-gutter-none q-mb-xl relative-position">
           <div
-            :class="$q.screen.gt.xs ? 'col-md-3 q-mr-sm' : 'col-sm-1'"
+            :class="$q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1'"
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
           >
-            <q-input
+            <q-file
               filled
-              label=""
               class="q-mr-sm col-3 full-width"
               type="file"
+              label="Change Image"
               v-model="formData.img"
             >
-              <template v-slot:prepend>
-                <q-icon name="image" />
+              <template v-slot:before>
+                <q-avatar
+                  v-if="formData.img !== null && formData.img === oldImage"
+                >
+                  <img :src="formData.img" />
+                </q-avatar>
+                <!-- <q-avatar v-else-if="formData.img !== oldImage" color="grey">
+                  <q-icon name="image" color="white" />
+                </q-avatar> -->
+                <!-- -->
+                <q-avatar v-else color="grey">
+                  <q-icon name="image" color="white" />
+                </q-avatar>
               </template>
-            </q-input>
+              <template v-slot:append>
+                <q-icon
+                  v-if="formData.img !== null"
+                  name="close"
+                  @click.stop.prevent="formData.img = null"
+                  class="cursor-pointer"
+                />
+                <q-icon name="image" @click.stop.prevent />
+              </template>
+            </q-file>
           </div>
         </div>
 
@@ -113,7 +133,7 @@
             unelevated
             label="Update"
             class="text-center"
-            color="primary"
+            color="blue"
             size="md"
             type="submit"
           />
@@ -126,6 +146,7 @@
 import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useProductDatas } from "src/stores/branch/productStores";
 
+import { useSupplyData } from "stores/supplies/supplyStore";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
@@ -135,10 +156,12 @@ const route = useRoute();
 
 const emit = defineEmits(["hideEditDialog"]);
 
+const supplyStore = useSupplyData();
 const props = defineProps(["productId"]);
 
-const productStore = useProductData();
+const productStore = useProductDatas();
 
+const oldImage = ref(null);
 const codes = reactive([]);
 const $q = useQuasar();
 const isPwd = ref(true);
@@ -155,7 +178,7 @@ const isPwdCon = ref(true);
 const getProduct = () => {
   var newToken = LocalStorage.getItem("jwt");
   api
-    .get("/api/products/" + props.productId + "/edit", {
+    .get(`/api/${route.params.slug}/products/${props.productId}/edit`, {
       headers: {
         Authorization: "Bearer " + newToken,
       },
@@ -168,6 +191,7 @@ const getProduct = () => {
       formData.sku = response.data.data.sku;
       formData.msrp = response.data.data.msrp;
       formData.img = response.data.img;
+      oldImage.value = response.data.img;
     })
     .catch((error) => {
       console.log(error);
@@ -191,7 +215,7 @@ const onSubmit = () => {
   fileData.append("_method", "PATCH");
 
   api
-    .post("/api/products/" + props.productId, fileData, {
+    .post(`/api/${route.params.slug}/products/${props.productId}`, fileData, {
       headers: {
         Authorization: "Bearer " + newToken,
       },
@@ -208,7 +232,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          productStore.getAllProducts();
+          supplyStore.getAllProducts(route.params.slug);
           emit("hideEditDialog");
         }, 2000);
       } else {
@@ -235,14 +259,14 @@ onMounted(() => {
 });
 
 const formData = reactive({
-  name: null,
-  description: null,
-  price: null,
-  msrp: null,
-  sku: null,
+  name: "",
+  description: "",
+  price: "",
+  msrp: "",
+  sku: "",
   //   sale: false,
   //   sale_price: 0,
-  img: null,
+  img: "",
 });
 
 const getActiveCodes = () => {};

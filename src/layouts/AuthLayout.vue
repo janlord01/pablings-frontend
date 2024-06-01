@@ -35,8 +35,13 @@
         </template>
 
         <template v-slot:after>
-          <img
+          <!-- <img
             src="/images/login-side-image.jpeg"
+            class="absolute-top-right img-login"
+            width="1000"
+          /> -->
+          <img
+            src="/images/Tabas-Pablings.jpeg"
             class="absolute-top-right img-login"
             width="1000"
           />

@@ -1,99 +1,118 @@
 <template>
-  <q-page class="row justify-center items-center q-mt-lg">
-    <div class="">
-      <div class="">
-        <h5 class="text-h5 text-black q-my-md text-bold text-center">
-          Register
-        </h5>
+  <q-page class="row justify-center items-center">
+    <div class="column">
+      <div class="row q-mb-lg text-center">
+        <!-- <img
+          src="/images/ink&shears-icon.png"
+          width="200"
+          style="display: block; margin: auto"
+        /><br /> -->
+        <img
+          src="/images/pablings.png"
+          width="200"
+          style="display: block; margin: auto"
+        /><br />
       </div>
-      <div class="q-mb-lg">
-        <q-card square bordered class="q-pa-lg shadow-1">
-          <q-card-section>
-            <q-form class="" method="post" @submit.prevent="handleSubmit">
-              <div class="row q-col-gutter-none">
-                <div class="col-6">
-                  <q-input
-                    square
-                    filled
-                    v-model="formData.firstname"
-                    type="text"
-                    label="Firstname"
-                    lazy-rules
-                    :rules="[
-                      (val) =>
-                        (val && val.length > 0) ||
-                        'Please Enter your firstname',
-                    ]"
-                    class="q-mr-sm"
-                  />
-                </div>
-                <div class="col-6">
-                  <q-input
-                    square
-                    filled
-                    v-model="formData.lastname"
-                    type="text"
-                    label="Lastname"
-                    lazy-rules
-                    :rules="[
-                      (val) =>
-                        (val && val.length > 0) || 'Please Enter your lastname',
-                    ]"
-                  />
-                </div>
-              </div>
+      <div class="row">
+        <q-card class="q-pa-lg no-shadow">
+          <q-card-section class="relative">
+            <q-form class="relative" @submit="loginSubmit">
               <q-input
-                square
-                filled
+                outlined
+                v-model="formData.name"
+                class="q-mb-md"
+                label="Name*"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="eva-person-outline" />
+                </template>
+              </q-input>
+              <q-input
+                outlined
                 v-model="formData.email"
-                type="email"
                 label="Email"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please Enter your email',
-                ]"
-                class="q-mt-sm"
-              />
+                type="email"
+                class="q-mb-md"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="eva-email-outline" />
+                </template>
+              </q-input>
               <q-input
-                square
-                filled
+                outlined
+                v-model="formData.cp_number"
+                label="Phone #(starts at 09)"
+                type="number"
+                class="q-mb-md"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="eva-phone-outline" />
+                </template>
+              </q-input>
+
+              <q-input
+                outlined
+                label="Password*"
+                class="q-mb-md"
                 v-model="formData.password"
-                type="password"
-                label="Password"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.length > 0) || 'Please Enter your password',
-                ]"
-                class="q-mt-sm"
-              />
+                :type="isPwd ? 'password' : 'text'"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="password" />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
               <q-input
-                square
-                filled
+                outlined
+                label="Password Confirmation*"
+                class="q-mb-md"
                 v-model="formData.password_confirmation"
-                type="password"
-                label="Confirm Password"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.length > 0) || 'Please confirm your firstname',
-                ]"
-                class="q-mt-sm"
-              />
+                :type="isPwdCon ? 'password' : 'text'"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="password" />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwdCon ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwdCon = !isPwdCon"
+                  />
+                </template>
+              </q-input>
               <q-btn
                 unelevated
-                size="lg"
-                color="primary"
+                size="md"
                 class="full-width text-white q-mt-sm"
                 label="Register"
+                color="blue"
                 type="submit"
               />
             </q-form>
           </q-card-section>
-
           <q-card-section class="text-center q-pa-none">
             <p class="text-grey-6">
-              Already have an account? <a href="/login">Login</a>
+              Already have an account?
+              <q-btn
+                flat
+                to="/login"
+                class="text-center text-primary"
+                style="text-decoration: none"
+                no-caps
+                dense
+                >Login
+              </q-btn>
+            </p>
+
+            <p class="text-grey-6" style="font-size: 12px">
+              All Right Reserved. Created exclusively for Pablings Barbershop.
+              <!-- Gnb Inventory System. All Right Reserved. Created By: Janlord Luga -->
             </p>
           </q-card-section>
         </q-card>
@@ -101,29 +120,26 @@
     </div>
   </q-page>
 </template>
-
 <script setup>
-// import axios from "src/boot/axios";
-import { ref, reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useUserData } from "stores/users/store";
 
 const userStore = useUserData();
-
+const isPwd = ref(true);
+const isPwdCon = ref(true);
 const formData = reactive({
-  firstname: "Janlord",
-  lastname: "Luga",
-  email: "janlord.luga@gmail.com",
-  password: "admin123",
-  password_confirmation: "admin123",
+  name: "",
+  email: "",
+  cp_number: "",
+  password: "",
+  password_confirmation: "",
 });
-
-const handleSubmit = () => {
-  userStore.registerUser(formData);
+const loginSubmit = () => {
+  userStore.loginUser(formData);
 };
 </script>
-
 <style>
 .q-card {
-  width: 600px;
+  width: 360px;
 }
 </style>

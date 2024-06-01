@@ -3,18 +3,21 @@
     <div
       :class="
         $q.dark.isActive
-          ? 'shadow-1 q-pa-md rounded-borders text-white bg-dark q-pa-lg'
-          : 'shadow-1 q-pa-md rounded-borders text-dark bg-white q-pa-lg'
+          ? 'shadow-1  rounded-borders text-white bg-dark '
+          : 'shadow-1  rounded-borders text-dark bg-white '
       "
       style="border-radius: 20px"
     >
       <q-toolbar class="q-mt-sm">
-        <q-toolbar-title class="text-h6">Cashier Transaction</q-toolbar-title>
+        <q-toolbar-title
+          :class="$q.screen.gt.xs ? ' full-width  text-h6' : 'hidden'"
+          >{{ mainStore.loc }}
+        </q-toolbar-title>
       </q-toolbar>
       <q-card-section>
         <q-form
           class="column shawdow full-width block"
-          :class="$q.screen.gt.xs ? 'q-pa-md' : ''"
+          :class="$q.screen.gt.xs ? '' : ''"
           ref="formName"
           @submit="onSubmit"
         >
@@ -25,6 +28,7 @@
             inline-label
             indicator-color="transparent"
             active-color="white"
+            :style="$q.screen.gt.xs ? 'margin-left: 20px;' : ''"
             :class="
               $q.dark.isActive
                 ? 'text-grey-4 bg-blue-grey-10'
@@ -64,68 +68,88 @@
                   </q-input>
                 </div>
                 <div class="row relative-position q-mt-lg">
-                  <q-card
-                    flat
-                    ripple
-                    bordered
-                    class="my-card col-3 q-mr-sm q-mb-sm"
+                  <div
                     v-for="item in serviceStore.rowDatas"
                     :key="item.id"
                     :style="
-                      $q.screen.gt.xs
+                      $q.screen.gt.md
                         ? 'min-width: 100px; width: 200px'
                         : 'width: 46%'
                     "
                   >
-                    <q-img :src="item.image" />
-                    <q-card-section>
-                      <div class="row no-wrap items-center">
-                        <div
-                          :class="
-                            $q.screen.gt.xs ? 'text-h6' : 'text-subtitle2'
-                          "
-                          class="col ellipsis"
-                        >
-                          {{ item.service_name }}
-                        </div>
-                        <div
-                          class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
-                        >
-                          <!-- <q-icon name="place" />
+                    <q-card
+                      flat
+                      ripple
+                      bordered
+                      class="my-card col-3 q-mr-sm q-mb-sm"
+                      v-if="item.status == 1"
+                    >
+                      <div
+                        @click="AddToCheckout(item.id, 'services')"
+                        style="cursor: pointer"
+                      >
+                        <q-img
+                          :src="item.image"
+                          :height="$q.screen.gt.xs ? '180px' : '120px'"
+                        />
+                        <q-card-section>
+                          <div class="row no-wrap items-center">
+                            <div
+                              :style="
+                                $q.screen.gt.xs
+                                  ? 'font-size: 16px; font-weight:bold'
+                                  : 'font-size: 10px; font-weight:bold'
+                              "
+                              class="col ellipsis"
+                            >
+                              {{ item.service_name }}
+                            </div>
+                            <div
+                              class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
+                            >
+                              <!-- <q-icon name="place" />
                       250 ft -->
-                        </div>
-                      </div>
+                            </div>
+                          </div>
 
-                      <!-- <q-rating v-model="stars" :max="5" size="32px" /> -->
-                    </q-card-section>
+                          <!-- <q-rating v-model="stars" :max="5" size="32px" /> -->
+                        </q-card-section>
 
-                    <q-card-section class="q-pt-none">
-                      <div class="text-subtitle1">
-                        P{{ item.service_price }}
-                      </div>
-                      <div class="text-caption text-grey">
+                        <q-card-section class="q-pt-none">
+                          <div
+                            :style="
+                              $q.screen.gt.xs
+                                ? 'font-size: 14px;'
+                                : 'font-size: 10px;'
+                            "
+                          >
+                            P{{ item.service_price }}
+                          </div>
+                          <!-- <div class="text-caption text-grey">
                         {{ item.service_descr }}
-                      </div>
-                      <!-- <div class="text-caption text-grey">
+                      </div> -->
+                          <!-- <div class="text-caption text-grey">
                         Qty: {{ item.qty_remaining }}
                       </div> -->
-                    </q-card-section>
+                        </q-card-section>
+                      </div>
+                      <q-separator />
 
-                    <q-separator />
+                      <q-card-actions v-if="$q.screen.gt.xs">
+                        <!-- <q-btn flat round icon="event" /> -->
+                        <q-btn
+                          color="blue"
+                          class="full-width"
+                          icon="o_shopping_cart"
+                          :size="$q.screen.gt.xs ? 'md' : 'sm'"
+                          @click="AddToCheckout(item.id, 'services')"
+                        >
+                          Add to cart
+                        </q-btn>
+                      </q-card-actions>
+                    </q-card>
+                  </div>
 
-                    <q-card-actions>
-                      <!-- <q-btn flat round icon="event" /> -->
-                      <q-btn
-                        color="blue"
-                        class="full-width"
-                        icon="o_shopping_cart"
-                        :size="$q.screen.gt.xs ? 'md' : 'sm'"
-                        @click="AddToCheckout(item.id, 'services')"
-                      >
-                        Add to cart
-                      </q-btn>
-                    </q-card-actions>
-                  </q-card>
                   <!-- </q-card> -->
                 </div>
               </div>
@@ -156,46 +180,69 @@
                     v-for="item in productStores.rowBranchProductDatas"
                     :key="item.id"
                     :style="
-                      $q.screen.gt.xs
+                      $q.screen.gt.md
                         ? 'min-width: 100px; width: 200px'
-                        : 'width: 47%'
+                        : 'width: 46%'
                     "
                   >
-                    <q-img :src="item.product_img" />
-                    <q-card-section>
-                      <div class="row no-wrap items-center">
-                        <div
-                          :class="
-                            $q.screen.gt.xs ? 'text-h6' : 'text-subtitle2'
-                          "
-                          class="col ellipsis"
-                        >
-                          {{ item.title }}
-                        </div>
-                        <div
-                          class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
-                        >
-                          <!-- <q-icon name="place" />
+                    <div
+                      @click="AddToCheckout(item.id, 'products')"
+                      style="cursor: pointer"
+                    >
+                      <q-img
+                        :src="item.product_img"
+                        :height="$q.screen.gt.xs ? '180px' : '120px'"
+                      />
+                      <q-card-section>
+                        <div class="row no-wrap items-center">
+                          <div
+                            :style="
+                              $q.screen.gt.xs
+                                ? 'font-size: 16px; font-weight:bold'
+                                : 'font-size: 10px; font-weight:bold'
+                            "
+                            class="col ellipsis"
+                          >
+                            {{ item.title }}
+                          </div>
+                          <div
+                            class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
+                          >
+                            <!-- <q-icon name="place" />
                       250 ft -->
+                          </div>
                         </div>
-                      </div>
 
-                      <!-- <q-rating v-model="stars" :max="5" size="32px" /> -->
-                    </q-card-section>
+                        <!-- <q-rating v-model="stars" :max="5" size="32px" /> -->
+                      </q-card-section>
 
-                    <q-card-section class="q-pt-none">
-                      <div class="text-subtitle1">P{{ item.srp }}</div>
-                      <div class="text-caption text-grey">
+                      <q-card-section class="q-pt-none">
+                        <div
+                          :style="
+                            $q.screen.gt.xs
+                              ? 'font-size: 14px; '
+                              : 'font-size: 10px; '
+                          "
+                        >
+                          P{{ item.srp }}
+                        </div>
+                        <!-- <div class="text-caption text-grey">
                         {{ item.description }}
-                      </div>
-                      <div class="text-caption text-grey">
-                        Qty: {{ item.qty_remaining }}
-                      </div>
-                    </q-card-section>
+                      </div> -->
+                        <div
+                          :style="
+                            $q.screen.gt.xs
+                              ? 'font-size: 14px; '
+                              : 'font-size: 10px; '
+                          "
+                        >
+                          Qty: {{ item.qty_remaining }}
+                        </div>
+                      </q-card-section>
 
-                    <q-separator />
-
-                    <q-card-actions>
+                      <q-separator />
+                    </div>
+                    <q-card-actions v-if="$q.screen.gt.xs">
                       <!-- <q-btn flat round icon="event" /> -->
                       <q-btn
                         color="blue"
@@ -231,6 +278,8 @@ import { LocalStorage } from "quasar";
 import { useUserData } from "src/stores/users/store";
 import { useRoute } from "vue-router";
 
+import { useMainStoreData } from "stores/store";
+const mainStore = useMainStoreData();
 const route = useRoute();
 
 const emit = defineEmits(["hideCreateDialog"]);
@@ -276,7 +325,7 @@ const AddToCheckout = (id, type) => {
     if (checkProds) {
       $q.notify({
         type: "negative",
-        position: "top",
+        position: "bottom",
         timeout: 3000,
         message: "Item already in the cart!",
       });
@@ -293,7 +342,7 @@ const AddToCheckout = (id, type) => {
     if (checkProds) {
       $q.notify({
         type: "negative",
-        position: "top",
+        position: "bottom",
         timeout: 3000,
         message: "Item already in the cart!",
       });
@@ -498,11 +547,29 @@ const onSubmit = () => {
       console.log(error);
     });
 };
+
+const getBranch = async () => {
+  api
+    .get(`api/branch/${route.params.id}`, {
+      headers: {
+        Authorization: "Bearer " + LocalStorage.getItem("jwt"),
+      },
+    })
+    .then((response) => {
+      mainStore.loc = response.data.branch.name + " Cashier Transaction";
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 onMounted(() => {
+  mainStore.loc = "Cashier Transaction";
+  getBranch();
   //   getMembers();
   // productStores.getAllProducts(route.params.id);
   cashierStore.clearPos();
-  serviceStore.getAllServices(route.params.id);
+  serviceStore.getAllServicesBranch(route.params.id);
 
   setTimeout(() => {
     productStores.getAllBranchProducts(route.params.id);

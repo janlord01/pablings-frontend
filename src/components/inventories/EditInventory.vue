@@ -138,6 +138,7 @@
             />
           </div>
           <q-table
+            :grid="!$q.screen.gt.xs"
             flat
             :pagination="pagination"
             class="q-pa-sm"
@@ -171,6 +172,153 @@
                   ]
             "
           >
+            <template v-slot:item="props" v-if="!$q.screen.gt.xs">
+              <q-card class="my-card row q-mb-md q-mr-sm" style="width: 45%">
+                <q-card-section>
+                  <div style="font-size: 12px">
+                    {{
+                      props.row.label != null
+                        ? props.row.label
+                        : props.row.product.label
+                    }}
+                  </div>
+                  <div style="font-size: 10px">
+                    <span class="text-bold">Purchase Price: </span> <br />{{
+                      props.row.purchase_price
+                    }}
+                    <q-btn flat size="sm" color="blue">Edit</q-btn>
+                    <q-popup-edit
+                      v-model="props.row.purchase_price"
+                      v-slot="scope"
+                    >
+                      <q-input
+                        v-model="scope.value"
+                        dense
+                        autofocus
+                        counter
+                        @keyup.enter="scope.set"
+                      />
+                    </q-popup-edit>
+                  </div>
+                  <div style="font-size: 10px">
+                    <span class="text-bold">Qty: </span> <br />{{
+                      props.row.qty
+                    }}
+                    <q-btn flat size="sm" color="blue">Edit</q-btn>
+                    <q-popup-edit v-model="props.row.qty" v-slot="scope">
+                      <q-input
+                        v-model="scope.value"
+                        dense
+                        autofocus
+                        counter
+                        @keyup.enter="scope.set"
+                      />
+                    </q-popup-edit>
+                  </div>
+                  <div style="font-size: 10px">
+                    <span
+                      ><span class="text-bold">Remaining: </span> <br />
+                      {{ props.row.remaining_qty }}
+                    </span>
+                    <br />
+
+                    <span
+                      ><span class="text-bold">MSRP: </span> <br />
+                      {{ props.row.msrp }}
+                    </span>
+                    <br />
+                    <span
+                      ><span class="text-bold">SRP: </span> <br />
+                      {{ props.row.srp }}
+                    </span>
+                    <br />
+                  </div>
+                  <div style="font-size: 10px">
+                    <span class="text-bold">MFG: </span> <br />{{
+                      date.formatDate(props.row.mfg, "MMMM DD, YYYY")
+                    }}
+                    <q-btn flat size="sm" color="blue">Edit</q-btn>
+
+                    <q-popup-edit v-model="props.row.mfg" v-slot="scope">
+                      <q-input
+                        filled
+                        v-model="scope.value"
+                        label="MFG Date"
+                        @keyup.enter="scope.set"
+                        mask="date"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date v-model="scope.value">
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Close"
+                                    color="primary"
+                                    flat
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </q-popup-edit>
+                  </div>
+                  <div style="font-size: 10px">
+                    <span class="text-bold">EXP: </span> <br />{{
+                      date.formatDate(props.row.exp, "MMMM DD, YYYY")
+                    }}
+                    <q-btn flat size="sm" color="blue">Edit</q-btn>
+
+                    <q-popup-edit v-model="props.row.exp" v-slot="scope">
+                      <q-input
+                        filled
+                        v-model="scope.value"
+                        label="EXP Date"
+                        @keyup.enter="scope.set"
+                        mask="date"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date v-model="scope.value">
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Close"
+                                    color="primary"
+                                    flat
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </q-popup-edit>
+                  </div>
+                </q-card-section>
+
+                <q-card-actions class="q-pt-none">
+                  <q-btn
+                    color="red"
+                    icon="delete"
+                    size="sm"
+                    @click="DeleteDialog(props.row.id)"
+                  />
+                </q-card-actions>
+              </q-card>
+            </template>
             <template #body="props">
               <q-tr :props="props">
                 <q-td key="product" :props="props">

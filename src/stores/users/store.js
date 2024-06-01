@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 import { api } from "src/boot/axios";
 import { route } from "quasar/wrappers";
 import { useQuasar } from "quasar";
-import { Notify, Loading, LocalStorage } from "quasar";
+import { Cookies } from "quasar";
+import { Notify, Loading, LocalStorage, Dialog } from "quasar";
 import { useRoute, useRouter } from "vue-router";
 
 export const useUserData = defineStore("userStore", {
@@ -15,9 +16,13 @@ export const useUserData = defineStore("userStore", {
     },
     rowDatas: [],
     tempRowDatas: [],
-
+    branch: 0,
+    branchName: "",
     rowStaffDatas: [],
     temprowStaffDatas: [],
+    orderCount: 0,
+    loading: false,
+    // branches: [],
     // router: useRouter(),
   }),
   getters: {},
@@ -111,23 +116,128 @@ export const useUserData = defineStore("userStore", {
         })
         .then((response) => {
           // console.log(response);
+          // console.log(response.data.role[0]);
+          const branches = [];
           if (response.data.status === 200) {
-            LocalStorage.set("jwt", response.data.token);
             setTimeout(() => {
               Loading.hide();
-              Notify.create({
-                type: "positive",
-                color: "positive",
-                timeout: 2000,
-                position: "bottom",
-                message: response.data.message,
-              });
-              if (LocalStorage.getItem("jwt")) {
-                // this.router.push({ name: "dashboard-index" });
-                window.location = response.data.slug + "/dashboard";
+
+              if (
+                response.data.role[0] === "cashier" ||
+                response.data.role[0] === "manager"
+              ) {
+                if (response.data.branches !== null) {
+                  Object.entries(response.data.branches).map(([key, val]) => {
+                    branches.push({
+                      label: val.name,
+                      value: val.id,
+                      color: "blue",
+                    });
+                  });
+
+                  Dialog.create({
+                    title: "Select Branch to Login",
+                    // message: "Choose an option:",
+                    options: {
+                      type: "radio",
+                      model: "opt1",
+                      // inline: true
+                      items: branches,
+                      // { label: "Option 1", value: "opt1", color: "secondary" },
+                      // { label: "Option 2", value: "opt2" },
+                      // { label: "Option 3", value: "opt3" },
+                    },
+                    ok: {
+                      label: "select",
+                      color: "blue",
+                    },
+                    cancel: {
+                      color: "grey",
+                    },
+                    persistent: true,
+                  })
+                    .onOk((data) => {
+                      console.log(">>>> OK, received", data);
+                      const selectedBranch = data;
+                      LocalStorage.set("jwt", response.data.token);
+                      LocalStorage.set("bb", data);
+                      Cookies.set("jwt", response.data.token);
+                      // LocalStorage.set("branch_name", data);
+
+                      if (LocalStorage.getItem("jwt")) {
+                        window.location = response.data.slug + "/dashboard";
+                        this.branch = LocalStorage.getItem("bb");
+                        // this.branchName = LocalStorage.getItem("branch_name");
+                        Notify.create({
+                          type: "positive",
+                          color: "positive",
+                          timeout: 2000,
+                          position: "bottom",
+                          message: response.data.message,
+                        });
+                      }
+                    })
+                    .onCancel(() => {
+                      // console.log('>>>> Cancel')
+                      // window.location = "/login";
+                    })
+                    .onDismiss(() => {
+                      // console.log('I am triggered on both OK and Cancel')
+                    });
+                } else {
+                  Notify.create({
+                    type: "negative",
+                    position: "top",
+                    timeout: 3000,
+                    message:
+                      "Please contact the owner to assign you to certain branch!",
+                  });
+                }
+              } else if (response.data.role[0] === "owner") {
+                LocalStorage.set("jwt", response.data.token);
+
+                if (LocalStorage.getItem("jwt")) {
+                  window.location = response.data.slug + "/dashboard";
+                  Notify.create({
+                    type: "positive",
+                    color: "positive",
+                    timeout: 2000,
+                    position: "bottom",
+                    message: response.data.message,
+                  });
+                }
+              } else if (response.data.role[0] === "super-admin") {
+                LocalStorage.set("jwt", response.data.token);
+
+                if (LocalStorage.getItem("jwt")) {
+                  window.location = "/dashboard";
+                  Notify.create({
+                    type: "positive",
+                    color: "positive",
+                    timeout: 2000,
+                    position: "bottom",
+                    message: response.data.message,
+                  });
+                }
+              } else if (response.data.role[0] === "barber") {
+                Notify.create({
+                  type: "negative",
+                  color: "negative",
+                  timeout: 3000,
+                  position: "bottom",
+                  message: "Barber Account is not yet ready!",
+                });
+              } else {
+                // LocalStorage.set("jwt", response.data.token);
+                Notify.create({
+                  type: "negative",
+                  color: "negative",
+                  timeout: 3000,
+                  position: "bottom",
+                  message: "Client account is not yet ready!",
+                });
               }
-              // this.getUserDetails();
-            }, 3000);
+            }, 1000);
           } else {
             setTimeout(() => {
               Loading.hide();
@@ -135,15 +245,26 @@ export const useUserData = defineStore("userStore", {
               Notify.create({
                 type: "negative",
                 color: "negative",
-                timeout: 1000,
+                timeout: 3000,
                 position: "bottom",
                 message: response.data.message,
               });
-            }, 2000);
+            }, 3000);
           }
         })
         .catch((error) => {
           console.log(error);
+          setTimeout(() => {
+            Loading.hide();
+
+            Notify.create({
+              type: "negative",
+              color: "negative",
+              timeout: 3000,
+              position: "bottom",
+              message: "Error! Invalid Credentials ",
+            });
+          }, 3000);
         });
     },
     async getUserDetails() {
@@ -151,25 +272,43 @@ export const useUserData = defineStore("userStore", {
       try {
         if (newToken !== null) {
           await api
-            .get("/api/user/details", {
-              headers: {
-                Authorization: "Bearer " + newToken,
+            .get(
+              "/api/user/details",
+              {
+                params: {
+                  branch: LocalStorage.getItem("bb"),
+                },
               },
-            })
+              {
+                headers: {
+                  Authorization: "Bearer " + newToken,
+                },
+              }
+            )
             .then((response) => {
-              // console.log(response);
+              console.log(response);
 
               if (response.data.user) {
+                // setTimeout(() => {
                 this.userDetails = {
                   user: response.data.user,
                   permissions: response.data.permissions,
                   roles: response.data.roles,
-                  branch:
-                    response.data.branch != null
-                      ? response.data.branch.branch_id
-                      : 0,
+                  // branch:
+                  //   response.data.branch != null
+                  //     ? response.data.branch.branch_id
+                  //     : 0,
                   slug: response.data.slug,
                 };
+                // }, 1000);
+
+                this.branch = LocalStorage.getItem("bb");
+                LocalStorage.set(
+                  "branchName",
+                  response.data.branch ? response.data.branch.name : ""
+                );
+
+                this.orderCount = response.data.orderCount;
               }
 
               // console.log(this.userDetails.branch);
@@ -200,6 +339,10 @@ export const useUserData = defineStore("userStore", {
           // console.log(response);
           // this.userDetails = {};
           localStorage.removeItem("jwt");
+          localStorage.removeItem("bb");
+          localStorage.removeItem("branchName");
+          window.location.reload();
+
           // router.push({ name: "login" });
           window.location = "/login";
         })
@@ -207,39 +350,83 @@ export const useUserData = defineStore("userStore", {
           console.log(error);
         });
     },
-    async getAllMembers() {
+    async getAllMembers(payload) {
       this.rowDatas = [];
+      this.loading = true;
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get("/api/members", {
-          headers: {
-            Authorization: "Bearer " + newToken,
+        .get(
+          "/api/members",
+          {
+            params: {
+              slug: payload,
+              // branch: payload[1],
+            },
           },
-        })
+          {
+            headers: {
+              Authorization: "Bearer " + newToken,
+            },
+          }
+        )
         .then((response) => {
           // console.log(response);
 
-          if (response.data.data) {
-            this.rowDatas = response.data.data;
+          if (response.data.status == 200) {
+            setTimeout(() => {
+              // this.rowDatas = response.data.data;
+              Object.entries(response.data.data).map(([key, val]) => {
+                this.rowDatas.push({
+                  name: val.name,
+                  email: val.email,
+                  cp_number: val.cp_number,
+                  id: val.id,
+                  value: val.id,
+                  label: val.name,
+                  image_path: val.image_path,
+                });
+              });
+              this.loading = false;
+            }, 1000);
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    addNewMember(payload) {
+      // this.loading = true;
+      setTimeout(() => {
+        Object.entries(payload).map(([key, val]) => {
+          this.rowDatas.push({
+            name: val.name,
+            email: val.email,
+            cp_number: val.cp_number,
+            id: val.id,
+            value: val.id,
+            label: val.name,
+            image_path: val.image_path,
+          });
+        });
+        // this.loading = false;
+      }, 100);
+    },
 
     async getAllStaff(payload) {
       this.rowStaffDatas = [];
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get(`/api/${payload[0]}/${payload[1]}/staff`, {
+        .get(`/api/${payload[0]}/staff`, {
           headers: {
             Authorization: "Bearer " + newToken,
           },
         })
         .then((response) => {
-          // console.log(response);
-          this.rowStaffDatas = response.data.data;
+          console.log(response);
+          if (response.data.status == 200) {
+            this.temprowStaffDatas = response.data.data;
+            this.rowStaffDatas = this.temprowStaffDatas;
+          }
 
           // if (response.data.data) {
           //   this.rowStaffDatas = response.data.data;

@@ -1,7 +1,7 @@
 <template>
   <q-card style="max-width: 500px; width: 500px; min-height: 400px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
-    <q-toolbar class="bg-primary text-white">
+    <q-toolbar class="bg-blue text-white">
       <q-toolbar-title> Assign Staff </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
@@ -44,46 +44,25 @@
       >
         <div class="row q-col-gutter-none relative-position">
           <div class="col-12 q-mr-sm">
-            <q-input
+            <q-select
               filled
-              v-model="searchMember"
+              v-model="seletedMember"
+              use-input
+              input-debounce="0"
               label="Search Staff"
-              class="col-3 full-width"
-              type="text"
-              @click="searchVisible = true"
-              @keyup="searchMemberFunc"
+              :options="options"
+              @filter="filterFn"
+              class="full-width"
+              behavior="menu"
             >
-              <template v-slot:prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-            <q-list
-              bordered
-              separator
-              class="full-width text-white z-max bg-grey-10"
-              v-if="searchVisible && memberToggle"
-            >
-              <p
-                clickable
-                v-ripple
-                v-for="item in filterMember"
-                v-bind:key="item.id"
-              >
-                <q-item
-                  clickable
-                  v-ripple
-                  v-for="member in item"
-                  :key="member.id"
-                  @click="selectStudent(member)"
-                >
-                  <q-item-section>
-                    <q-item-label class="text-white">{{
-                      member.name + " (" + member.roles[0].name + ")"
-                    }}</q-item-label>
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
                   </q-item-section>
                 </q-item>
-              </p>
-            </q-list>
+              </template>
+            </q-select>
           </div>
         </div>
 
@@ -92,7 +71,7 @@
             unelevated
             label="Assign"
             class="text-center"
-            color="primary"
+            color="blue"
             size="md"
             type="submit"
           />
@@ -108,7 +87,23 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
 import { useRoute } from "vue-router";
+const stringOptions = reactive([]);
+const options = ref(stringOptions);
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(() => {
+      options.value = stringOptions;
+    });
+    return;
+  }
 
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = stringOptions.filter(
+      (v) => v.label.toLowerCase().indexOf(needle) > -1
+    );
+  });
+};
 const route = useRoute();
 const assignStore = useAssignData();
 
@@ -239,14 +234,20 @@ const getAssignedMembers = async () => {
 };
 const getMembers = async () => {
   await api
-    .get("/api/staff/", {
+    .get(`/api/${route.params.slug}/staff`, {
       headers: {
         Authorization: "Bearer " + newToken.value,
       },
     })
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       allMembers.value = response.data.data;
+      Object.entries(response.data.data).map(([key, val]) => {
+        stringOptions.push({
+          label: val.name,
+          value: val.user_id,
+        });
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -271,66 +272,55 @@ const searchMemberFunc = () => {
 };
 
 const onSubmit = () => {
-  //   console.log(route.params.id);
-  if (formData.member_id == null || formData.member_id == "") {
-    $q.notify({
-      type: "negative",
-      color: "negative",
-      timeout: 3000,
-      position: "top",
-      message: "Please Search of Staff!",
-    });
-  } else {
-    $q.loading.show();
-    const newToken = LocalStorage.getItem("jwt");
-    api
-      .post(
-        "/api/branch/assign",
-        {
-          branch: props.branchId,
-          user: formData.member_id,
+  $q.loading.show();
+  const newToken = LocalStorage.getItem("jwt");
+  api
+    .post(
+      "/api/branch/assign",
+      {
+        branch: props.branchId,
+        user: seletedMember.value.value,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + newToken,
         },
-        {
-          headers: {
-            Authorization: "Bearer " + newToken,
-          },
-        }
-      )
-      .then((response) => {
-        // console.log(response);
-        if (response.data.status == 200) {
-          setTimeout(() => {
-            $q.notify({
-              type: "positive",
-              color: "positive",
-              timeout: 2000,
-              position: "top",
-              message: response.data.message,
-            });
-            // state.data = "";
-            // emit("hideAssignDialog");
-            // assignMember = [];
-            searchMember.value = "";
-            getAssignedMembers();
-            $q.loading.hide();
-          }, 2000);
-        } else {
-          setTimeout(() => {
-            $q.notify({
-              type: "negative",
-              color: "negative",
-              timeout: 3000,
-              position: "top",
-              message: response.data.message,
-            });
-            $q.loading.hide();
-          }, 2000);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+      }
+    )
+    .then((response) => {
+      // console.log(response);
+      if (response.data.status == 200) {
+        setTimeout(() => {
+          $q.notify({
+            type: "positive",
+            color: "positive",
+            timeout: 2000,
+            position: "top",
+            message: response.data.message,
+          });
+          // state.data = "";
+          // emit("hideAssignDialog");
+          // assignMember = [];
+          searchMember.value = "";
+          getAssignedMembers();
+          $q.loading.hide();
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          $q.notify({
+            type: "negative",
+            color: "negative",
+            timeout: 3000,
+            position: "top",
+            message: response.data.message,
+          });
+          $q.loading.hide();
+        }, 2000);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 onMounted(() => {

@@ -49,18 +49,59 @@
   <q-table
     v-else
     flat
+    grid
     :pagination="pagination"
-    class="q-pa-sm"
     :rows="productStore.rowDatas"
     :columns="columns"
     row-key="id"
     separator="cell"
     :visible-columns="
       $q.screen.gt.xs
-        ? ['id', 'name', 'description', 'msrp', 'srp', 'qrcode', 'action']
-        : ['id', 'name', 'description', 'msrp', 'srp', 'qrcode', 'action']
+        ? ['id', 'name', 'description', 'qrcode', 'action']
+        : ['id', 'name', 'description', 'qrcode', 'action']
     "
   >
+    <template v-slot:item="props">
+      <q-card class="my-card row q-mb-md q-mr-sm" style="width: 47%">
+        <q-img
+          :src="props.row.product_img"
+          v-if="props.row.product_img"
+          height="200px"
+          class="full-width"
+        />
+        <q-avatar
+          v-else
+          color="grey"
+          text-color="white"
+          icon="image_not_supported"
+          class="full-width"
+        >
+        </q-avatar>
+
+        <q-card-section>
+          <div style="font-size: 12px">{{ props.row.title }}</div>
+          <div style="font-size: 10px">SKU:{{ props.row.sku }}</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none" style="font-size: 12px">
+          {{ props.row.description }}
+        </q-card-section>
+        <q-card-section style="font-size: 10px" class="q-pt-none">
+          <span class="q-mr-sm"
+            ><span class="text-bold">MSRP:</span> {{ props.row.msrp }}</span
+          >
+          <span class="text-bold">SRP:</span> {{ props.row.price }}
+        </q-card-section>
+        <q-card-actions class="q-pt-none">
+          <q-btn
+            color="blue"
+            icon="edit"
+            label="edit"
+            size="sm"
+            @click="EditDialog(props.row.id)"
+          />
+        </q-card-actions>
+      </q-card>
+    </template>
     <template #body="props">
       <q-tr :props="props" v-if="props.row.type == 'Product'">
         <q-td key="id" :props="props">
