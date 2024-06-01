@@ -63,23 +63,32 @@ To get started with the Comprehensive Business Management App, follow these step
 
    ```sh
    git clone https://github.com/your-username/your-private-repo.git
-
    ```
 
 2. Navigate to the project directory:
 
-````sh cd your-private-repo
+```sh cd your-private-repo
+
+```
 
 3. Install the dependencies:
+
 ```sh quasar dev
+
+```
 
 4. Run the app in development mode:
+
 ```sh quasar dev
 
+```
+
 ## Usage
+
 Once the app is running, you can access it at http://localhost:8080. From here, you can explore and utilize the various modules to manage your business effectively.
 
 ## Contributing
+
 As this is a private repository, contributions are managed internally. If you are a team member with access, please follow these steps:
 
 1. Create a new branch: git checkout -b my-feature-branch.
@@ -88,8 +97,9 @@ As this is a private repository, contributions are managed internally. If you ar
 4. Open a pull request for review within the team.
 
 ## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Contact
+
 For any inquiries or support, please contact us at [janlord.luga@gmail.com].
-````
