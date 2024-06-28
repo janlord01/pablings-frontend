@@ -36,6 +36,7 @@
           color="primary"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: 0px"
+          :style="$q.screen.gt.sm ? '' : 'margin-left:-10px; margin-bottom: 10px;'"
           :label="$q.screen.gt.xs ? 'Select Employee' : 'Employee'"
           @click="createDialog"
         />

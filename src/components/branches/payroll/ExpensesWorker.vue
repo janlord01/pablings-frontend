@@ -38,7 +38,7 @@
             color="negative"
             icon="delete"
             size="sm"
-            @click="removeDialog(props.row.id)"
+            @click="payrollStore.removeItem([props.row.uid, 'expense'])"
           />
         </q-td>
       </q-tr>
@@ -60,7 +60,7 @@ const payrollStore = usePayrollData();
 
 const pagination = reactive({
   sortBy: "id",
-  rowsPerPage: 10,
+  rowsPerPage: 0,
 });
 const columns = reactive([
   {

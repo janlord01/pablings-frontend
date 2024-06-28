@@ -1,0 +1,7 @@
+{
+  "appId": "com.inkshears.app",
+  "appName": "Comprehensive Business Management",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www"
+}

@@ -7,6 +7,8 @@ export const usePayrollData = defineStore("payrollStore", {
     rowDatas: [],
     tempRowDatas: [],
 
+    mainDatas: [],
+
     commissionData: [],
     commissionTempData: [],
     loadingCommission: false,
@@ -21,11 +23,95 @@ export const usePayrollData = defineStore("payrollStore", {
     grossSalary: 0,
     totalExpenses: 0,
     netSalary: 0,
+    workerLoans: [],
+    workerLoanLoadiing: false,
+    selectedLoan: [],
+    selectedId: [],
+    selectedLoanAmount: 0,
+    selectedLoanDescription: "",
+
+    // Benefits variable/data
+    benefits: [],
+    benefitsLoading: false,
+    selectedBenefit: [],
+    selectedBenefitAMount: "",
+
+    mainLoading: false,
   }),
   getters: {},
   actions: {
+    clearData() {
+      this.rowDatas = [];
+      this.tempRowDatas = [];
+
+      // this.mainDatas = [];
+
+      this.commissionData = [];
+      this.commissionTempData = [];
+      this.loadingCommission = false;
+
+      this.ExpensesData = [];
+      this.ExpensesTempData = [];
+      this.loadingExpenses = false;
+
+      this.loading = true;
+      this.user = [];
+      this.userName = "";
+      this.grossSalary = 0;
+      this.totalExpenses = 0;
+      this.netSalary = 0;
+      this.workerLoans = [];
+      this.workerLoanLoadiing = false;
+      this.selectedLoan = [];
+      this.selectedId = [];
+      this.selectedLoanAmount = 0;
+      this.selectedLoanDescription = "";
+
+      // Benefits variable/data
+      this.benefits = [];
+      this.benefitsLoading = false;
+      this.selectedBenefit = [];
+      this.selectedBenefitAMount = "";
+
+      this.mainLoading = false;
+    },
     hiFunc() {
       console.log("hi");
+    },
+    async getAllPayrolls(payload) {
+      this.mainLoading = true;
+      this.mainDatas = [];
+      const newToken = LocalStorage.getItem("jwt");
+      api
+        .get("/api/payroll/" + payload, {
+          headers: {
+            Authorization: "Bearer " + newToken,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+
+          if (response.data.status == 200) {
+            setTimeout(() => {
+              this.mainDatas = response.data.data;
+              this.mainLoading = false;
+            }, 500);
+          } else {
+            setTimeout(() => {
+              this.mainLoading = false;
+              Notify.create({
+                type: "negative",
+                icon: "error",
+                timeout: 3000,
+                position: "bottom",
+                message: "Something went wrong!",
+              });
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async getEmployeeCommission() {
       this.commissionData = [];
@@ -55,9 +141,12 @@ export const usePayrollData = defineStore("payrollStore", {
 
               Object.entries(response.data.commissions).map(([key, val]) => {
                 // console.log(val.amount);
+                const newIId = uid();
                 this.commissionTempData.push({
-                  uid: uid,
-                  type: val.pay_id ? val.pay_id : val.type,
+                  uid: newIId,
+                  id: val.id,
+                  pay_id: val.pay_id,
+                  type: val.id ? "commission" : val.type,
                   title: val.title ? val.title : val.service_name,
                   amount: val.amount,
                 });
@@ -135,8 +224,9 @@ export const usePayrollData = defineStore("payrollStore", {
 
               Object.entries(response.data.expenses).map(([key, val]) => {
                 // console.log(val.amount);
+                const newIId = uid();
                 this.ExpensesData.push({
-                  uid: uid,
+                  uid: newIId,
                   type: "deduction",
                   id: val.id,
                   expenseName: val.expenseName,
@@ -187,8 +277,9 @@ export const usePayrollData = defineStore("payrollStore", {
     addBonusWorker(payload) {
       this.loadingCommission = true;
       setTimeout(() => {
+        const newIId = uid();
         this.commissionTempData.push({
-          uid: uid,
+          uid: newIId,
           type: "bonus",
           title: payload[1],
           amount: payload[0],
@@ -208,9 +299,10 @@ export const usePayrollData = defineStore("payrollStore", {
     },
     addSalaryWorker(payload) {
       this.loadingCommission = true;
+      const newIId = uid();
       setTimeout(() => {
         this.commissionTempData.push({
-          uid: uid,
+          uid: newIId,
           type: "salary",
           title: payload[1],
           amount: payload[0],
@@ -231,9 +323,10 @@ export const usePayrollData = defineStore("payrollStore", {
     },
     addDeductionWorker(payload) {
       this.loadingExpenses = true;
+      const newIId = uid();
       setTimeout(() => {
         this.ExpensesData.push({
-          uid: uid,
+          uid: newIId,
           type: "new deduction",
           expenseName: payload[1],
           title: payload[1],
@@ -252,6 +345,62 @@ export const usePayrollData = defineStore("payrollStore", {
         });
       }, 500);
     },
+    addDeductionLoanWorker() {
+      this.loadingExpenses = true;
+      setTimeout(() => {
+        const newIId = uid();
+        this.ExpensesData.push({
+          uid: newIId,
+          type: "loan",
+          id: this.selectedId,
+          expenseName: this.selectedLoanDescription,
+          title: this.selectedLoanDescription,
+          amount: this.selectedLoanAmount,
+        });
+        // this.ExpensesData = this.ExpensesTempData;
+        this.totalExpenses =
+          parseFloat(this.totalExpenses) + parseFloat(this.selectedLoanAmount);
+        this.netSalary =
+          parseFloat(this.netSalary) - parseFloat(this.selectedLoanAmount);
+        this.loadingExpenses = false;
+        Notify.create({
+          position: "bottom",
+          type: "positive",
+          timeout: 3000,
+          message: "Added!",
+        });
+      }, 500);
+    },
+    addBenefitWorker() {
+      this.loadingExpenses = true;
+      const objWithIdIndex = this.benefits.findIndex(
+        (item) => item.id === this.selectedBenefit.id
+      );
+      this.selectedBenefitAMount = this.benefits[objWithIdIndex].amount;
+      setTimeout(() => {
+        const newIId = uid();
+        this.ExpensesData.push({
+          uid: newIId,
+          type: "benefit deduction",
+          expenseName: this.benefits[objWithIdIndex].label,
+          title: this.benefits[objWithIdIndex].label,
+          amount: this.selectedBenefitAMount,
+        });
+        // this.ExpensesData = this.ExpensesTempData;
+        this.totalExpenses =
+          parseFloat(this.totalExpenses) +
+          parseFloat(this.selectedBenefitAMount);
+        this.netSalary =
+          parseFloat(this.netSalary) - parseFloat(this.selectedBenefitAMount);
+        this.loadingExpenses = false;
+        Notify.create({
+          position: "bottom",
+          type: "positive",
+          timeout: 3000,
+          message: "Added!",
+        });
+      }, 500);
+    },
     selectWorkerForCommission(payload) {
       this.user = payload;
       this.userName = payload.label;
@@ -259,6 +408,8 @@ export const usePayrollData = defineStore("payrollStore", {
       this.commissionTempData = [];
     },
     async getWorkerLoan(payload) {
+      this.workerLoanLoadiing = true;
+      this.workerLoans = [];
       let newToken = LocalStorage.getItem("jwt");
       await api
         .get(
@@ -276,10 +427,33 @@ export const usePayrollData = defineStore("payrollStore", {
         )
         .then((response) => {
           console.log(response);
+          if (response.data.status) {
+            setTimeout(() => {
+              Object.entries(response.data.data).map(([key, val]) => {
+                this.workerLoans.push(val);
+              });
+              this.workerLoanLoadiing = false;
+            }, 500);
+            console.log(this.workerLoans);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    getLoan() {
+      const objWithIdIndex = this.workerLoans.findIndex(
+        (item) => item.id === this.selectedLoan.id
+      );
+      this.selectedLoanAmount = this.workerLoans[objWithIdIndex].amount;
+      this.selectedId = this.workerLoans[objWithIdIndex].id;
+    },
+    getBenefit() {
+      console.log(this.selectedBenefit);
+      const objWithIdIndex = this.benefits.findIndex(
+        (item) => item.id === this.selectedBenefit.id
+      );
+      this.selectedBenefitAMount = this.benefits[objWithIdIndex].amount;
     },
     async getAllLoans(payload) {
       this.rowDatas = [];
@@ -315,6 +489,98 @@ export const usePayrollData = defineStore("payrollStore", {
         .catch((error) => {
           console.log(error);
         });
+    },
+    async getBenefits(payload) {
+      this.benefitsLoading = true;
+      this.benefits = [];
+      let newToken = LocalStorage.getItem("jwt");
+      await api
+        .get(
+          `api/benefits`,
+          {
+            params: {
+              branch: payload,
+            },
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + newToken,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.status) {
+            setTimeout(() => {
+              Object.entries(response.data.data).map(([key, val]) => {
+                this.benefits.push(val);
+              });
+              this.benefitsLoading = false;
+            }, 5000);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    removeItem(payload) {
+      console.log(payload);
+      if (payload[1] === "income") {
+        this.loadingCommission = true;
+        const objWithIdIndex = this.commissionTempData.findIndex(
+          (item) => item.uid === payload[0]
+        );
+
+        setTimeout(() => {
+          this.grossSalary =
+            parseFloat(this.grossSalary) -
+            parseFloat(this.commissionTempData[objWithIdIndex].amount);
+
+          this.netSalary =
+            parseFloat(this.netSalary) -
+            parseFloat(this.commissionTempData[objWithIdIndex].amount);
+
+          // console.log(this.total);
+          if (objWithIdIndex > -1) {
+            this.commissionTempData.splice(objWithIdIndex, 1);
+            Notify.create({
+              type: "positive",
+              message: "Item Removed!",
+              position: "top",
+            });
+          }
+          this.commissionData = this.commissionTempData;
+          this.loadingCommission = false;
+        }, 500);
+      } else {
+        this.loadingExpenses = true;
+        const objWithIdIndex = this.ExpensesData.findIndex(
+          (item) => item.uid === payload[0]
+        );
+
+        setTimeout(() => {
+          this.totalExpenses =
+            parseFloat(this.totalExpenses) -
+            parseFloat(this.ExpensesData[objWithIdIndex].amount);
+
+          this.netSalary =
+            parseFloat(this.netSalary) +
+            parseFloat(this.ExpensesData[objWithIdIndex].amount);
+
+          // console.log(this.total);
+          if (objWithIdIndex > -1) {
+            this.ExpensesData.splice(objWithIdIndex, 1);
+            Notify.create({
+              type: "positive",
+              message: "Item Removed!",
+              position: "top",
+            });
+          }
+          // this.ExpensesData = this.ExpensesTempData;
+          this.loadingExpenses = false;
+        }, 500);
+      }
     },
   },
 });

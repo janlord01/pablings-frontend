@@ -716,7 +716,8 @@ const setColor = () => {
     >
       <q-toolbar v-if="$q.screen.width > 1008">
         <q-toolbar-title style="font-size: 14px"
-          >Gnb POS System &copy; Copyright 2024. All Right Reserved.
+          >Comprehensive Business Management &copy; Copyright 2024. All Right
+          Reserved.
         </q-toolbar-title>
       </q-toolbar>
       <q-tabs
@@ -1169,7 +1170,7 @@ const setColor = () => {
 </template>
 <style>
 .q-router-link--active {
-  background: #d6e7f4;
+  /* background: #d6e7f4; */
   border-right: solid 10px #2096f3;
   color: #2096f3;
 }

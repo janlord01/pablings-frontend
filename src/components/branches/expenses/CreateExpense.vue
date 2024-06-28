@@ -14,7 +14,7 @@
         <div class="row q-col-gutter-none">
           <q-select
             filled
-            :options="['Tip', 'CA', 'Others']"
+            :options="['CA', 'Others']"
             v-model="formData.type"
             label="Expense Type"
             :class="
@@ -189,7 +189,7 @@ const onSubmit = () => {
   }
 };
 const extractStaff = () => {
-  Object.entries(staffStore.rowStaffDatas).map(([key, val]) => {
+  Object.entries(staffStore.rowStaffBranchDatas).map(([key, val]) => {
     stringOptions.push({
       label: val.name,
       value: val.id,

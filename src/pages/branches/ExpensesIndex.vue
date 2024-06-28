@@ -61,11 +61,13 @@ import createBranch from "src/components/branches/CreateBranch.vue";
 import importMember from "src/components/users/member/importMember.vue";
 import CreateExpense from "src/components/branches/expenses/CreateExpense.vue";
 import { useRoute } from "vue-router";
-import { useUserData } from "stores/users/store";
+// import { useUserData } from "stores/users/store";
 import { useExpensesData } from "src/stores/branch/expensesStore";
+import { useUserData } from "stores/users/store";
 import ExpensesList from "src/components/branches/expenses/ExpensesList.vue";
 const mainStore = useUserData();
 
+// const userStore = useExpensesData();
 const expenseStore = useExpensesData();
 const route = useRoute();
 
@@ -102,6 +104,8 @@ const ImportDialog = () => {
 };
 onMounted(() => {
   mainStore.loc = "Expenses";
+
+  mainStore.getbranchStaff([route.params.slug, route.params.id]);
   mainStore.getAllStaff([route.params.slug]);
   expenseStore.getAllExpenses(route.params.id);
   // getBranch();

@@ -1,6 +1,6 @@
 <template>
   <div class="row" v-if="payrollStore.userName">
-    <div>
+    <div class="col full-width">
       <q-chip class="text-h4"
         >Gross Salary: {{ payrollStore.grossSalary }}</q-chip
       >
@@ -13,6 +13,15 @@
       >
     </div>
   </div>
+  <div class="row q-mt-lg" v-if="payrollStore.userName">
+    <q-btn
+      color="positive"
+      icon="save"
+      label="Submit"
+      :size="$q.screen.gt.sm ? 'lg' : 'md'"
+      @click="onSubmit"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -22,11 +31,14 @@ import { LocalStorage } from "quasar";
 import { ref, reactive, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { useUserData } from "stores/users/store";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { usePayrollData } from "src/stores/branch/payrollStore";
+// import { route } from "quasar/wrappers";
 const payrollStore = usePayrollData();
-
+const $q = useQuasar();
+const route = useRoute();
+const router = useRouter();
 const pagination = reactive({
   sortBy: "id",
   rowsPerPage: 10,
@@ -67,6 +79,71 @@ const columns = reactive([
     align: "left",
   },
 ]);
+
+const onSubmit = () => {
+  console.log("salaries: " + payrollStore.commissionData);
+  console.log("expenses: " + payrollStore.ExpensesData);
+  var newToken = LocalStorage.getItem("jwt");
+  $q.loading.show();
+  // let product = Object.entries(productStore.tempCashierProductDatas).map(item => {
+
+  // });
+  // console.log(product);
+  // console.log("proceed");
+  api
+    .post(
+      "/api/payroll",
+      {
+        salaries: payrollStore.commissionData,
+        expenses: payrollStore.ExpensesData,
+        user: payrollStore.user.value,
+        branch: route.params.id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + newToken,
+        },
+      }
+    )
+    .then((response) => {
+      console.log(response);
+      // $q.loading.hide();
+
+      if (response.data.status == 200) {
+        setTimeout(() => {
+          $q.loading.hide();
+          $q.notify({
+            type: "positive",
+            icon: "save",
+            timeout: 1000,
+            position: "bottom",
+            message: response.data.message,
+          });
+          $q.loading.hide();
+          // productStore.resetItem();
+          // productStore.getAllPayments(route.params.id);
+
+          // emit("hideCheckoutDialog");
+          payrollStore.clearData();
+          router.push({ name: "branch-payroll-index" });
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          $q.loading.hide();
+          $q.notify({
+            type: "negative",
+            icon: "error",
+            timeout: 3000,
+            position: "bottom",
+            message: response.data.message,
+          });
+        }, 2000);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 onMounted(() => {
   //   branchData.getAllStaff();
 });

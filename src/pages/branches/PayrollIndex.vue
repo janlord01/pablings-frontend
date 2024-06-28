@@ -40,7 +40,7 @@
           :to="`/${route.params.slug}/branches/${route.params.id}/payroll/create`"
         />
       </q-toolbar>
-      <LoanList />
+      <payrollList />
 
       <q-dialog v-model="showCreateDialog">
         <createLoan
@@ -63,12 +63,14 @@ import createLoan from "src/components/branches/loan/CreateLoan.vue";
 import { useRoute } from "vue-router";
 import { useUserData } from "stores/users/store";
 import { useLoanData } from "src/stores/branch/loanStore";
+import { usePayrollData } from "src/stores/branch/payrollStore";
 import LoanList from "src/components/branches/loan/LoanList.vue";
+import payrollList from "src/components/branches/payroll/payrollList.vue";
 const mainStore = useUserData();
 
 const loanStore = useLoanData();
 const route = useRoute();
-
+const payrollStore = usePayrollData();
 const productStore = useProductDatas();
 
 const searchUser = ref("");
@@ -102,8 +104,10 @@ const ImportDialog = () => {
 };
 onMounted(() => {
   mainStore.loc = "Payroll";
-  mainStore.getAllStaff([route.params.slug]);
-  loanStore.getAllLoans(route.params.id);
+  payrollStore.clearData();
+  payrollStore.getAllPayrolls(route.params.id);
+  // mainStore.getAllStaff([route.params.slug]);
+  // loanStore.getAllLoans(route.params.id);
   // getBranch();
   // productStore.getAllBranchProducts(route.params.id);
   // getCodesFunc();

@@ -11,14 +11,18 @@
         ref="formName"
         @submit="onSubmit"
       >
+
+
         <div class="row q-col-gutter-none">
           <q-select
             filled
-            v-model="formData.loans"
-            :options="[]"
+            v-model="payrollStore.selectedLoan"
+            :options="payrollStore.workerLoans"
             label="Select Loan"
             class="q-mr-sm col-3 q-mt-sm full-width"
             type="text"
+            @update:model-value="payrollStore.getLoan"
+
           >
             <template v-slot:prepend>
               <q-icon name="attach_money" />
@@ -26,7 +30,7 @@
           </q-select>
           <q-input
             filled
-            v-model="formData.amount"
+            v-model="payrollStore.selectedLoanAmount"
             label="Amount"
             class="q-mr-sm col-3 q-mt-sm full-width"
             type="text"
@@ -37,7 +41,7 @@
           </q-input>
           <q-input
             filled
-            v-model="formData.description"
+            v-model="payrollStore.selectedLoanDescription"
             label="Description"
             class="q-mr-sm col-3 q-mt-sm full-width"
             type="text"
@@ -46,28 +50,6 @@
               <q-icon name="description" />
             </template>
           </q-input>
-          <!-- <q-select
-            filled
-            v-model="formData.user"
-            use-input
-            input-debounce="0"
-            label="Search Employee"
-            class="q-mr-sm col-3 q-mt-sm full-width"
-            :options="options"
-            @filter="filterFn"
-            @update:model-value="getUser"
-            style="width: 250px"
-            behavior="menu"
-          >
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-          </q-select> -->
         </div>
         <div class="row q-mt-lg align-center">
           <q-btn
@@ -80,8 +62,10 @@
           />
         </div>
       </q-form>
+      <q-inner-loading :showing="payrollStore.workerLoanLoadiing" />
     </q-card-section>
   </q-card>
+
 </template>
 <script setup>
 import { ref, reactive, onMounted, onBeforeMount, computed } from "vue";
@@ -97,7 +81,7 @@ import { useRoute } from "vue-router";
 const payrollStore = usePayrollData();
 
 const route = useRoute();
-const emit = defineEmits(["hideNewDeductionDialog"]);
+const emit = defineEmits(["hideLoanDialog"]);
 
 const loanStore = useLoanData();
 const staffStore = useUserData();
@@ -126,7 +110,8 @@ const filterFn = (val, update) => {
 const $q = useQuasar();
 
 const onSubmit = () => {
-  if (formData.amount === "" || formData.description === "") {
+  // console.log(payrollStore.selectedLoan)
+  if (payrollStore.selectedLoan.length === 0 || payrollStore.selectedLoanAmount === 0 || payrollStore.selectedLoanDescription === '') {
     $q.notify({
       position: "bottom",
       type: "negative",
@@ -136,8 +121,8 @@ const onSubmit = () => {
   } else {
     // payrollStore.user = formData.user;
     // payrollStore.userName = formData.user.label;
-    payrollStore.addDeductionWorker([formData.amount, formData.description]);
-    emit("hideNewDeductionDialog");
+    payrollStore.addDeductionLoanWorker();
+    emit("hideLoanDialog");
   }
 };
 const extractStaff = () => {

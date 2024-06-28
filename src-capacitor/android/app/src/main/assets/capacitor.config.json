@@ -1,0 +1,10 @@
+{
+  "appId": "com.inkshears.app",
+  "appName": "Comprehensive Business Management",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www",
+  "server": {
+    "url": "http://192.168.254.107:9500"
+  }
+}

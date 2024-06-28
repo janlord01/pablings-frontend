@@ -6,7 +6,7 @@
         label="Load Commission"
         icon="loop"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -17,7 +17,7 @@
         label="Add Salary"
         icon="add"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -28,7 +28,7 @@
         label="Add Bonus"
         icon="add"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -40,7 +40,7 @@
         label="Load Deduction"
         icon="loop"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -48,10 +48,21 @@
       />
       <q-btn
         color="negative"
+        label="Benifits Deduction"
+        icon="health_and_safety"
+        :style="
+          $q.screen.gt.sm
+            ? 'font-size: 12px; margin: 0 3px 3px 0'
+            : 'font-size: 8px; margin: 0 3px 3px 0'
+        "
+        @click="benefitFunc"
+      />
+      <q-btn
+        color="negative"
         label="Select Loan"
         icon="credit_score"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -62,7 +73,7 @@
         label="Add New Deduction"
         icon="add"
         :style="
-          $q.screen.gt.md
+          $q.screen.gt.sm
             ? 'font-size: 12px; margin: 0 3px 3px 0'
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
@@ -89,9 +100,14 @@
     />
   </q-dialog>
 
-  <!-- New Deduction Diaglog -->
-  <q-dialog v-model="showLoanDialog">
+  <!-- New Loan Diaglog -->
+  <q-dialog v-model="showLoanDialog" position="standard">
     <selectLoan @hide-loan-dialog="showLoanDialog = !showLoanDialog" />
+  </q-dialog>
+
+  <!-- New Benefit Dediction Diaglog -->
+  <q-dialog v-model="showBenefitDialog" position="standard">
+    <addBenefit @hide-benefit-dialog="showBenefitDialog = !showBenefitDialog" />
   </q-dialog>
 </template>
 
@@ -106,7 +122,8 @@ import { usePayrollData } from "src/stores/branch/payrollStore";
 import addsalary from "./addSalary.vue";
 import addBonus from "./AddBonusSalary.vue";
 import newDeduction from "./AddDeduction.vue";
-import selectLoan from "./selectLoan.vue";
+import selectLoan from "./SelectLoan.vue";
+import addBenefit from "./SelectBenefit.vue";
 const route = useRoute();
 
 const loanStore = useLoanData();
@@ -119,11 +136,16 @@ const showSalaryDialog = ref(false);
 const showBonusDialog = ref(false);
 const showNewDeductionDialog = ref(false);
 const showLoanDialog = ref(false);
+const showBenefitDialog = ref(false);
 
 const showEditDialog = ref(false);
 const showCaptureImg = ref(false);
 const showPasswordDialog = ref(false);
 const loan_id = ref(null);
+
+const benefitFunc = () => {
+  showBenefitDialog.value = true;
+};
 
 const selectLoanFunc = () => {
   showLoanDialog.value = true;
@@ -190,7 +212,9 @@ const columns = reactive([
     align: "left",
   },
 ]);
-onMounted(() => {});
+onMounted(() => {
+  payrollStore.getBenefits(route.params.id);
+});
 </script>
 
 <style></style>

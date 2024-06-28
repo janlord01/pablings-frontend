@@ -26,6 +26,7 @@ import ChangeProfilePassword from "pages/profile/ChangeProfilePassword.vue";
 import BranchReportIndex from "pages/branches/BranchReportIndex.vue";
 import ProductRequest from "pages/branches/request/RequestIndex.vue";
 import BookingIndex from "pages/branches/booking/BookingIndex.vue";
+import BookingCreate from "pages/branches/booking/CreateBooking.vue";
 import ExpensesIndex from "pages/branches/ExpensesIndex.vue";
 import BenefitsIndex from "pages/branches/BenefitsIndex.vue";
 import LoanIndex from "pages/branches/LoanIndex.vue";
@@ -535,7 +536,7 @@ const routes = [
         name: "branch-payroll-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager", "franchisee"],
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
         },
       },
       {
@@ -544,7 +545,7 @@ const routes = [
         name: "branch-payroll-create",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner", "manager", "franchisee"],
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
         },
       },
 
@@ -669,6 +670,22 @@ const routes = [
   //     },
   //   ],
   // },
+  {
+    path: "/",
+    redirect: "/:slug/booking",
+    component: () => import("layouts/AuthLayout.vue"),
+    name: "booking-public",
+    meta: {
+      requiredAuth: false,
+    },
+    children: [
+      {
+        path: "/:slug/booking",
+        component: () => BookingCreate,
+        name: "booking-create",
+      },
+    ],
+  },
   {
     path: "/",
     redirect: "/login",

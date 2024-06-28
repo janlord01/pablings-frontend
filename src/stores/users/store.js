@@ -20,6 +20,10 @@ export const useUserData = defineStore("userStore", {
     branchName: "",
     rowStaffDatas: [],
     temprowStaffDatas: [],
+
+    rowStaffBranchDatas: [],
+    tempRowStaffBranchDatas: [],
+
     orderCount: 0,
     loading: false,
     // branches: [],
@@ -309,6 +313,22 @@ export const useUserData = defineStore("userStore", {
                 );
 
                 this.orderCount = response.data.orderCount;
+                // if (
+                //   LocalStorage.getItem("bb") === null &&
+                //   (this.userDetails.roles !== "owner" ||
+                //     this.userDetails.roles !== "super-admin")
+                // ) {
+                //   setTimeout(() => {
+                //     Notify.create({
+                //       type: "warning",
+                //       color: "warning",
+                //       timeout: 3000,
+                //       position: "top",
+                //       message: "Session Expired. Please login again!",
+                //     });
+                //     LocalStorage.remove("jwt");
+                //   }, 3000);
+                // }
               }
 
               // console.log(this.userDetails.branch);
@@ -410,6 +430,29 @@ export const useUserData = defineStore("userStore", {
         });
         // this.loading = false;
       }, 100);
+    },
+
+    async getbranchStaff(payload) {
+      this.tempRowStaffBranchDatas = [];
+      this.rowStaffBranchDatas = [];
+      var newToken = LocalStorage.getItem("jwt");
+
+      await api
+        .get(`/api/${[payload[0]]}/staff/${payload[1]}`, {
+          headers: {
+            Authorization: "Bearer " + newToken,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.status == 200) {
+            this.tempRowStaffBranchDatas = response.data.data;
+            this.rowStaffBranchDatas = this.tempRowStaffBranchDatas;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     async getAllStaff(payload) {

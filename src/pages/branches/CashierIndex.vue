@@ -13,12 +13,75 @@
           :class="$q.screen.gt.xs ? ' full-width  text-h6' : 'hidden'"
           >{{ mainStore.loc }}
         </q-toolbar-title>
+        <q-input
+          filled
+          v-model="startDate"
+          mask="date"
+          label="Start Date"
+          class="q-mr-sm"
+          :rules="['date']"
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-date v-model="startDate">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+        <q-input
+          filled
+          v-model="endDate"
+          mask="date"
+          label="End Date"
+          class="q-mr-sm"
+          :rules="['date']"
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-date v-model="endDate">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
 
+        <q-btn
+          icon="search"
+          color="blue"
+          size="sm"
+          class="q-mr-sm"
+          style="padding-top: 15px; padding-bottom: 15px; margin-bottom: 20px"
+          :label="$q.screen.gt.xs ? 'Search' : 'Search'"
+          @click="
+            cashierStore.getAllBranchPaymentTransactionByDate([
+              route.params.id,
+              startDate,
+              endDate,
+            ])
+          "
+        />
         <q-btn
           icon="add_circle"
           color="blue"
           size="sm"
-          style="padding-top: 15px; padding-bottom: 15px; margin-bottom: 10px"
+          style="padding-top: 15px; padding-bottom: 15px; margin-bottom: 20px"
           :label="$q.screen.gt.xs ? 'Create Payment' : 'Create'"
           :to="
             '/' +
@@ -59,6 +122,9 @@ import { useCashierData } from "src/stores/branch/cashierStore";
 
 import { useMainStoreData } from "stores/store";
 const mainStore = useMainStoreData();
+
+const startDate = ref("");
+const endDate = ref("");
 
 const cashierStore = useCashierData();
 

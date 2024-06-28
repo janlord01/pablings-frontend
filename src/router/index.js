@@ -48,9 +48,12 @@ export default route(function (/* { store, ssrContext } */) {
     const access = to.meta.access;
     // const rroute = useRoute();
     var newToken = LocalStorage.getItem("jwt");
+
+    const slugBookingPattern = /^\/[^\/]+\/booking$/;
+
     if (LocalStorage.getItem("jwt")) {
       if (requiredAuth) {
-        let new_update = "v0000000002";
+        let new_update = "v0000000004";
         if (LocalStorage.getItem("new_update")) {
           if (LocalStorage.getItem("new_update") === new_update) {
           } else {
@@ -150,6 +153,20 @@ export default route(function (/* { store, ssrContext } */) {
                   position: "top",
                   message: "Please wait. Redirecting...",
                 });
+                // let bslug = LocalStorage.getItem("slug");
+
+                // if (bslug === null) {
+                //   setTimeout(() => {
+                //     Notify.create({
+                //       type: "warning",
+                //       color: "warning",
+                //       timeout: 3000,
+                //       position: "top",
+                //       message: "Account Logout, Please login again",
+                //     });
+                //     window.location = window.location.origin;
+                //   }, 3000);
+                // } else {
                 setTimeout(() => {
                   window.location =
                     window.location.origin +
@@ -157,7 +174,8 @@ export default route(function (/* { store, ssrContext } */) {
                     LocalStorage.getItem("slug") +
                     "/dashboard";
                 }, 2000);
-              } else if (checkRole == false) {
+                // }
+              } else if (checkRole == false && requiredAuth == true) {
                 Notify.create({
                   type: "negative",
                   color: "negative",
@@ -182,6 +200,7 @@ export default route(function (/* { store, ssrContext } */) {
                 next();
               }
             } else {
+              localStorage.removeItem("jwt");
               return next("login");
             }
           })
@@ -204,6 +223,8 @@ export default route(function (/* { store, ssrContext } */) {
           });
       } else if (to.path == "/login" || to.path == "/register") {
         return next("/dashboard");
+      } else if (slugBookingPattern.test(to.path)) {
+        return next();
       } else {
         // console.log("test");
 
@@ -213,7 +234,11 @@ export default route(function (/* { store, ssrContext } */) {
           replace: true,
         });
       }
-    } else if (to.path == "/login" || to.path == "/register") {
+    } else if (
+      to.path == "/login" ||
+      to.path == "/register" ||
+      slugBookingPattern.test(to.path)
+    ) {
       next();
     } else if (to.path == "/") {
       next("login");

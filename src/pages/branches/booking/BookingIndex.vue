@@ -32,7 +32,7 @@
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
           :label="$q.screen.gt.xs ? 'Create Booking' : 'Create Booking'"
-          @click="createDialog"
+          :to="'/' + route.params.slug + '/booking'"
         />
       </q-toolbar>
       <servicesList />

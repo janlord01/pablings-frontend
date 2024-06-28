@@ -1,6 +1,6 @@
 <template>
   <div class="row" v-if="payrollStore.userName">
-    <div class="col-4">
+    <div :class="$q.screen.gt.sm ? 'col-4' : 'col'">
       <q-input
         filled
         readonly

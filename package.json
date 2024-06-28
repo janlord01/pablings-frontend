@@ -1,8 +1,8 @@
 {
-  "name": "service-pos",
+  "name": "comprehensive-business-management",
   "version": "0.0.1",
   "description": "A all in One Product and Service Solution",
-  "productName": "Gnb POS System",
+  "productName": "Comprehensive Business Management",
   "author": "Janlord Luga <janlord.luga@gmail.com>",
   "private": true,
   "scripts": {
@@ -22,6 +22,7 @@
     "apexcharts": "^3.44.0",
     "axios": "^0.21.1",
     "cap": "^0.2.1",
+    "electron": "^30.0.9",
     "jsbarcode": "^3.11.5",
     "moment": "^2.29.4",
     "pinia": "^2.0.11",

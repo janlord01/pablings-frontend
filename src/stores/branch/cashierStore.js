@@ -265,6 +265,48 @@ export const useCashierData = defineStore("cashierStore", {
           console.log(error);
         });
     },
+    async getAllBranchPaymentTransactionByDate(payload) {
+      const newToken = LocalStorage.getItem("jwt");
+      if (
+        payload[1] === "" ||
+        payload[1] === null ||
+        payload[2] === "" ||
+        payload[2] === null
+      ) {
+        Notify.create({
+          type: "negative",
+          timeout: 3000,
+          position: "top",
+          message:
+            "Starting date or End date cannot be empty, Please select the date!",
+        });
+      } else {
+        await api
+          .get(
+            `/api/branch/cashier/search/${payload[0]}`,
+            {
+              params: {
+                startDate: payload[1],
+                endDate: payload[2],
+              },
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + newToken,
+              },
+            }
+          )
+          .then((response) => {
+            // console.log(response);
+            if (response.status == 200) {
+              this.paymentRowDatas = response.data.data;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
     cashCalcute() {
       this.change = parseFloat(this.cash - this.total);
     },
