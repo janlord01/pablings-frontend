@@ -673,7 +673,7 @@ const routes = [
   {
     path: "/",
     redirect: "/:slug/booking",
-    component: () => import("layouts/AuthLayout.vue"),
+    component: () => import("layouts/BookingLayout.vue"),
     name: "booking-public",
     meta: {
       requiredAuth: false,

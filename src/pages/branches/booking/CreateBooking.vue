@@ -1,167 +1,203 @@
 <template>
-  <q-page class="row justify-center items-center">
-    <div class="column">
-      <div class="row q-mb-lg text-center">
+  <q-page class="row justify-center items-center" style="border: solid 1px">
+    <div class="column full-width">
+      <div class="row q-mb-lg text-center q-mt-lg">
         <img
           src="/images/pablings.png"
           width="200"
-          style="display: block; margin: auto"
+          :style="
+            $q.screen.gt
+              ? 'display: block; margin: 10px auto'
+              : 'display: block; margin: 30px auto'
+          "
         /><br />
       </div>
-      <div class="row">
-        <q-card class="q-pa-lg no-shadow">
-          <q-card-section class="relative">
-            <q-form class="relative" @submit="onSubmit">
-              <q-input
-                outlined
-                v-model="formData.name"
-                class="q-mb-md"
-                label=""
-                readonly
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="store" />
-                </template>
-              </q-input>
-              <q-select
-                filled
-                v-model="branch"
-                use-input
-                input-debounce="0"
-                label="Select Branch"
-                :options="options"
-                @filter="filterFn"
-                class="q-mb-md"
-                @update:model-value="selectBranchFunc"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="storefront" />
-                </template>
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No results
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-              <q-select
-                filled
-                v-model="service"
-                label="Select Services"
-                :options="serviceOption"
-                class="q-mb-md"
-                @update:model-value="selectedService"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="construction" />
-                </template>
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No results
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-              <q-select
-                filled
-                v-model="worker"
-                label="Your Barber(optional)"
-                :options="workerOption"
-                class="q-mb-md"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="construction" />
-                </template>
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No results
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-              <q-input
-                outlined
-                v-model="formData.price"
-                label="Price"
-                class="q-mb-md"
-                readonly
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="payment" />
-                </template>
-              </q-input>
+      <div class="full-width">
+        <q-card class="q-pa-lg no-shadow full-width">
+          <q-card-section class="relative full-width">
+            <q-form class="relative full-width" @submit="onSubmit">
+              <div class="row">
+                <q-input
+                  outlined
+                  v-model="formData.name"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md q-mr-md col'
+                      : 'full-width q-mb-sm'
+                  "
+                  label=""
+                  readonly
+                  filled
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="store" />
+                  </template>
+                </q-input>
+                <q-select
+                  filled
+                  v-model="branch"
+                  use-input
+                  input-debounce="0"
+                  label="Select Branch"
+                  :options="options"
+                  @filter="filterFn"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md q-mr-md col'
+                      : 'full-width q-mb-sm'
+                  "
+                  @update:model-value="selectBranchFunc"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="storefront" />
+                  </template>
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <q-select
+                  filled
+                  v-model="service"
+                  label="Select Services"
+                  :options="serviceOption"
+                  :class="
+                    $q.screen.gt.sm ? 'q-mb-md col' : 'full-width q-mb-sm'
+                  "
+                  @update:model-value="selectedService"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="construction" />
+                  </template>
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
 
-              <q-input
-                outlined
-                filled
-                label="Guest Name*"
-                class="q-mb-md"
-                v-model="formData.guest"
-                type="text"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="man" />
-                </template>
-              </q-input>
-              <q-input
-                filled
-                v-model="bookingDate"
-                class="q-mb-md"
-                label="Date of Booking"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-date v-model="bookingDate" mask="YYYY-MM-DD">
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Close"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-              <q-input
-                filled
-                v-model="bookingTime"
-                mask="time"
-                label="Time of Booking"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-time v-model="bookingTime">
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Close"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
+              <div class="row">
+                <q-select
+                  filled
+                  v-model="worker"
+                  label="Your Barber(optional)"
+                  :options="workerOption"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md q-mr-md col'
+                      : 'full-width q-mb-sm'
+                  "
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="construction" />
+                  </template>
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <q-input
+                  outlined
+                  v-model="formData.price"
+                  label="Price"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md q-mr-md col'
+                      : 'full-width q-mb-sm'
+                  "
+                  readonly
+                  filled
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="payment" />
+                  </template>
+                </q-input>
+
+                <q-input
+                  outlined
+                  filled
+                  label="Guest Name*"
+                  :class="
+                    $q.screen.gt.sm ? 'q-mb-md col' : 'full-width q-mb-sm'
+                  "
+                  v-model="formData.guest"
+                  type="text"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="man" />
+                  </template>
+                </q-input>
+              </div>
+              <div class="row">
+                <q-input
+                  filled
+                  v-model="bookingDate"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md q-mr-md col'
+                      : 'full-width q-mb-sm'
+                  "
+                  label="Date of Booking"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-date v-model="bookingDate" mask="YYYY-MM-DD">
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Close"
+                              color="primary"
+                              flat
+                            />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+                <q-input
+                  filled
+                  v-model="bookingTime"
+                  mask="time"
+                  label="Time of Booking"
+                  :class="$q.screen.gt.sm ? 'col' : 'full-width q-mb-sm'"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="access_time" class="cursor-pointer">
+                      <q-popup-proxy
+                        cover
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time v-model="bookingTime">
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Close"
+                              color="primary"
+                              flat
+                            />
+                          </div>
+                        </q-time>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </div>
 
               <q-btn
                 unelevated

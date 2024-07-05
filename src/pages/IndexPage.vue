@@ -81,7 +81,7 @@
               </q-input>
             </div>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mr-sm' : 'full-width'">
+          <div :class="$q.screen.gt.xs ? 'col q-mr-sm' : 'full-width'">
             <div class="full-width">
               <q-btn
                 color="blue"
@@ -101,266 +101,257 @@
           </div>
         </div>
         <div class="row full-width">
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    style="background: rgba(39, 174, 228, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon
-                      name="people_outline"
-                      color="light-blue"
-                    /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalTransactions }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Transactions</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+            class="bg-transparent"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  style="background: rgba(39, 174, 228, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="people_outline" color="light-blue" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalTransactions }} </span
+                ><br />
+                <span class="text-body1 text-center">Transactions</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(219, 28, 248, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="people" color="purple" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalStaff }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Staff</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(219, 28, 248, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="people" color="purple" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalStaff }} </span
+                ><br />
+                <span class="text-body1 text-center">Staff</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(244, 158, 0, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="groups" color="orange" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalBarber }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Barbers</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(244, 158, 0, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="groups" color="orange" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalBarber }} </span
+                ><br />
+                <span class="text-body1 text-center">Barbers</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(187, 6, 33, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon
-                      name="baby_changing_station"
-                      color="red"
-                    /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalCashier }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Cashier</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(187, 6, 33, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="baby_changing_station" color="red" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalCashier }} </span
+                ><br />
+                <span class="text-body1 text-center">Cashier</span>
+              </div>
+            </q-card-section>
+          </q-card>
         </div>
 
         <!-- Transactions  -->
         <div class="row full-width q-mt-md">
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalIncomeTransactions }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Total Income</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalIncomeTransactions }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Income</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalServiceIncome }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Total Services Income</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalServiceIncome }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Total Services Income</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalProductIncome }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Total Product Income</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalProductIncome }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Product Income</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgb(16, 138, 231)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="blue-10" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalIncomeTransactionsCash }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Total Cash</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgb(16, 138, 231)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="blue-10" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalIncomeTransactionsCash }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Cash</span>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
 
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgb(16, 138, 231)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="blue-10" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalIncomeTransactionsGCash }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Total Gcash</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+        <div class="row full-width">
+          <q-card
+            class="bg-transparent"
+            :class="
+              $q.screen.gt.xs ? 'col q-mr-md q-mt-md' : 'full-width q-mb-md'
+            "
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgb(16, 138, 231)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="blue-10" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalIncomeTransactionsGCash }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Gcash</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(210, 5, 5, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="red" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalDiscounts }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Total Discount</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="
+              $q.screen.gt.xs ? 'col q-mr-md q-mt-md' : 'full-width q-mb-md'
+            "
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(210, 5, 5, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="red" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalDiscounts }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Discount</span>
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(210, 5, 5, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="red" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ totalExpenses }} </span
-                  ><br />
-                  <span class="text-body1 text-center">Total Expenses</span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width q-mb-md'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(210, 5, 5, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="red" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ totalExpenses }} </span
+                ><br />
+                <span class="text-body1 text-center">Total Expenses</span>
+              </div>
+            </q-card-section>
+          </q-card>
           <div :class="$q.screen.gt.xs ? 'full-width' : 'full-width'">
             <!-- <q-card class="bg-transparent">
               <q-card-section class="text-center">
@@ -386,7 +377,7 @@
         "
       >
         <div class="row full-width">
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width'">
+          <div :class="$q.screen.gt.xs ? 'col' : 'full-width'">
             <q-card class="bg-transparent">
               <q-card-section class="text-center">
                 <div class="q-pa-lg" style="border-radius: 10px">
@@ -408,7 +399,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
+          <div :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'">
             <q-card
               class="bg-transparent"
               :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
@@ -435,7 +426,7 @@
             </q-card>
           </div>
 
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width'">
+          <div :class="$q.screen.gt.xs ? 'col' : 'full-width'">
             <q-card class="bg-transparent">
               <q-card-section class="text-center">
                 <div class="q-pa-lg" style="border-radius: 10px">
@@ -458,7 +449,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3' : 'full-width q-mb-md'">
+          <div :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'">
             <q-card
               class="bg-transparent"
               :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
@@ -484,7 +475,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width'">
+          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width'">
             <q-card class="bg-transparent">
               <q-card-section class="text-center">
                 <div class="q-pa-lg" style="border-radius: 10px">
@@ -507,9 +498,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div
-            :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width q-mb-md'"
-          >
+          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width q-mb-md'">
             <q-card
               class="bg-transparent"
               :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
@@ -534,7 +523,7 @@
               </q-card-section>
             </q-card>
           </div>
-          <div :class="$q.screen.gt.xs ? 'col-3 q-mt-md' : 'full-width'">
+          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width'">
             <q-card class="bg-transparent">
               <q-card-section class="text-center">
                 <div class="q-pa-lg" style="border-radius: 10px">

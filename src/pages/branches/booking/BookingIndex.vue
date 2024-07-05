@@ -35,7 +35,7 @@
           :to="'/' + route.params.slug + '/booking'"
         />
       </q-toolbar>
-      <servicesList />
+      <bookingList />
 
       <q-dialog v-model="showCreateDialog">
         <CreateService
@@ -51,7 +51,7 @@ import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useServicesData } from "stores/branch/servicesStore";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
-import servicesList from "src/components/branches/services/ServicesList.vue";
+import bookingList from "src/components/branches/booking/bookingList.vue";
 import createBranch from "src/components/branches/CreateBranch.vue";
 import importMember from "src/components/users/member/importMember.vue";
 import CreateService from "src/components/branches/services/CreateService.vue";
