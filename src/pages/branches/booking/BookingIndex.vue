@@ -49,6 +49,7 @@
 <script setup>
 import { ref, reactive, onMounted, onBeforeMount } from "vue";
 import { useServicesData } from "stores/branch/servicesStore";
+import { useBookingData } from "src/stores/branch/bookingStore";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import bookingList from "src/components/branches/booking/bookingList.vue";
@@ -62,6 +63,7 @@ const mainStore = useMainStoreData();
 const route = useRoute();
 
 const servicesStore = useServicesData();
+const bookingStore = useBookingData();
 
 const searchUser = ref(null);
 const onSearchSubmit = () => {};
@@ -77,10 +79,8 @@ const ImportDialog = () => {
   showImportDialog.value = true;
 };
 onMounted(() => {
-  mainStore.loc = "Services";
-
-  servicesStore.getAllServicesBranch(route.params.id);
-  servicesStore.getAllServices(route.params.slug);
+  mainStore.loc = "Booking";
+  bookingStore.getBranchItem(route.params.id);
   // getCodesFunc();
   // console.log(codes);
 });

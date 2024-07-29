@@ -672,7 +672,7 @@ const routes = [
   // },
   {
     path: "/",
-    redirect: "/:slug/booking",
+    // redirect: "/:slug/booking",
     component: () => import("layouts/BookingLayout.vue"),
     name: "booking-public",
     meta: {
@@ -681,7 +681,7 @@ const routes = [
     children: [
       {
         path: "/:slug/booking",
-        component: () => BookingCreate,
+        component: () => import("pages/branches/booking/CreateBooking.vue"),
         name: "booking-create",
       },
     ],

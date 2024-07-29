@@ -377,175 +377,174 @@
         "
       >
         <div class="row full-width">
-          <div :class="$q.screen.gt.xs ? 'col' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalIncomeTransactions }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }}) Income
-                  </span>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalServiceIncome }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }}) Services
-                    Income</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalIncomeTransactions }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }}) Income
+                </span>
+              </div>
+            </q-card-section>
+          </q-card>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalServiceIncome }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }}) Services
+                  Income</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
 
-          <div :class="$q.screen.gt.xs ? 'col' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(0, 244, 61, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="green" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalProductIncome }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }}) Product
-                    Income</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div :class="$q.screen.gt.xs ? 'col' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(210, 5, 5, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="red" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalExpenses }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }})
-                    Expenses</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgba(210, 5, 5, 0.5)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="red" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalDiscounts }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }})
-                    Discount</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width q-mb-md'">
-            <q-card
-              class="bg-transparent"
-              :class="$q.screen.gt.xs ? 'q-mr-md' : ''"
-            >
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgb(16, 138, 231)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="blue-10" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalIncomeTransactionsCash }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }}) Cash</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div :class="$q.screen.gt.xs ? 'col q-mt-md' : 'full-width'">
-            <q-card class="bg-transparent">
-              <q-card-section class="text-center">
-                <div class="q-pa-lg" style="border-radius: 10px">
-                  <q-avatar
-                    size="60px"
-                    text-color="white"
-                    style="background: rgb(16, 138, 231)"
-                    class="q-mb-lg"
-                  >
-                    <q-icon name="attach_money" color="blue-10" /> </q-avatar
-                  ><br />
-                  <span class="text-h3 text-bold text-center">
-                    {{ Cashier_totalIncomeTransactionsGCash }} </span
-                  ><br />
-                  <span class="text-body1 text-center"
-                    >Daily ({{ LocalStorage.getItem("branchName") }})
-                    Gcash</span
-                  >
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(0, 244, 61, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="green" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalProductIncome }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }}) Product
+                  Income</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(210, 5, 5, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="red" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalExpenses }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }})
+                  Expenses</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="row full-width q-mt-md">
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgba(210, 5, 5, 0.5)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="red" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalDiscounts }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }})
+                  Discount</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgb(16, 138, 231)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="blue-10" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalIncomeTransactionsCash }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }}) Cash</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
+          <q-card
+            class="bg-transparent"
+            :class="$q.screen.gt.xs ? 'col q-mr-md' : 'full-width'"
+          >
+            <q-card-section class="text-center">
+              <div class="q-pa-lg" style="border-radius: 10px">
+                <q-avatar
+                  size="60px"
+                  text-color="white"
+                  style="background: rgb(16, 138, 231)"
+                  class="q-mb-lg"
+                >
+                  <q-icon name="attach_money" color="blue-10" /> </q-avatar
+                ><br />
+                <span class="text-h3 text-bold text-center">
+                  {{ Cashier_totalIncomeTransactionsGCash }} </span
+                ><br />
+                <span class="text-body1 text-center"
+                  >Daily ({{ LocalStorage.getItem("branchName") }}) Gcash</span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
         </div>
       </div>
       <q-dialog v-model="showViewDialog">

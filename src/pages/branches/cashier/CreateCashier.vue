@@ -67,22 +67,23 @@
                     </template>
                   </q-input>
                 </div>
-                <div class="row relative-position q-mt-lg">
+                <div class="row relative-position q-mt-lg full-width">
                   <div
                     v-for="item in serviceStore.rowDatas"
                     :key="item.id"
-                    :style="
-                      $q.screen.gt.md
-                        ? 'min-width: 100px; width: 200px'
-                        : 'width: 46%'
-                    "
+                    :class="$q.screen.gt.sm ? '' : 'full-width'"
                   >
                     <q-card
                       flat
                       ripple
                       bordered
-                      class="my-card col-3 q-mr-sm q-mb-sm"
                       v-if="item.status == 1"
+                      class="q-mr-sm q-mb-sm"
+                      :style="
+                        $q.screen.gt.sm
+                          ? 'min-width: 100px; width: 200px'
+                          : 'width: 99%'
+                      "
                     >
                       <div
                         @click="AddToCheckout(item.id, 'services')"

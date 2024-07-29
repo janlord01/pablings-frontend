@@ -139,6 +139,22 @@
               </div>
               <div class="row">
                 <q-input
+                  outlined
+                  filled
+                  label="CP Number*"
+                  :class="
+                    $q.screen.gt.sm
+                      ? 'q-mb-md col q-mr-md'
+                      : 'full-width q-mb-sm'
+                  "
+                  v-model="formData.number"
+                  type="text"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="numbers" />
+                  </template>
+                </q-input>
+                <q-input
                   filled
                   v-model="bookingDate"
                   :class="
@@ -240,6 +256,9 @@ import { useRoute } from "vue-router";
 import { useBookingData } from "stores/branch/bookingStore";
 import { LocalStorage, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+
+import { useMainStoreData } from "stores/store";
+const mainStore = useMainStoreData();
 // const newToken = ref(LocalStorage.getI)
 const bookingDate = ref("");
 const bookingTime = ref("");
@@ -268,9 +287,14 @@ const selectedService = () => {
 };
 
 const selectBranchFunc = async () => {
+  // branch.value = "";
+  service.value = [];
+  formData.price = "";
   // console.log(branch.value);
+  serviceOption.value = [];
+  workerOption.value = [];
   await api
-    .get(`/api/branch/services/search/${branch.value.value}`)
+    .get(`/api/branch/services/worker/${branch.value.value}`)
     .then((response) => {
       console.log(response);
       if (response.status == 200) {
@@ -286,6 +310,7 @@ const selectBranchFunc = async () => {
 const formData = reactive({
   price: "",
   guest: "",
+  number: "",
 });
 
 const fetchData = async () => {
@@ -344,6 +369,7 @@ const onSubmit = () => {
       worker: worker.value != "" ? worker.value.value : "",
       price: formData.price,
       guest: formData.guest,
+      number: formData.number,
       bookingDate: bookingDate.value,
       bookingTime: bookingTime.value,
     })
@@ -363,6 +389,7 @@ const onSubmit = () => {
           bookingTime.value = "";
           formData.price = "";
           formData.guest = "";
+          formData.number = "";
           $q.loading.hide();
         }, 1000);
       } else {
@@ -392,6 +419,7 @@ const onSubmit = () => {
 };
 
 onMounted(() => {
+  mainStore.loc = "Create Booking";
   formData.name = route.params.slug;
   fetchData();
 });
