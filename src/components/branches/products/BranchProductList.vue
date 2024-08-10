@@ -2,17 +2,21 @@
   <q-table
     flat
     :pagination="pagination"
-    grid
+    :grid="!$q.screen.gt.md"
     :rows="productStore.rowBranchProductDatas"
+    :loading="productStore.loading"
     :columns="columns"
     row-key="id"
     separator="cell"
     :visible-columns="
       $q.screen.gt.xs
-        ? ['id', 'name', 'description', 'qty', 'msrp', 'srp', 'qrcode']
-        : ['id', 'name', 'description', 'qty', 'msrp', 'srp', 'qrcode']
+        ? ['name', 'description', 'srp', 'qty', 'qrcode', 'action']
+        : ['name', 'description', 'srp', 'qty', 'qrcode', 'action']
     "
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-slot:item="props">
       <q-card
         class="my-card row q-mb-md q-mr-sm"
@@ -41,10 +45,12 @@
 
         <q-card-section>
           <div style="font-size: 12px">{{ props.row.title }}</div>
-          <div style="font-size: 10px">SKU:{{ props.row.sku }}</div>
-          <div style="font-size: 10px">Qty:{{ props.row.qty_remaining }}</div>
+          <div style="font-size: 12px">{{ props.row.description }}</div>
+          <div style="font-size: 10px">SRP:{{ props.row.price }}</div>
+          <div style="font-size: 10px">qty:{{ props.row.qty }}</div>
+          <!-- <div style="font-size: 10px">Qty:{{ props.row.qty_remaining }}</div>
           <div style="font-size: 10px">MSRP:{{ props.row.msrp }}</div>
-          <div style="font-size: 10px">SRP:{{ props.row.srp }}</div>
+          <div style="font-size: 10px">SRP:{{ props.row.srp }}</div> -->
         </q-card-section>
 
         <q-card-actions class="q-pt-none">
@@ -97,17 +103,17 @@
         <q-td key="description" :props="props">
           {{ props.row.description }}
         </q-td>
+        <q-td key="srp" :props="props">
+          {{ props.row.price }}
+        </q-td>
         <q-td key="qty" :props="props">
-          {{ props.row.qty_remaining }}
+          {{ props.row.qty }}
         </q-td>
 
         <q-td key="msrp" :props="props">
           {{ props.row.msrp }}
         </q-td>
 
-        <q-td key="srp" :props="props">
-          {{ props.row.srp }}
-        </q-td>
         <q-td key="qrcode" :props="props">
           <vue-qrcode
             :value="props.row.code"
@@ -268,9 +274,8 @@ const downloadFunc = (id) => {
 };
 
 const EditDialog = (id) => {
-  product_id.value = "";
-  showEditDialog.value = true;
   product_id.value = id;
+  showEditDialog.value = true;
 };
 
 const pagination = reactive({
@@ -303,13 +308,6 @@ const columns = reactive([
   },
 
   {
-    name: "qty",
-    label: "Qty",
-    field: "qty",
-    align: "left",
-    sortable: true,
-  },
-  {
     name: "msrp",
     label: "MSRP",
     field: "msrp",
@@ -320,6 +318,13 @@ const columns = reactive([
     name: "srp",
     label: "SRP",
     field: "srp",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "qty",
+    label: "Qty",
+    field: "qty",
     align: "left",
     sortable: true,
   },
@@ -345,19 +350,7 @@ const columns = reactive([
     align: "left",
   },
 ]);
-onMounted(() => {
-  //   branchData.getAllStaff();
-  $q.loading.show();
-
-  setTimeout(() => {
-    // console.log(productStore.rowBranchProductDatas);
-
-    $q.loading.hide();
-  }, 1000);
-  // if (route.params.slug) {
-  //   productStore.getAllBranchProducts(route.params.slug);
-  // }
-});
+onMounted(() => {});
 </script>
 
 <style></style>

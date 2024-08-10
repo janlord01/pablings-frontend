@@ -1,5 +1,5 @@
 <template>
-  <q-markup-table v-if="inventoryStore.skeleton">
+  <!-- <q-markup-table v-if="inventoryStore.skeleton">
     <thead>
       <tr>
         <th class="text-left" style="width: 150px">
@@ -45,10 +45,9 @@
         </td>
       </tr>
     </tbody>
-  </q-markup-table>
+  </q-markup-table> -->
 
   <q-table
-    v-else
     flat
     :grid="!$q.screen.gt.xs"
     :pagination="pagination"
@@ -57,11 +56,12 @@
     :columns="columns"
     row-key="id"
     separator="cell"
+    :loading="inventoryStore.loading"
     :visible-columns="
       $q.screen.gt.xs
         ? [
             'id',
-            'supplier',
+            // 'supplier',
             'order_date',
             'order_arrived',
             'status',
@@ -70,7 +70,7 @@
           ]
         : [
             'id',
-            'supplier',
+            // 'supplier',
             'order_date',
             'order_arrived',
             'status',
@@ -79,6 +79,9 @@
           ]
     "
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-slot:item="props" v-if="!$q.screen.gt.xs">
       <q-card class="my-card row q-mb-md q-mr-sm" style="width: 47%">
         <q-card-section>
@@ -144,7 +147,7 @@
         <q-card-actions class="q-pt-none">
           <q-btn
             color="blue"
-            label="edit"
+            label="view"
             style="font-size: 8px; margin: 0 3px 3px 0"
             @click="EditDialog(props.row.id)"
           />
@@ -205,18 +208,18 @@
         <q-td key="action" :props="props">
           <q-btn
             color="blue"
-            icon="edit"
-            label="edit"
+            icon="visibility"
+            label="view"
             size="sm"
             @click="EditDialog(props.row.id)"
           />
-          <q-btn
+          <!-- <q-btn
             color="red"
             icon="delete"
             label="delete"
             size="sm"
             @click="DeleteDialog(props.row.id)"
-          />
+          /> -->
         </q-td>
       </q-tr>
     </template>

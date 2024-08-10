@@ -132,12 +132,12 @@ const essentialLinks = reactive([
     separator: false,
     role: ["super-admin"],
     subMenu: [
-      {
-        // icon: "boy",
-        label: "Clients",
-        to: "/user/members",
-        role: ["super-admin"],
-      },
+      // {
+      //   // icon: "boy",
+      //   label: "Clients",
+      //   to: "/user/members",
+      //   role: ["super-admin"],
+      // },
       {
         // icon: "hail",
         label: "Staff",
@@ -177,12 +177,12 @@ const essentialLinks = reactive([
     role: ["owner"],
   },
 
-  {
-    icon: "o_fastfood",
-    label: "Product",
-    separator: false,
-    role: ["owner"],
-  },
+  // {
+  //   icon: "o_fastfood",
+  //   label: "Product",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
 
   {
     icon: "o_construction",
@@ -191,13 +191,13 @@ const essentialLinks = reactive([
     role: ["owner"],
   },
 
-  {
-    icon: "o_inventory",
-    label: "Inventory",
-    to: "/inventory",
-    separator: false,
-    role: ["owner"],
-  },
+  // {
+  //   icon: "o_inventory",
+  //   label: "Inventory",
+  //   to: "/inventory",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
 
   {
     icon: "o_co_present",
@@ -215,13 +215,13 @@ const essentialLinks = reactive([
     role: ["owner"],
   },
 
-  {
-    icon: "o_receipt",
-    label: "Orders",
-    to: slug.value + "/order",
-    separator: false,
-    role: ["owner"],
-  },
+  // {
+  //   icon: "o_receipt",
+  //   label: "Orders",
+  //   to: slug.value + "/order",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
   {
     icon: "eva-settings-outline",
     label: "Settings",
@@ -233,7 +233,7 @@ const essentialLinks = reactive([
   // Manager / Cashier
   {
     icon: "o_groups",
-    label: "Client",
+    label: "Clients",
     separator: false,
     role: ["cashier", "manager", "franchisee"],
   },
@@ -241,6 +241,13 @@ const essentialLinks = reactive([
     icon: "o_fastfood",
     label: "Products",
     to: "/branches/" + link.value + "/products",
+    separator: false,
+    role: ["cashier", "manager", "franchisee"],
+  },
+  {
+    icon: "o_fastfood",
+    label: "Inventory",
+    to: "/branches/" + link.value + "/inventory",
     separator: false,
     role: ["cashier", "manager", "franchisee"],
   },
@@ -1084,9 +1091,11 @@ const setColor = () => {
               ? `/${computedSlug}/branches/${link}/benefits`
               : menuItem.label == 'Products'
               ? `/${computedSlug}/branches/${link}/products`
+              : menuItem.label == 'Inventory'
+              ? `/${computedSlug}/branches/${link}/inventory`
               : menuItem.label == 'Voucher'
               ? `/${computedSlug}/branches/${link}/discount`
-              : menuItem.label == 'Client'
+              : menuItem.label == 'Clients'
               ? `/${computedSlug}/branches/${link}/client`
               : menuItem.label == 'Branches' &&
                 menuItem.role.find((element) => element == 'owner')

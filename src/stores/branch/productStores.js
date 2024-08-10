@@ -15,7 +15,7 @@ export const useProductDatas = defineStore("productStore", {
 
     tempCashierProductDatas: [],
     tempCashierPlanDatas: [],
-
+    loading: true,
     rowRequest: [],
     rowTempRequest: [],
 
@@ -155,7 +155,8 @@ export const useProductDatas = defineStore("productStore", {
     },
 
     async getAllBranchProducts(payload) {
-      Loading.show();
+      // Loading.show();
+      this.loading = true;
       this.rowBranchProductDatas = [];
       this.rowTempBranchProductDatas = [];
       var newToken = LocalStorage.getItem("jwt");
@@ -166,12 +167,13 @@ export const useProductDatas = defineStore("productStore", {
           },
         })
         .then((response) => {
+          console.log(response);
           if (response.data.status === 200) {
             setTimeout(() => {
               this.rowTempBranchProductDatas = response.data.data;
               this.rowBranchProductDatas = this.rowTempBranchProductDatas;
-
-              Loading.hide();
+              this.loading = false;
+              // Loading.hide();
             }, 1000);
           }
         })

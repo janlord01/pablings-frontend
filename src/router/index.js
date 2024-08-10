@@ -53,7 +53,7 @@ export default route(function (/* { store, ssrContext } */) {
 
     if (LocalStorage.getItem("jwt")) {
       if (requiredAuth) {
-        let new_update = "v0000000004";
+        let new_update = "v0000000005";
         if (LocalStorage.getItem("new_update")) {
           if (LocalStorage.getItem("new_update") === new_update) {
           } else {

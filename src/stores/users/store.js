@@ -379,7 +379,7 @@ export const useUserData = defineStore("userStore", {
           "/api/members",
           {
             params: {
-              slug: payload,
+              branch_id: payload,
               // branch: payload[1],
             },
           },
@@ -390,7 +390,7 @@ export const useUserData = defineStore("userStore", {
           }
         )
         .then((response) => {
-          // console.log(response);
+          console.log(response);
 
           if (response.data.status == 200) {
             setTimeout(() => {
@@ -399,11 +399,15 @@ export const useUserData = defineStore("userStore", {
                 this.rowDatas.push({
                   name: val.name,
                   email: val.email,
-                  cp_number: val.cp_number,
+                  number: val.number,
+                  address: val.address,
+                  gender: val.gender,
+                  dob: val.dob,
                   id: val.id,
+
                   value: val.id,
                   label: val.name,
-                  image_path: val.image_path,
+                  // image_path: val.image_path,
                 });
               });
               this.loading = false;
@@ -419,13 +423,16 @@ export const useUserData = defineStore("userStore", {
       setTimeout(() => {
         Object.entries(payload).map(([key, val]) => {
           this.rowDatas.push({
+            id: val.id,
             name: val.name,
             email: val.email,
-            cp_number: val.cp_number,
-            id: val.id,
+            number: val.number,
+            gender: val.gender,
+            address: val.address,
+            dob: val.dob,
             value: val.id,
             label: val.name,
-            image_path: val.image_path,
+            // image_path: val.image_path,
           });
         });
         // this.loading = false;

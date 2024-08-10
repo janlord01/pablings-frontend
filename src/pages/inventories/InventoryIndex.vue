@@ -90,7 +90,7 @@ const ImportDialog = () => {
   showImportDialog.value = true;
 };
 onMounted(() => {
-  inventoryStore.getAllInventories(route.params.slug);
+  inventoryStore.getAllInventories([route.params.slug, route.params.id]);
   mainStore.loc = "Inventory";
 
   // getCodesFunc();

@@ -880,11 +880,11 @@ const getDashboardForCashierManager = async () => {
       console.log(response);
       $q.loading.hide();
 
-      let expenseTotal = parseFloat(response.data.totalExpenses.total)
+      let expenseTotal = parseFloat(response.data.Cashier_totalExpenses.total)
         .toFixed(2)
         .split(".");
       Cashier_totalExpenses.value =
-        response.data.totalExpenses.total != null
+        response.data.Cashier_totalExpenses.total != null
           ? "P" +
             expenseTotal[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") +
             (expenseTotal[1] ? "." + expenseTotal[1] : "")

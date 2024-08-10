@@ -150,6 +150,24 @@
           <q-btn
             :disable="props.row.status != 1"
             color="primary"
+            label="inventory"
+            icon="o_inventory"
+            :style="
+              $q.screen.gt.md
+                ? 'font-size: 12px; margin: 0 3px 3px 0'
+                : 'font-size: 8px; margin: 0 3px 3px 0'
+            "
+            :to="
+              '/' +
+              route.params.slug +
+              '/branches/' +
+              props.row.id +
+              '/inventory'
+            "
+          />
+          <q-btn
+            :disable="props.row.status != 1"
+            color="primary"
             label="voucher"
             icon="discount"
             :style="

@@ -60,7 +60,7 @@
                 </template>
               </q-input>
             </div>
-            <div
+            <!-- <div
               :class="
                 $q.screen.gt.xs ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
               "
@@ -76,8 +76,8 @@
                   <q-icon name="attach_money" />
                 </template>
               </q-input>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               :class="$q.screen.gt.xs ? 'full-width ' : ' full-width'"
               :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
             >
@@ -93,7 +93,7 @@
                   <q-icon name="attach_money" />
                 </template>
               </q-input>
-            </div>
+            </div> -->
             <div
               :class="$q.screen.gt.xs ? 'col-md-3' : 'col-sm-1 full-width'"
               :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
@@ -110,7 +110,7 @@
                 </template>
               </q-input>
             </div>
-            <div
+            <!-- <div
               :class="
                 $q.screen.gt.xs ? 'col-md-4 q-mb-md' : 'col-sm-1 full-width'
               "
@@ -143,8 +143,8 @@
                   </q-icon>
                 </template>
               </q-input>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               :class="$q.screen.gt.xs ? 'col-md-4' : 'col-sm-1 full-width'"
               :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
             >
@@ -175,7 +175,7 @@
                   </q-icon>
                 </template>
               </q-input>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -249,13 +249,13 @@ const getProduct = async () => {
 const getAllProducts = async () => {
   var newToken = LocalStorage.getItem("jwt");
   await api
-    .get(`api/${route.params.slug}/products`, {
+    .get(`api/products/branch/${route.params.id}`, {
       headers: {
         Authorization: "Bearer " + newToken,
       },
     })
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       Object.entries(response.data.data).map(([key, val]) => {
         stringOptions.push({
           label: val.title,

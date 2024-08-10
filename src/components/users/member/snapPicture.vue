@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import snapPicture from "./viewImage.vue";
 

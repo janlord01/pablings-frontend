@@ -36,7 +36,9 @@
           color="primary"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: 0px"
-          :style="$q.screen.gt.sm ? '' : 'margin-left:-10px; margin-bottom: 10px;'"
+          :style="
+            $q.screen.gt.sm ? '' : 'margin-left:-10px; margin-bottom: 10px;'
+          "
           :label="$q.screen.gt.xs ? 'Select Employee' : 'Employee'"
           @click="createDialog"
         />
@@ -76,10 +78,12 @@ import PayrollButtons from "src/components/branches/payroll/PayrollButtons.vue";
 import Salary from "src/components/branches/payroll/SalaryVue.vue";
 import ExpensesWorker from "src/components/branches/payroll/ExpensesWorker.vue";
 import totalIncomeExpenses from "src/components/branches/payroll/IncomeExpensesTotal.vue";
+import { useAssignData } from "stores/branch/assignStore";
 
 const payrollStore = usePayrollData();
 const mainStore = useUserData();
 
+const assignStore = useAssignData();
 const loanStore = useLoanData();
 const route = useRoute();
 
@@ -119,6 +123,7 @@ onMounted(() => {
   mainStore.loc = "Create Payroll";
   mainStore.getAllStaff([route.params.slug]);
   loanStore.getAllLoans(route.params.id);
+  assignStore.getAllAssign(route.params.id);
   // payrollStore.user = [];
   // getBranch();
   // productStore.getAllBranchProducts(route.params.id);

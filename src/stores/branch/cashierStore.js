@@ -328,16 +328,16 @@ export const useCashierData = defineStore("cashierStore", {
           name: payload[0].title,
           product_id: payload[0].product_id,
           description: payload[0].description,
-          srp: parseFloat(payload[0].srp),
+          srp: parseFloat(payload[0].price),
           qty: 1,
-          total: parseFloat(payload[0].srp),
+          total: parseFloat(payload[0].price),
           image: payload[0].product_img,
           type: payload[1],
           id: payload[0].id,
           discountId: "",
           discount: 0,
         });
-        this.subTotal = this.subTotal + parseFloat(payload[0].srp);
+        this.subTotal = this.subTotal + parseFloat(payload[0].price);
         this.total = this.subTotal;
 
         Notify.create({

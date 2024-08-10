@@ -12,12 +12,12 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div class="col q-mr-sm">
             <q-input
               filled
               label="Product Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mr-sm col-3 q-mt-md full-width"
               type="text"
               v-model="formData.name"
               :rules="[(val) => !!val || 'Field is required']"
@@ -27,7 +27,7 @@
               </template>
             </q-input>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div class="col q-mr-sm">
             <q-input
               filled
               label="Price*"
@@ -42,7 +42,7 @@
               </template>
             </q-input>
           </div>
-          <div class="col-3 q-mr-sm">
+          <!-- <div class="col-3 q-mr-sm">
             <q-input
               filled
               label="Quantity*"
@@ -55,7 +55,7 @@
                 <q-icon name="numbers" />
               </template>
             </q-input>
-          </div>
+          </div> -->
         </div>
 
         <div class="row q-col-gutter-none relative-position">
@@ -89,10 +89,10 @@
             </q-input>
           </div>
         </div>
-        <q-separator color="orange" inset />
+        <!-- <q-separator color="orange" inset />
         <div class="row q-col-gutter-none relative-position">
           <q-toggle v-model="formData.sale" label="On Sale?" />
-        </div>
+        </div> -->
 
         <div
           class="row q-col-gutter-none relative-position q-mb-lg"
@@ -164,14 +164,14 @@ const onSubmit = () => {
   fileData.append("description", formData.description);
   fileData.append("price", formData.price);
   fileData.append("qty", formData.qty);
-  fileData.append("sale", formData.sale);
-  fileData.append("sale_price", formData.sale_price);
+  // fileData.append("sale", formData.sale);
+  // fileData.append("sale_price", formData.sale_price);
   fileData.append("branch_id", route.params.id);
   fileData.append("_method", "POST");
 
   api
     .post(
-      "/api/products",
+      `/api/${route.params.slug}/products`,
       fileData,
       // {
       //   name: formData.name,
@@ -193,7 +193,6 @@ const onSubmit = () => {
       // console.log(response);
       if (response.data.status == 200) {
         setTimeout(() => {
-          $q.loading.hide();
           $q.notify({
             type: "positive",
             icon: "save",
@@ -201,9 +200,10 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          productStore.getAllProducts(route.params.id);
+          productStore.getAllBranchProducts(route.params.id);
           emit("hideCreateDialog");
-        }, 2000);
+          $q.loading.hide();
+        }, 1000);
       } else {
         setTimeout(() => {
           $q.loading.hide();
@@ -214,7 +214,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-        }, 2000);
+        }, 3000);
       }
     })
     .catch((error) => {

@@ -71,6 +71,7 @@ import { api } from "src/boot/axios";
 import { LocalStorage } from "quasar";
 import { useUserData } from "src/stores/users/store";
 import { useRoute } from "vue-router";
+import { useAssignData } from "stores/branch/assignStore";
 
 const payrollStore = usePayrollData();
 
@@ -79,6 +80,8 @@ const emit = defineEmits(["hideCreateDialog"]);
 
 const loanStore = useLoanData();
 const staffStore = useUserData();
+
+const assignStore = useAssignData();
 
 const stringOptions = reactive([]);
 const options = ref(stringOptions);
@@ -119,10 +122,10 @@ const onSubmit = () => {
   }
 };
 const extractStaff = () => {
-  Object.entries(staffStore.rowStaffDatas).map(([key, val]) => {
+  Object.entries(assignStore.rowDatas).map(([key, val]) => {
     stringOptions.push({
       label: val.name,
-      value: val.id,
+      value: val.user_id,
     });
   });
 };

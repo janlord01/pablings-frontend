@@ -172,14 +172,17 @@
                     </template>
                   </q-input>
                 </div>
-                <div class="row relative-position q-mt-lg">
+                <div
+                  class="row relative-position q-mt-lg"
+                  v-for="item in productStores.rowBranchProductDatas"
+                  :key="item.id"
+                >
                   <q-card
                     flat
                     ripple
                     bordered
                     class="my-card col-3 q-mr-sm q-mb-sm"
-                    v-for="item in productStores.rowBranchProductDatas"
-                    :key="item.id"
+                    v-if="item.qty !== 0"
                     :style="
                       $q.screen.gt.md
                         ? 'min-width: 100px; width: 200px'
@@ -225,7 +228,7 @@
                               : 'font-size: 10px; '
                           "
                         >
-                          P{{ item.srp }}
+                          P{{ item.price }}
                         </div>
                         <!-- <div class="text-caption text-grey">
                         {{ item.description }}
@@ -237,24 +240,26 @@
                               : 'font-size: 10px; '
                           "
                         >
-                          Qty: {{ item.qty_remaining }}
+                          Qty: {{ item.qty }}
                         </div>
                       </q-card-section>
 
                       <q-separator />
                     </div>
-                    <q-card-actions v-if="$q.screen.gt.xs">
-                      <!-- <q-btn flat round icon="event" /> -->
-                      <q-btn
-                        color="blue"
-                        class="full-width"
-                        icon="o_shopping_cart"
-                        :size="$q.screen.gt.xs ? 'md' : 'sm'"
-                        @click="AddToCheckout(item.id, 'products')"
-                      >
-                        Add to cart
-                      </q-btn>
-                    </q-card-actions>
+                    <div>
+                      <q-card-actions v-if="$q.screen.gt.xs">
+                        <!-- <q-btn flat round icon="event" /> -->
+                        <q-btn
+                          color="blue"
+                          class="full-width"
+                          icon="o_shopping_cart"
+                          :size="$q.screen.gt.xs ? 'md' : 'sm'"
+                          @click="AddToCheckout(item.id, 'products')"
+                        >
+                          Add to cart
+                        </q-btn>
+                      </q-card-actions>
+                    </div>
                   </q-card>
                   <!-- </q-card> -->
                 </div>

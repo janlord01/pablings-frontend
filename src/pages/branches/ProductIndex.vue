@@ -32,12 +32,12 @@
           </template>
         </q-input>
         <q-btn
-          icon="description"
+          icon="add"
           color="blue"
           size="sm"
           style="padding-top: 15px; padding-bottom: 15px; margin-top: -10px"
-          :label="$q.screen.gt.xs ? 'Request Product' : 'Request'"
-          :to="`/${route.params.slug}/branches/${route.params.id}/products/request`"
+          :label="$q.screen.gt.xs ? 'Create Product' : 'Product'"
+          @click="createDialog"
         />
       </q-toolbar>
       <productList />

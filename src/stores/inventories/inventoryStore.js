@@ -9,22 +9,30 @@ export const useInventoryData = defineStore("inventoryStore", {
     rowDatasOwner: [],
     rowTempProducts: [],
     skeleton: true,
+    loading: true,
   }),
   getters: {},
   actions: {
     async getAllInventories(payload) {
+      this.loading = true;
       this.skeleton = true;
       this.tempRowDatas = [];
       this.rowDatas = [];
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get(`/api/${payload}/inventory`, {
-          headers: {
-            Authorization: "Bearer " + newToken,
+        .get(
+          `/api/${payload[0]}/inventory`,
+          {
+            params: { branch_id: payload[1] },
           },
-        })
+          {
+            headers: {
+              Authorization: "Bearer " + newToken,
+            },
+          }
+        )
         .then((response) => {
-          // console.log(response);
+          console.log(response);
 
           // if (response.data.data) {
           if (response.status === 200) {
@@ -33,6 +41,7 @@ export const useInventoryData = defineStore("inventoryStore", {
 
             this.rowDatas = this.tempRowDatas;
             this.skeleton = false;
+            this.loading = false;
             // }, 3000);
           }
 
@@ -54,6 +63,7 @@ export const useInventoryData = defineStore("inventoryStore", {
     },
     //
     getAddedProductInventory(payload) {
+      console.log(payload);
       this.rowTempProducts = [];
       // Object.entries(payload).map(([key, val]) => {
       this.rowTempProducts = payload;

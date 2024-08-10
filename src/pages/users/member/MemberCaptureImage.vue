@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import seeImg from "src/components/users/member/viewImage.vue";
 import { api } from "src/boot/axios";

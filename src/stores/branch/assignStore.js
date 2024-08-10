@@ -11,7 +11,7 @@ export const useAssignData = defineStore("AssignStore", {
     async getAllAssign(payload) {
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get("/api/branch/" + payload + "/members/", {
+        .get("/api/branch/" + payload + "/members", {
           headers: {
             Authorization: "Bearer " + newToken,
           },

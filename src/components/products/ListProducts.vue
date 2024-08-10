@@ -49,7 +49,7 @@
   <q-table
     v-else
     flat
-    grid
+    :grid="!$q.screen.gt.md"
     :pagination="pagination"
     :rows="productStore.rowDatas"
     :columns="columns"

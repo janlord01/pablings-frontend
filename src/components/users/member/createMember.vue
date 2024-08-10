@@ -15,33 +15,14 @@
           <div class="full-width q-mb-md">
             <q-input
               filled
-              label="First Name*"
+              label="Name*"
               name="code"
               type="text"
-              v-model="formData.firstname"
+              v-model="formData.name"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
               </template>
-            </q-input>
-          </div>
-          <div class="full-width q-mb-md">
-            <q-input
-              filled
-              label="Middle Name"
-              name="code"
-              type="text"
-              v-model="formData.middlename"
-            >
-            </q-input>
-          </div>
-          <div class="full-width q-mb-md">
-            <q-input
-              filled
-              label="Last Name*"
-              type="text"
-              v-model="formData.lastname"
-            >
             </q-input>
           </div>
         </div>
@@ -74,7 +55,7 @@
             <q-select
               filled
               :options="['Male', 'Female']"
-              label="Gender*"
+              label="Gender"
               v-model="formData.gender"
             >
               <template v-slot:prepend>
@@ -130,7 +111,7 @@
         <div class="row align-center">
           <q-btn
             unelevated
-            label="Create"
+            label="Add"
             class="text-center full-width"
             color="primary"
             size="md"
@@ -169,69 +150,59 @@ const getCodesFunc = () => {
 
 const onSubmit = () => {
   var newToken = LocalStorage.getItem("jwt");
-  if (formData.phone.includes("+63") || formData.phone.includes("+")) {
-    $q.notify({
-      position: "top",
-      type: "negative",
-      timeout: 3000,
-      message: "Cp number should starts with 09",
-    });
-  } else {
-    $q.loading.show();
-    api
-      .post(
-        "/api/members",
-        {
-          firstname: formData.firstname,
-          middlename: formData.middlename,
-          lastname: formData.lastname,
-          dob: formData.dob,
-          gender: formData.gender,
-          address: formData.address,
-          cp_number: formData.phone,
-          email: formData.email,
-          slug: route.params.slug,
-          branch: route.params.id,
+
+  $q.loading.show();
+  api
+    .post(
+      "/api/member/clients",
+      {
+        name: formData.name,
+        dob: formData.dob,
+        gender: formData.gender,
+        address: formData.address,
+        cp_number: formData.phone,
+        email: formData.email,
+        slug: route.params.slug,
+        branch_id: route.params.id,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + newToken,
         },
-        {
-          headers: {
-            Authorization: "Bearer " + newToken,
-          },
-        }
-      )
-      .then((response) => {
-        // console.log(response);
-        if (response.data.status == 200) {
-          setTimeout(() => {
-            $q.notify({
-              type: "positive",
-              icon: "save",
-              timeout: 3000,
-              position: "top",
-              message: response.data.message,
-            });
-            $q.loading.hide();
-            userStore.addNewMember(response.data.data);
-            emit("hideCreateDialog");
-            emit("updateClient");
-          }, 500);
-        } else {
-          setTimeout(() => {
-            $q.loading.hide();
-            $q.notify({
-              type: "negative",
-              icon: "error",
-              timeout: 3000,
-              position: "top",
-              message: response.data.message,
-            });
-          }, 3000);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+      }
+    )
+    .then((response) => {
+      // console.log(response);
+      if (response.data.status == 200) {
+        setTimeout(() => {
+          $q.notify({
+            type: "positive",
+            icon: "save",
+            timeout: 3000,
+            position: "top",
+            message: response.data.message,
+          });
+          $q.loading.hide();
+          userStore.addNewMember(response.data.data);
+          emit("hideCreateDialog");
+          emit("updateClient");
+        }, 500);
+      } else {
+        setTimeout(() => {
+          $q.loading.hide();
+          $q.notify({
+            type: "negative",
+            icon: "error",
+            timeout: 3000,
+            position: "top",
+            message: response.data.message,
+          });
+        }, 3000);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 onMounted(() => {
   getCodesFunc();
@@ -239,17 +210,12 @@ onMounted(() => {
 });
 
 const formData = reactive({
-  firstname: null,
-  middlename: null,
-  lastname: null,
+  name: null,
   dob: null,
   gender: null,
   phone: null,
   address: null,
-  profession: null,
   email: null,
-  code: null,
-  from: null,
 });
 
 const getActiveCodes = () => {};

@@ -113,20 +113,33 @@ export const usePayrollData = defineStore("payrollStore", {
           console.log(error);
         });
     },
-    async getEmployeeCommission() {
+    async getEmployeeCommission(payload) {
       this.commissionData = [];
       this.commissionTempData = [];
       this.loadingCommission = true;
       this.grossSalary = 0;
       this.netSalary = 0;
 
+      Loading.show({
+        message: "Some important process is in progress. Please wait...",
+      });
+
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get(`api/payment/worker/commission/${this.user.value}`, {
-          headers: {
-            Authorization: "Bearer " + newToken,
+        .get(
+          `api/payment/worker/commission/${this.user.value}`,
+          {
+            params: {
+              startDate: payload[0],
+              endDate: payload[1],
+            },
           },
-        })
+          {
+            headers: {
+              Authorization: "Bearer " + newToken,
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
           if (response.data.status == 200) {
@@ -168,6 +181,7 @@ export const usePayrollData = defineStore("payrollStore", {
               //     parseFloat(this.netSalary) - parseFloat(val.amount);
               // });
               this.loadingCommission = false;
+              // Loading.hide()
             }, 500);
           } else {
             setTimeout(() => {
@@ -179,6 +193,7 @@ export const usePayrollData = defineStore("payrollStore", {
                 message: "An error occurred while getting the commissions.",
               });
               this.loadingCommission = false;
+              Loading.hide();
             }, 500);
           }
         })
@@ -193,23 +208,36 @@ export const usePayrollData = defineStore("payrollStore", {
               message: "An error occurred while getting the commissions.",
             });
             this.loadingCommission = false;
+            Loading.hide();
           }, 3000);
         });
     },
-    async getEmployeeExpenses() {
+    async getEmployeeExpenses(payload) {
       this.ExpensesData = [];
       this.ExpensesTempData = [];
       this.loadingExpenses = true;
       this.netSalary = 0;
       this.totalExpenses = 0;
 
+      Loading.show({
+        message: "Some important process is in progress. Please wait...",
+      });
       var newToken = LocalStorage.getItem("jwt");
       await api
-        .get(`api/payment/worker/expenses/${this.user.value}`, {
-          headers: {
-            Authorization: "Bearer " + newToken,
+        .get(
+          `api/payment/worker/expenses/${this.user.value}`,
+          {
+            params: {
+              startDate: payload[0],
+              endDate: payload[1],
+            },
           },
-        })
+          {
+            headers: {
+              Authorization: "Bearer " + newToken,
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
           if (response.data.status == 200) {
@@ -246,6 +274,7 @@ export const usePayrollData = defineStore("payrollStore", {
               });
 
               this.loadingExpenses = false;
+              Loading.hide();
             }, 500);
           } else {
             setTimeout(() => {
@@ -257,7 +286,8 @@ export const usePayrollData = defineStore("payrollStore", {
                 message: "An error occurred while getting the commissions.",
               });
               this.loadingExpenses = false;
-            }, 500);
+              Loading.hide();
+            }, 3000);
           }
         })
         .catch((error) => {
@@ -271,6 +301,7 @@ export const usePayrollData = defineStore("payrollStore", {
               message: "An error occurred while getting the commissions.",
             });
             this.loadingExpenses = false;
+            Loading.hide();
           }, 3000);
         });
     },

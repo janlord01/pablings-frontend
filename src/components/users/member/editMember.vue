@@ -1,8 +1,8 @@
 <template>
-  <q-card style="max-width: 800px; width: 800px">
+  <q-card style="max-width: 400px; width: 800px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
     <q-toolbar class="bg-primary text-white">
-      <q-toolbar-title> Update Member </q-toolbar-title>
+      <q-toolbar-title> Create Client </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
     <q-card-section>
@@ -15,33 +15,14 @@
           <div class="full-width q-mb-md">
             <q-input
               filled
-              label="First Name*"
+              label="Name*"
               name="code"
               type="text"
-              v-model="formData.firstname"
+              v-model="formData.name"
             >
               <template v-slot:prepend>
                 <q-icon name="account_circle" />
               </template>
-            </q-input>
-          </div>
-          <div class="full-width q-mb-md">
-            <q-input
-              filled
-              label="Middle Name"
-              name="code"
-              type="text"
-              v-model="formData.middlename"
-            >
-            </q-input>
-          </div>
-          <div class="full-width q-mb-md">
-            <q-input
-              filled
-              label="Last Name*"
-              type="text"
-              v-model="formData.lastname"
-            >
             </q-input>
           </div>
         </div>
@@ -74,7 +55,7 @@
             <q-select
               filled
               :options="['Male', 'Female']"
-              label="Gender*"
+              label="Gender"
               v-model="formData.gender"
             >
               <template v-slot:prepend>
@@ -85,7 +66,7 @@
           <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Phone #"
+              label="CP #(starts 09)"
               name="phone"
               type="text"
               v-model="formData.phone"
@@ -115,7 +96,7 @@
           <div class="full-width q-mb-md">
             <q-input
               filled
-              label="Email Address "
+              label="Email Address"
               name="email"
               type="email"
               v-model="formData.email"
@@ -130,7 +111,7 @@
         <div class="row align-center">
           <q-btn
             unelevated
-            label="Update"
+            label="Add"
             class="text-center full-width"
             color="primary"
             size="md"
@@ -169,12 +150,10 @@ const getMemberData = () => {
     })
     .then((response) => {
       // console.log(response);
-      formData.firstname = response.data.data.firstname;
-      formData.middlename = response.data.data.middlename;
-      formData.lastname = response.data.data.lastname;
-      formData.dob = response.data.data.birthday;
+      formData.name = response.data.data.name;
+      formData.dob = response.data.data.dob;
       formData.gender = response.data.data.gender;
-      formData.phone = response.data.data.cp_number;
+      formData.phone = response.data.data.number;
       formData.address = response.data.data.address;
       // formData.profession = response.data.data.profession;
       formData.email = response.data.data.email;
@@ -201,13 +180,11 @@ const onSubmit = () => {
     .patch(
       "/api/members/" + props.memberId,
       {
-        firstname: formData.firstname,
-        middlename: formData.middlename,
-        lastname: formData.lastname,
+        name: formData.name,
         dob: formData.dob,
         gender: formData.gender,
         address: formData.address,
-        contact: formData.phone,
+        number: formData.phone,
         email: formData.email,
       },
       {
@@ -228,7 +205,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          userStore.getAllMembers(route.params.slug);
+          userStore.getAllMembers(route.params.id);
           emit("hideEditDialog");
         }, 2000);
       } else {
@@ -255,17 +232,12 @@ onMounted(() => {
 });
 
 const formData = reactive({
-  firstname: null,
-  middlename: null,
-  lastname: null,
+  name: null,
   dob: null,
   gender: null,
   phone: null,
   address: null,
-  profession: null,
   email: null,
-  code: null,
-  from: null,
 });
 
 const getActiveCodes = () => {};

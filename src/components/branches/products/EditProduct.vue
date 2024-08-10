@@ -2,7 +2,7 @@
   <q-card style="max-width: 800px; width: 800px; min-height: 400px">
     <!-- <q-linear-progress :value="onProgressBar" color="green" size="md" /> -->
     <q-toolbar class="bg-primary text-white">
-      <q-toolbar-title> Create Product </q-toolbar-title>
+      <q-toolbar-title> Update Product </q-toolbar-title>
       <q-btn flat icon="close" round v-close-popup></q-btn>
     </q-toolbar>
     <q-card-section>
@@ -12,12 +12,12 @@
         @submit="onSubmit"
       >
         <div class="row q-col-gutter-none relative-position">
-          <div class="col-5 q-mr-sm">
+          <div class="col q-mr-sm">
             <q-input
               filled
               label="Product Name*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mr-sm col-3 q-mt-md full-width"
               type="text"
               v-model="formData.name"
               :rules="[(val) => !!val || 'Field is required']"
@@ -27,12 +27,12 @@
               </template>
             </q-input>
           </div>
-          <div class="col-3 q-mr-sm">
+          <div class="col q-mr-sm">
             <q-input
               filled
               label="Price*"
               name="code"
-              class="q-mr-sm col-3 q-mt-md q-mb-md full-width"
+              class="q-mr-sm col-3 q-mt-md full-width"
               type="text"
               v-model="formData.price"
               :rules="[(val) => !!val || 'Price is required']"
@@ -42,7 +42,7 @@
               </template>
             </q-input>
           </div>
-          <div class="col-3 q-mr-sm">
+          <!-- <div class="col-3 q-mr-sm">
             <q-input
               filled
               label="Quantity*"
@@ -55,7 +55,7 @@
                 <q-icon name="numbers" />
               </template>
             </q-input>
-          </div>
+          </div> -->
         </div>
 
         <div class="row q-col-gutter-none relative-position">
@@ -75,13 +75,23 @@
           </div>
         </div>
         <div class="row q-col-gutter-none q-mb-xl relative-position">
+          <div class="col-12">
+            <img
+              v-if="imageUrl"
+              :src="imageUrl"
+              alt="Product Image"
+              style="width: 200px; height: auto"
+            />
+          </div>
           <div class="col-3">
             <q-input
               filled
               label=""
+              v-model="formData.img"
               class="q-mr-sm col-3 full-width"
               type="file"
-              v-model="formData.img"
+              ref="fileInput"
+              @change="onFileChange"
             >
               <template v-slot:prepend>
                 <q-icon name="image" />
@@ -89,10 +99,10 @@
             </q-input>
           </div>
         </div>
-        <q-separator color="orange" inset />
+        <!-- <q-separator color="orange" inset />
         <div class="row q-col-gutter-none relative-position">
           <q-toggle v-model="formData.sale" label="On Sale?" />
-        </div>
+        </div> -->
 
         <div
           class="row q-col-gutter-none relative-position q-mb-lg"
@@ -123,6 +133,9 @@
         </div>
       </q-form>
     </q-card-section>
+    <q-inner-loading :showing="loading">
+      <q-spinner-gears size="50px" color="primary" />
+    </q-inner-loading>
   </q-card>
 </template>
 <script setup>
@@ -141,28 +154,72 @@ const emit = defineEmits(["hideEditDialog"]);
 
 const productStore = useProductDatas();
 
+const imageUrl = ref(null);
+const fileInput = ref(null);
+const fileInputRef = ref(null); //
+const onFileChange = () => {
+  const fileInput = fileInputRef.value;
+  if (fileInput && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    formData.img = file;
+    imageUrl.value = URL.createObjectURL(file); // Update imageUrl for preview
+    console.log("File selected:", file);
+  } else {
+    console.error("No files found or files array is empty");
+  }
+};
+
 const $q = useQuasar();
 
+const loading = ref(true);
+
 const getProduct = () => {
+  loading.value = true;
   var newToken = LocalStorage.getItem("jwt");
   api
-    .get("/api/products/" + props.productId + "/edit", {
-      headers: {
-        Authorization: "Bearer " + newToken,
-      },
-    })
+    .get(
+      "/api/" + route.params.slug + "/products/" + props.productId + "/edit",
+      {
+        headers: {
+          Authorization: "Bearer " + newToken,
+        },
+      }
+    )
     .then((response) => {
       // console.log(response);
-      formData.name = response.data.data.title;
-      formData.description = response.data.data.description;
-      formData.price = response.data.data.price;
-      formData.qty = response.data.data.qty;
-      formData.sale = JSON.parse(response.data.data.sale);
-      formData.sale_price = response.data.data.sale_price;
-      formData.temp_img = response.data.img;
+      if (response.data.status == 200) {
+        setTimeout(() => {
+          formData.name = response.data.data.title;
+          formData.description = response.data.data.description;
+          formData.price = response.data.data.price;
+          formData.qty = response.data.data.qty;
+          formData.sale = JSON.parse(response.data.data.sale);
+          formData.sale_price = response.data.data.sale_price;
+          formData.temp_img = response.data.img;
+          loading.value = false;
+          imageUrl.value = response.data.img;
+        }, 300);
+      } else {
+        setTimeout(() => {
+          $q.notify({
+            position: "bottom",
+            type: "negative",
+            timeout: 3000,
+            message: "Something went wrong!",
+          });
+        }, 3000);
+      }
     })
     .catch((error) => {
       console.log(error);
+      setTimeout(() => {
+        $q.notify({
+          position: "bottom",
+          type: "negative",
+          timeout: 3000,
+          message: "Something went wrong!",
+        });
+      }, 3000);
     });
 };
 
@@ -188,7 +245,7 @@ const onSubmit = () => {
 
   api
     .post(
-      "/api/products/" + props.productId,
+      `/api/${route.params.slug}/products/${props.productId}`,
       fileDat,
       // {
       //   name: formData.name,
@@ -217,7 +274,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          productStore.getAllProducts(route.params.id);
+          productStore.getAllBranchProducts(route.params.id);
           emit("hideEditDialog");
         }, 2000);
       } else {

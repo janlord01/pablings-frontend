@@ -25,7 +25,7 @@
         </q-td>
 
         <q-td key="name" :props="props">
-          <q-btn round>
+          <!-- <q-btn round>
             <q-avatar size="42px">
               <img
                 :src="props.row.image_path"
@@ -34,7 +34,7 @@
               <q-btn v-else-if="props.row.gender == 'Male'" icon="face"></q-btn>
               <q-btn v-else icon="face_3"></q-btn>
             </q-avatar>
-          </q-btn>
+          </q-btn> -->
           {{ props.row.name }}
         </q-td>
         <q-td key="email" :props="props">
@@ -51,7 +51,7 @@
             label="edit"
             @click="EditMemberDialog(props.row.id)"
           />
-          <q-btn
+          <!-- <q-btn
             color="orange"
             icon="camera_alt"
             label="profile image"
@@ -64,7 +64,7 @@
             label="change password"
             size="sm"
             @click="passwordDialog(props.row.id)"
-          />
+          /> -->
         </q-td>
       </q-tr>
     </template>

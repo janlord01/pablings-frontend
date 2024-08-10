@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive } from "vue";
 // import snapPicture from "./viewImage.vue";
 import { useUserData } from "src/stores/users/store";
 

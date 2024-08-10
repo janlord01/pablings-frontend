@@ -21,49 +21,7 @@
               $q.screen.gt.xs ? 'col-md-12 q-mr-sm q-mb-md' : 'full-width'
             "
             :style="$q.screen.gt.xs ? '' : 'margin-bottom:0px;'"
-          >
-            <!-- <q-select
-              filled
-              v-model="formData.product"
-              use-input
-              input-debounce="0"
-              label="Search Product"
-              :options="options"
-              @filter="filterFn"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select> -->
-          </div>
-          <div
-            :class="
-              $q.screen.gt.xs ? 'col-md-12 q-mr-sm q-mb-md' : 'full-width '
-            "
-            :style="$q.screen.gt.xs ? '' : 'margin-bottom:20px;'"
-          >
-            <q-select
-              filled
-              v-model="formData.supplier"
-              use-input
-              input-debounce="0"
-              label="Search Supplier"
-              :options="options"
-              @filter="filterFn"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </div>
+          ></div>
           <div
             :class="
               $q.screen.gt.xs ? 'col-md-5 q-mr-sm' : 'col-sm-1 full-width'
@@ -152,42 +110,28 @@
               size="sm"
               class="q-mr-sm col-5"
               color="blue"
-              :to="'/' + route.params.slug + '/products'"
+              :to="
+                '/' +
+                route.params.slug +
+                '/branches/' +
+                route.params.id +
+                '/products'
+              "
             />
           </div>
           <q-table
             flat
             :grid="!$q.screen.gt.xs"
             :pagination="pagination"
-            class="q-pa-sm"
+            class="q-pa-sm full-width"
             :rows="inventoryStore.rowTempProducts"
             :columns="columns"
             row-key="id"
             separator="cell"
             :visible-columns="
               $q.screen.gt.xs
-                ? [
-                    'product',
-                    'purchase_price',
-                    'qty',
-                    'remaining',
-                    'msrp',
-                    'srp',
-                    'mfg',
-                    'exp',
-                    'action',
-                  ]
-                : [
-                    'product',
-                    'purchase_price',
-                    'qty',
-                    'remaining',
-                    'msrp',
-                    'srp',
-                    'mfg',
-                    'exp',
-                    'action',
-                  ]
+                ? ['product', 'qty', 'msrp', 'srp', 'action']
+                : ['product', 'qty', 'msrp', 'srp', 'action']
             "
           >
             <template v-slot:item="props" v-if="!$q.screen.gt.xs">
@@ -195,27 +139,6 @@
                 <q-card-section>
                   <div style="font-size: 12px">
                     {{ props.row.product.label }}
-                  </div>
-                  <div style="font-size: 10px">
-                    <span class="text-bold">Purchase Price: </span> <br />{{
-                      props.row.purchase_price
-                    }}
-                    <q-btn flat size="sm" color="blue">Edit</q-btn>
-                    <q-popup-edit
-                      v-model="props.row.purchase_price"
-                      v-slot="scope"
-                      buttons
-                      class="bg-grey-5"
-                    >
-                      <q-input
-                        v-model="scope.value"
-                        dense
-                        label="Purchase Price"
-                        filled
-                        counter
-                        @keyup.enter="scope.set"
-                      />
-                    </q-popup-edit>
                   </div>
                   <div style="font-size: 10px">
                     <span class="text-bold">Qty: </span> <br />{{
@@ -269,108 +192,8 @@
                     <span
                       ><span class="text-bold">SRP: </span> <br />
                       {{ props.row.srp }}
-                      <q-btn flat size="sm" color="blue">Edit</q-btn>
-                      <q-popup-edit
-                        v-model="props.row.srp"
-                        v-slot="scope"
-                        buttons
-                        class="bg-grey-5"
-                      >
-                        <q-input
-                          v-model="scope.value"
-                          dense
-                          label="SRP"
-                          filled
-                          counter
-                          @keyup.enter="scope.set"
-                        />
-                      </q-popup-edit>
                     </span>
                     <br />
-                  </div>
-                  <div style="font-size: 10px">
-                    <span class="text-bold">MFG: </span> <br />{{
-                      date.formatDate(props.row.mfg, "MMMM DD, YYYY")
-                    }}
-                    <q-btn flat size="sm" color="blue">Edit</q-btn>
-
-                    <q-popup-edit
-                      v-model="props.row.mfg"
-                      buttons
-                      class="bg-grey-5"
-                      v-slot="scope"
-                    >
-                      <q-input
-                        filled
-                        v-model="scope.value"
-                        label="MFG Date"
-                        @keyup.enter="scope.set"
-                        mask="date"
-                      >
-                        <template v-slot:append>
-                          <q-icon name="event" class="cursor-pointer">
-                            <q-popup-proxy
-                              cover
-                              transition-show="scale"
-                              transition-hide="scale"
-                            >
-                              <q-date v-model="scope.value">
-                                <div class="row items-center justify-end">
-                                  <q-btn
-                                    v-close-popup
-                                    label="Close"
-                                    color="primary"
-                                    flat
-                                  />
-                                </div>
-                              </q-date>
-                            </q-popup-proxy>
-                          </q-icon>
-                        </template>
-                      </q-input>
-                    </q-popup-edit>
-                  </div>
-                  <div style="font-size: 10px">
-                    <span class="text-bold">EXP: </span> <br />{{
-                      date.formatDate(props.row.exp, "MMMM DD, YYYY")
-                    }}
-                    <q-btn flat size="sm" color="blue">Edit</q-btn>
-
-                    <q-popup-edit
-                      v-model="props.row.exp"
-                      buttons
-                      class="bg-grey-5"
-                      v-slot="scope"
-                    >
-                      <q-input
-                        filled
-                        v-model="scope.value"
-                        label="EXP Date"
-                        @keyup.enter="scope.set"
-                        mask="date"
-                      >
-                        <template v-slot:append>
-                          <q-icon name="event" class="cursor-pointer">
-                            <q-popup-proxy
-                              cover
-                              transition-show="scale"
-                              transition-hide="scale"
-                            >
-                              <q-date v-model="scope.value">
-                                <div class="row items-center justify-end">
-                                  <q-btn
-                                    v-close-popup
-                                    label="Close"
-                                    color="primary"
-                                    flat
-                                  />
-                                </div>
-                              </q-date>
-                            </q-popup-proxy>
-                          </q-icon>
-                        </template>
-                      </q-input>
-                    </q-popup-edit>
                   </div>
                 </q-card-section>
 
@@ -437,7 +260,7 @@
                 </q-td>
                 <q-td key="srp" :props="props">
                   {{ props.row.srp }}
-                  <q-btn flat size="sm" color="blue">Edit</q-btn>
+                  <!-- <q-btn flat size="sm" color="blue">Edit</q-btn>
                   <q-popup-edit v-model="props.row.srp" v-slot="scope">
                     <q-input
                       v-model="scope.value"
@@ -447,7 +270,7 @@
                       counter
                       @keyup.enter="scope.set"
                     />
-                  </q-popup-edit>
+                  </q-popup-edit> -->
                 </q-td>
 
                 <q-td key="mfg" :props="props">
@@ -710,7 +533,7 @@
             <q-select
               filled
               v-model="formData.status"
-              :options="['Order Placed', 'In Transit', 'Order Arrived']"
+              :options="['Order Arrived']"
               label="Status"
             >
               <template v-slot:prepend>
@@ -973,11 +796,12 @@ const onSubmit = () => {
       `/api/${route.params.slug}/inventory`,
       {
         products: inventoryStore.rowTempProducts,
-        supplier: formData.supplier.value,
+        // supplier: formData.supplier.value,
         order_date: formData.orderDate,
         order_arrived: formData.orderArrived,
         status: formData.status,
         remarks: formData.remark,
+        branch_id: route.params.id,
       },
       {
         headers: {
@@ -997,9 +821,12 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-          inventoryStore.getAllInventories(route.params.slug);
+          inventoryStore.getAllInventories([
+            route.params.slug,
+            route.params.id,
+          ]);
           emit("hideCreateDialog");
-        }, 2000);
+        }, 1000);
       } else {
         setTimeout(() => {
           $q.loading.hide();
@@ -1010,7 +837,7 @@ const onSubmit = () => {
             position: "bottom",
             message: response.data.message,
           });
-        }, 2000);
+        }, 3000);
       }
     })
     .catch((error) => {
@@ -1029,7 +856,7 @@ const formData = reactive({
   orderDate: null,
   orderArrived: null,
   remark: null,
-  status: null,
+  status: "Order Arrived",
 });
 
 const getActiveCodes = () => {};

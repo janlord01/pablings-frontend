@@ -1,7 +1,7 @@
 <template>
   <div class="row q-mt-lg" v-if="payrollStore.userName">
     <div class="full-width">
-      <q-btn
+      <!-- <q-btn
         color="primary"
         label="Load Commission"
         icon="loop"
@@ -11,7 +11,7 @@
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
         @click="payrollStore.getEmployeeCommission"
-      />
+      /> -->
       <q-btn
         color="primary"
         label="Add Salary"
@@ -35,7 +35,7 @@
         @click="addBonusFunc"
       />
 
-      <q-btn
+      <!-- <q-btn
         color="negative"
         label="Load Deduction"
         icon="loop"
@@ -45,7 +45,7 @@
             : 'font-size: 8px; margin: 0 3px 3px 0'
         "
         @click="payrollStore.getEmployeeExpenses"
-      />
+      /> -->
       <q-btn
         color="negative"
         label="Benifits Deduction"

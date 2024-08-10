@@ -555,7 +555,7 @@ const getBranchName = ref("");
 onMounted(() => {
   companyStore.getCompany(route.params.slug ? route.params.slug : "admin");
   userStore.getUserDetails();
-  userStore.getAllMembers(route.params.slug);
+  userStore.getAllMembers(route.params.id);
   // onLoad();
   if (LocalStorage.getItem("dark")) {
     $q.dark.set(LocalStorage.getItem("dark"));
@@ -839,7 +839,8 @@ const setColor = () => {
     >
       <q-toolbar v-if="$q.screen.width > 1008">
         <q-toolbar-title style="font-size: 14px"
-          >Comprehensive Business Management &copy; Copyright 2024. All Right Reserved.
+          >Comprehensive Business Management &copy; Copyright 2024. All Right
+          Reserved.
         </q-toolbar-title>
       </q-toolbar>
       <q-tabs

@@ -9,7 +9,9 @@
     :loading="payrollStore.mainLoading"
     :separator="$q.screen.gt.xs ? 'horizontal' : 'none'"
     :visible-columns="
-      $q.screen.gt.xs ? ['staff', 'status'] : ['staff', 'status']
+      $q.screen.gt.xs
+        ? ['staff', 'status', 'action']
+        : ['staff', 'status', 'action']
     "
   >
     <template v-slot:loading>
@@ -24,7 +26,15 @@
           {{ props.row.payroll_status }}
         </q-td>
 
-        <q-td key="action" :props="props"> </q-td>
+        <q-td key="action" :props="props">
+          <q-btn
+            label="view"
+            color="blue"
+            icon="visibility"
+            size="sm"
+            @click="viewDialogFunc(props.row.id)"
+          />
+        </q-td>
       </q-tr>
     </template>
   </q-table>
@@ -62,6 +72,11 @@ const showEditDialog = ref(false);
 const showCaptureImg = ref(false);
 const showPasswordDialog = ref(false);
 const loan_id = ref(null);
+
+const showViewDialog = ref(false);
+const viewDialogFunc = (id) => {
+  showViewDialog.value = true;
+};
 
 const cantEditFunc = () => {
   $q.notify({

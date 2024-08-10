@@ -32,6 +32,7 @@ import BenefitsIndex from "pages/branches/BenefitsIndex.vue";
 import LoanIndex from "pages/branches/LoanIndex.vue";
 import PayrollIndex from "pages/branches/PayrollIndex.vue";
 import PayrollCreate from "pages/branches/payroll/CreatePayroll.vue";
+import ClientIndex from "pages/users/member/MemberIndex.vue";
 const routes = [
   {
     path: "/",
@@ -139,15 +140,15 @@ const routes = [
     name: "inventory",
     meta: {
       requiredAuth: true,
-      access: ["super-admin", "owner"],
+      access: ["super-admin", "owner", "cashier", "manager"],
     },
-    children: [
-      {
-        path: "/inventory",
-        component: () => import("pages/supplies/SupplyIndex.vue"),
-        name: "inventory-index",
-      },
-    ],
+    // children: [
+    //   {
+    //     path: "/:slug/branches/:id/inventory",
+    //     component: () => import("pages/inventories/InventoryIndex.vue"),
+    //     name: "inventory-index",
+    //   },
+    // ],
   },
   {
     path: "/",
@@ -245,7 +246,7 @@ const routes = [
         name: "inventory-index",
         meta: {
           requiredAuth: true,
-          access: ["super-admin", "owner"],
+          access: ["super-admin", "owner", "cashier"],
         },
       },
     ],
@@ -259,11 +260,11 @@ const routes = [
       access: ["super-admin", "manager", "franchisee"],
     },
     children: [
-      {
-        path: "/user/members",
-        component: () => import("pages/users/member/MemberIndex.vue"),
-        name: "member-index",
-      },
+      // {
+      //   path: "/user/members",
+      //   component: () => import("pages/users/member/MemberIndex.vue"),
+      //   name: "member-index",
+      // },
       {
         path: "/user/members/:id/update-photo",
         component: () => import("pages/users/member/MemberCaptureImage.vue"),
@@ -436,6 +437,15 @@ const routes = [
       //     access: ["super-admin", "owner", "manager"],
       //   },
       // },
+      {
+        path: "/:slug/branches/:id/inventory",
+        component: () => import("pages/inventories/InventoryIndex.vue"),
+        name: "inventory-index",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
 
       {
         path: "/:slug/branches/:id/cashier",
@@ -496,7 +506,7 @@ const routes = [
       },
       {
         path: "/:slug/branches/:id/client",
-        component: import("pages/users/member/MemberIndex.vue"),
+        component: ClientIndex,
         name: "branch-client-index",
         meta: {
           requiredAuth: true,

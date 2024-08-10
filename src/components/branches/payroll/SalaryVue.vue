@@ -17,7 +17,7 @@
     "
   >
     <template v-slot:loading>
-      <q-inner-loading showing color="primary" />
+      <q-inner-loading showing color="primary" label="Please Wait...." />
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">

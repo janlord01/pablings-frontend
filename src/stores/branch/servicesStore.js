@@ -60,7 +60,7 @@ export const useServicesData = defineStore("servicesStore", {
           console.log(response);
           Object.entries(response.data.data).map(([key, val]) => {
             this.tempRowDatas.push({
-              id: val.id,
+              id: val.serv_id,
               image: val.image,
               service_name: val.service_name,
               service_descr: val.service_descr,
