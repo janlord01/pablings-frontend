@@ -345,6 +345,14 @@ const essentialLinks = reactive([
     role: ["manager", "cashier", "franchisee"],
   },
 
+  {
+    icon: "o_account_balance",
+    label: "Coop",
+    to: `/${userStore.userDetails.slug}/branches/${link.value}/coop`,
+    separator: false,
+    role: ["manager", "cashier", "franchisee"],
+  },
+
   // {
   //   icon: "eva-settings-outline",
   //   label: "Settings",
@@ -1097,6 +1105,8 @@ const setColor = () => {
               ? `/${computedSlug}/branches/${link}/discount`
               : menuItem.label == 'Clients'
               ? `/${computedSlug}/branches/${link}/client`
+              : menuItem.label == 'Coop'
+              ? `/${computedSlug}/branches/${link}/coop`
               : menuItem.label == 'Branches' &&
                 menuItem.role.find((element) => element == 'owner')
               ? `/${computedSlug}/branches`

@@ -101,7 +101,26 @@
               >
             </p>
           </div>
+          <div style="margin-top: 0px; margin-bottom: -15px">
+            <p style="margin-top: -16px" v-if="cashierStore.vat">
+              <span style="margin-right: 2px">Total with VAT 12%</span
+              ><span></span>
+              <span></span>
+              <span style="float: right; font-size: 12px">PHP {{ vat }}</span>
+            </p>
+          </div>
+          <br />
+          <div style="clear: both; margin-top: -12px">
+            <p style="margin-top: -16px" v-if="cashierStore.vat">
+              <span style="margin-right: 2px">Change with VAT 12%</span>
+
+              <span style="float: right; font-size: 12px; margin-left: 50px"
+                >&nbsp;&nbsp;&nbsp;&nbsp; PHP {{ totalAmountChange }}</span
+              >
+            </p>
+          </div>
         </div>
+
         <hr />
         <div>
           <p class="text-red" style="font-size: 12px">
@@ -246,8 +265,19 @@ const getItemForReceipt = async () => {
       console.log(error);
     });
 };
-
+const totalAmountMop = ref("");
+const totalAmountChange = ref("");
+const vat = ref("");
 onMounted(() => {
   getItemForReceipt();
+  totalAmountMop.value = cashierStore.mop.reduce(
+    (acc, curr) => parseFloat(acc) + parseFloat(curr.amount),
+    0
+  );
+  vat.value =
+    parseFloat(cashierStore.total) + parseFloat(cashierStore.total) * 0.12;
+
+  totalAmountChange.value =
+    parseFloat(totalAmountMop.value) - parseFloat(vat.value);
 });
 </script>

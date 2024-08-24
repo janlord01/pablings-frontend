@@ -230,6 +230,7 @@ const slugWatch = watch(
     // return newValue;
   }
 );
+
 const essentialLinks = reactive([
   {
     icon: "eva-home-outline",
@@ -246,12 +247,12 @@ const essentialLinks = reactive([
     separator: false,
     role: ["super-admin"],
     subMenu: [
-      {
-        // icon: "boy",
-        label: "Clients",
-        to: "/user/members",
-        role: ["super-admin"],
-      },
+      // {
+      //   // icon: "boy",
+      //   label: "Clients",
+      //   to: "/user/members",
+      //   role: ["super-admin"],
+      // },
       {
         // icon: "hail",
         label: "Staff",
@@ -284,19 +285,19 @@ const essentialLinks = reactive([
     role: ["super-admin"],
     // permission: ["view-profile"],
   },
-
   {
     icon: "o_groups",
     label: "Staff",
     separator: false,
     role: ["owner"],
   },
-  {
-    icon: "o_fastfood",
-    label: "Product",
-    separator: false,
-    role: ["owner"],
-  },
+
+  // {
+  //   icon: "o_fastfood",
+  //   label: "Product",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
 
   {
     icon: "o_construction",
@@ -305,13 +306,13 @@ const essentialLinks = reactive([
     role: ["owner"],
   },
 
-  {
-    icon: "o_inventory",
-    label: "Inventory",
-    to: "/inventory",
-    separator: false,
-    role: ["owner"],
-  },
+  // {
+  //   icon: "o_inventory",
+  //   label: "Inventory",
+  //   to: "/inventory",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
 
   {
     icon: "o_co_present",
@@ -329,13 +330,13 @@ const essentialLinks = reactive([
     role: ["owner"],
   },
 
-  {
-    icon: "o_receipt",
-    label: "Orders",
-    to: slug.value + "/order",
-    separator: false,
-    role: ["owner"],
-  },
+  // {
+  //   icon: "o_receipt",
+  //   label: "Orders",
+  //   to: slug.value + "/order",
+  //   separator: false,
+  //   role: ["owner"],
+  // },
   {
     icon: "eva-settings-outline",
     label: "Settings",
@@ -343,10 +344,11 @@ const essentialLinks = reactive([
     separator: false,
     role: ["owner"],
   },
+
   // Manager / Cashier
   {
     icon: "o_groups",
-    label: "Client",
+    label: "Clients",
     separator: false,
     role: ["cashier", "manager", "franchisee"],
   },
@@ -355,8 +357,14 @@ const essentialLinks = reactive([
     label: "Products",
     to: "/branches/" + link.value + "/products",
     separator: false,
-    role: ["manager", "cashier", "franchisee"],
-    // permission: ["view-profile"],
+    role: ["cashier", "manager", "franchisee"],
+  },
+  {
+    icon: "o_fastfood",
+    label: "Inventory",
+    to: "/branches/" + link.value + "/inventory",
+    separator: false,
+    role: ["cashier", "manager", "franchisee"],
   },
 
   {
@@ -364,19 +372,61 @@ const essentialLinks = reactive([
     label: "Voucher",
     to: "/voucher/",
     separator: false,
-    role: ["manager"],
+    role: ["cashier", "manager", "franchisee"],
   },
+  // {
+  //   icon: "attach_money",
+  //   label: "Finance",
+  //   to: "/branches/" + userStore.userDetails.branch + "/cashier",
+  //   separator: false,
+  //   role: ["cashier", "manager", "franchisee"],
+  //   subMenu: [
+  //     {
+  //       icon: "o_shopping_cart",
+  //       label: "Cashier",
+  //       to: `/${userStore.userDetails.slug}/branches/${link.value}/cashier`,
+  //       separator: false,
+  //       role: ["cashier", "manager", "franchisee"],
+  //     },
+  //     {
+  //       icon: "attach_money",
+  //       label: "Expenses",
+  //       to: `/${userStore.userDetails.slug}/branches/${link.value}/expenses`,
+  //       separator: false,
+  //       role: ["manager", "cashier", "franchisee"],
+  //     },
+  //     {
+  //       icon: "o_workspaces",
+  //       label: "Benefits",
+  //       to: `/${userStore.userDetails.slug}/branches/${link.value}/benefits`,
+  //       separator: false,
+  //       role: ["manager", "cashier", "franchisee"],
+  //     },
+  //     {
+  //       icon: "o_credit_card",
+  //       label: "Loans",
+  //       to: `/${userStore.userDetails.slug}/branches/${link.value}/loans`,
+  //       separator: false,
+  //       role: ["manager", "cashier", "franchisee"],
+  //     },
+  //     {
+  //       icon: "o_account_balance",
+  //       label: "Payroll",
+  //       to: `/${userStore.userDetails.slug}/branches/${link.value}/payroll`,
+  //       separator: false,
+  //       role: ["manager", "cashier", "franchisee"],
+  //     },
+  //   ],
+  // },
   {
     icon: "o_shopping_cart",
     label: "Cashier",
     to: "/branches/" + userStore.userDetails.branch + "/cashier",
-    // to: userStore,
     separator: false,
-    role: ["manager", "cashier", "franchisee"],
-    // permission: ["view-profile"],
+    role: ["cashier", "manager", "franchisee"],
   },
   {
-    icon: "o_shopping_cart",
+    icon: "attach_money",
     label: "Expenses",
     to: "/branches/" + userStore.userDetails.branch + "/expenses",
     // to: userStore,
@@ -385,7 +435,7 @@ const essentialLinks = reactive([
     // permission: ["view-profile"],
   },
   {
-    icon: "o_shopping_cart",
+    icon: "o_workspaces",
     label: "Benefits",
     to: "/branches/" + userStore.userDetails.branch + "/benefits",
     // to: userStore,
@@ -401,6 +451,21 @@ const essentialLinks = reactive([
     separator: false,
     role: ["manager", "cashier", "franchisee"],
     // permission: ["view-profile"],
+  },
+  {
+    icon: "o_account_balance",
+    label: "Payroll",
+    to: `/${userStore.userDetails.slug}/branches/${link.value}/payroll`,
+    separator: false,
+    role: ["manager", "cashier", "franchisee"],
+  },
+
+  {
+    icon: "o_account_balance",
+    label: "Coop",
+    to: `/${userStore.userDetails.slug}/branches/${link.value}/coop`,
+    separator: false,
+    role: ["manager", "cashier", "franchisee"],
   },
 
   // {
@@ -1188,7 +1253,7 @@ const setColor = () => {
         </q-item> -->
 
         <q-item
-          class="q-mb-sm"
+          class=""
           v-else-if="
             menuItem.label !== 'Logout' && userStore.checkRole(menuItem.role)
           "
@@ -1201,14 +1266,20 @@ const setColor = () => {
               ? `/${computedSlug}/branches/${link}/expenses`
               : menuItem.label == 'Loans'
               ? `/${computedSlug}/branches/${link}/loans`
+              : menuItem.label == 'Payroll'
+              ? `/${computedSlug}/branches/${link}/payroll`
               : menuItem.label == 'Benefits'
               ? `/${computedSlug}/branches/${link}/benefits`
               : menuItem.label == 'Products'
               ? `/${computedSlug}/branches/${link}/products`
+              : menuItem.label == 'Inventory'
+              ? `/${computedSlug}/branches/${link}/inventory`
               : menuItem.label == 'Voucher'
               ? `/${computedSlug}/branches/${link}/discount`
-              : menuItem.label == 'Client'
+              : menuItem.label == 'Clients'
               ? `/${computedSlug}/branches/${link}/client`
+              : menuItem.label == 'Coop'
+              ? `/${computedSlug}/branches/${link}/coop`
               : menuItem.label == 'Branches' &&
                 menuItem.role.find((element) => element == 'owner')
               ? `/${computedSlug}/branches`

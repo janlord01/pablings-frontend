@@ -232,6 +232,21 @@
                 <q-icon name="attach_file" />
               </template>
             </q-file>
+            <div class="q-mt-md">
+              <span class="text-body2">VAT 12%</span>
+              <q-toggle v-model="cashierStore.vat" color="green" /> <br />
+              <p
+                class="bg-yellow q-pl-sm"
+                style="width: 150px"
+                v-if="cashierStore.vat"
+              >
+                Balance Due with VAT:
+                {{
+                  parseFloat(cashierStore.total) +
+                  parseFloat(cashierStore.total) * 0.12
+                }}
+              </p>
+            </div>
             <q-btn
               unelevated
               label="Pay"
@@ -241,6 +256,7 @@
               @click="onSubmit"
               icon="attach_money"
             />
+            <!-- <pre>{{ cashierStore.vat }}</pre> -->
             <!-- <q-btn
               unelevated
               label="Print"
@@ -283,6 +299,8 @@ const route = useRoute();
 const router = useRouter();
 const productStores = useProductDatas();
 const serviceStore = useServicesData();
+
+const activateVat = ref(false);
 
 const emit = defineEmits("hidePayDialog");
 const printReceiptDialog = ref(false);
@@ -528,6 +546,7 @@ const onSubmit = () => {
     fileData.append("reference", cashierStore.reference);
     fileData.append("proof", cashierStore.proof);
     fileData.append("slug", route.params.slug);
+    fileData.append("vat", cashierStore.vat);
     fileData.append(
       "client",
       cashierStore.client == "Client" && cashierStore.selectedClient != null

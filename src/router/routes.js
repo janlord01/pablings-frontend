@@ -33,6 +33,7 @@ import LoanIndex from "pages/branches/LoanIndex.vue";
 import PayrollIndex from "pages/branches/PayrollIndex.vue";
 import PayrollCreate from "pages/branches/payroll/CreatePayroll.vue";
 import ClientIndex from "pages/users/member/MemberIndex.vue";
+import CoopIndex from "pages/branches/CoopIndexPage.vue";
 const routes = [
   {
     path: "/",
@@ -553,6 +554,15 @@ const routes = [
         path: "/:slug/branches/:id/payroll/create",
         component: PayrollCreate,
         name: "branch-payroll-create",
+        meta: {
+          requiredAuth: true,
+          access: ["super-admin", "owner", "manager", "franchisee", "cashier"],
+        },
+      },
+      {
+        path: "/:slug/branches/:id/coop",
+        component: CoopIndex,
+        name: "branch-coop-index",
         meta: {
           requiredAuth: true,
           access: ["super-admin", "owner", "manager", "franchisee", "cashier"],

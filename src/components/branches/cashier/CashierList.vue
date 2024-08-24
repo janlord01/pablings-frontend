@@ -7,7 +7,7 @@
     flat
     row-key="id"
     separator="none"
-    :visible-columns="['date', 'name', 'total', 'remarks', 'action']"
+    :visible-columns="['date', 'name', 'total', 'vat', 'remarks', 'action']"
   >
     <template v-slot:item="props" v-if="!$q.screen.gt.xs">
       <q-card
@@ -115,9 +115,8 @@
         <q-td key="mop" :props="props">
           {{ props.row.mop }}
         </q-td>
-        <q-td key="total" :props="props">
-          {{ props.row.total }}
-        </q-td>
+        <q-td key="total" :props="props"> P{{ props.row.total }} </q-td>
+        <q-td key="vat" :props="props"> P{{ props.row.vat }} </q-td>
         <q-td key="cash" :props="props">
           {{ props.row.cash }}
         </q-td>
@@ -348,6 +347,13 @@ const columns = reactive([
     name: "total",
     label: "Total",
     field: "total",
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "vat",
+    label: "Total with VAT(12%)",
+    field: "cash",
     align: "left",
     sortable: true,
   },

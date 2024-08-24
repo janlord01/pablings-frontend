@@ -31,6 +31,7 @@ export const useCashierData = defineStore("cashierStore", {
     totalDiscount: 0,
     discountId: "",
     total: 0,
+    vat: false,
     cash: "",
     change: 0,
     remarks: "",
